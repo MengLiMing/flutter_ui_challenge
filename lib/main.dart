@@ -1,8 +1,22 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_ui_challenge/routes.dart';
 import 'package:flutter_ui_challenge/theme.dart';
 
-void main() => runApp(const FlutterChallengeApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (Platform.isAndroid) {
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+  }
+
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
+    runApp(const FlutterChallengeApp());
+  });
+}
 
 class FlutterChallengeApp extends StatelessWidget {
   const FlutterChallengeApp({Key? key}) : super(key: key);

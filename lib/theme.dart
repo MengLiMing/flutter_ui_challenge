@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class Themes {
+  static const Map<TargetPlatform, PageTransitionsBuilder> _defaultBuilders = {
+    TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+    TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+  };
+
   static ThemeData lightTheme = ThemeData(
+    pageTransitionsTheme: PageTransitionsTheme(builders: _defaultBuilders),
     appBarTheme: const AppBarTheme(
       toolbarHeight: 44,
       foregroundColor: Colors.black,
