@@ -1,5 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/common_router.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/login/login_route.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/not_found_page.dart';
 
 abstract class ModularRouterProvider {
@@ -21,6 +22,7 @@ class DeerRouters {
 
     /// 配置路由
     _listRouters.add(CommonRouter());
+    _listRouters.add(LoginRouter());
 
     for (final element in _listRouters) {
       element.initRouter(router);

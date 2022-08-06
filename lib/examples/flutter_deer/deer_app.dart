@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/common/config_providers.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/common/deer_theme.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/deer_home_page.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/common/deer_storage.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/common/user_provider.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/loading_page.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/home/deer_home_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/deer_routers.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/routers/deer_theme.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/not_found_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/splash_page.dart';
 import 'package:oktoast/oktoast.dart';
@@ -53,53 +55,40 @@ class DeerApp extends StatelessWidget {
   }
 
   Widget _configScreen() {
-    return Consumer(
-      builder: (context, ref, child) {
-        return Scaffold();
-        ThemeMode themeMode = ref.watch(ConfigProviders.themeMode);
+    return ProviderScope(
+      overrides: [
+        UserProviders.userInfo
+            .overrideWithValue(DeerUserInfoState(DeerStorage.userInfo)),
+      ],
+      child: Consumer(
+        builder: (context, ref, child) {
+          ThemeMode themeMode = ref.watch(ConfigProviders.themeMode);
 
-        return MaterialApp(
-          color: Colors.white,
-          debugShowCheckedModeBanner: false,
-          theme: DeerTheme.getTheme(),
-          darkTheme: DeerTheme.getTheme(isDarkMode: true),
-          themeMode: themeMode,
-          title: 'Deer Demo',
-          navigatorKey: navigatorKey,
-          onGenerateRoute: DeerRouters.router.generator,
-          home: child,
-          onUnknownRoute: (_) {
-            return MaterialPageRoute(
-                builder: (context) => const NotFoundPage());
-          },
-          restorationScopeId: 'app',
-        );
-      },
-      child: _configHome(),
+          Widget content = MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: DeerTheme.getTheme(),
+            darkTheme: DeerTheme.getTheme(isDarkMode: true),
+            themeMode: themeMode,
+            title: 'Deer Demo',
+            navigatorKey: navigatorKey,
+            onGenerateRoute: DeerRouters.router.generator,
+            home: child,
+            onUnknownRoute: (settings) {
+              return MaterialPageRoute(builder: (context) {
+                return const NotFoundPage();
+              });
+            },
+          );
+          return GestureDetector(
+            onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            child: content,
+          );
+        },
+        child: _configHome(),
+      ),
     );
-    // return Consumer(
-    //   builder: (context, ref, child) {
-    //     ThemeMode themeMode = ref.watch(ConfigProviders.themeMode);
-
-    //     return MaterialApp(
-    //       color: Colors.white,
-    //       debugShowCheckedModeBanner: false,
-    //       theme: DeerTheme.getTheme(),
-    //       darkTheme: DeerTheme.getTheme(isDarkMode: true),
-    //       themeMode: themeMode,
-    //       title: 'Deer Demo',
-    //       navigatorKey: navigatorKey,
-    //       onGenerateRoute: DeerRouters.router.generator,
-    //       home: child,
-    //       onUnknownRoute: (_) {
-    //         return MaterialPageRoute(
-    //             builder: (context) => const NotFoundPage());
-    //       },
-    //       restorationScopeId: 'app',
-    //     );
-    //   },
-    //   child: _configHome(),
-    // );
   }
 
   Widget _configHome() {

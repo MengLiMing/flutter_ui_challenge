@@ -41,9 +41,10 @@ class TextStyles {
     textBaseline: TextBaseline.alphabetic,
   );
   static const TextStyle textDark = TextStyle(
-      fontSize: 14,
-      color: Colours.darkText,
-      textBaseline: TextBaseline.alphabetic);
+    fontSize: 14,
+    color: Colours.darkText,
+    textBaseline: TextBaseline.alphabetic,
+  );
 
   static const TextStyle textGray12 = TextStyle(
       fontSize: 12, color: Colours.textGray, fontWeight: FontWeight.normal);

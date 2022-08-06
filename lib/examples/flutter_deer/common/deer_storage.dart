@@ -1,13 +1,40 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/common/constant.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/common/user_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DeerStorage {
   static late SharedPreferences sp;
 
-  /// 用户是否登录
-  static bool get isLogin => sp.getBool(StorageKey.isLogin) ?? false;
-  static set isLogin(bool value) => sp.setBool(StorageKey.isLogin, value);
+  /// 用户信息
+  static DeerUserInfo? get userInfo {
+    final value = sp.get(StorageKey.userInfo);
+    if (value != null) {
+      final userJson = jsonDecode(value as String) as Map<String, dynamic>;
+
+      return DeerUserInfo.fromJson(userJson as Map<String, dynamic>);
+    }
+    return null;
+  }
+
+  static set userInfo(DeerUserInfo? value) {
+    if (value == null) {
+      sp.remove(StorageKey.userInfo);
+      return;
+    }
+    ;
+    final jsonString = jsonEncode(value.toJson());
+    sp.setString(StorageKey.userInfo, jsonString);
+  }
+
+  // 是否登录
+  static bool get isLogin => userInfo != null;
+
+  /// 之前登录人的手机号 - 用于下次填写使用
+  static String get phone => sp.getString(StorageKey.phone) ?? '';
+  static set phone(String value) => sp.setString(StorageKey.phone, value);
 
   /// 是否展示过引导页
   static bool get hadShowGuide => sp.getBool(StorageKey.hadShowGuide) ?? false;

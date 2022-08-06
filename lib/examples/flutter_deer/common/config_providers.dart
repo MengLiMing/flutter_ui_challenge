@@ -9,9 +9,9 @@ class ConfigProviders {
     final result = await Future.wait<dynamic>(
       [
         SharedPreferences.getInstance(),
-        Future.delayed(
-          const Duration(seconds: 3),
-        ),
+        // Future.delayed(
+        //   const Duration(seconds: 3),
+        // ),
       ],
     );
 
@@ -23,15 +23,10 @@ class ConfigProviders {
   static final config = StateNotifierProvider<AppConfigState, AppConfig>((ref) {
     return AppConfigState(
       AppConfig(
-        isLogin: DeerStorage.isLogin,
         hadShowGuide: DeerStorage.hadShowGuide,
         themeMode: DeerStorage.themeMode,
       ),
     );
-  });
-
-  static final isLogin = Provider<bool>((ref) {
-    return ref.watch(config).isLogin;
   });
 
   static final hadShowGuide = Provider<bool>((ref) {
@@ -45,12 +40,6 @@ class ConfigProviders {
 
 class AppConfigState extends StateNotifier<AppConfig> {
   AppConfigState(AppConfig config) : super(config);
-
-  void loginSuccess() {
-    DeerStorage.isLogin = true;
-
-    state = state.copyWith(isLogin: true);
-  }
 
   void showedGuide() {
     DeerStorage.hadShowGuide = true;
@@ -67,32 +56,24 @@ class AppConfigState extends StateNotifier<AppConfig> {
 
 @immutable
 class AppConfig extends Equatable {
-  final bool isLogin;
   final bool hadShowGuide;
   final ThemeMode themeMode;
 
   const AppConfig({
-    required this.isLogin,
     required this.hadShowGuide,
     required this.themeMode,
   });
 
   AppConfig copyWith({
-    bool? isLogin,
     bool? hadShowGuide,
     ThemeMode? themeMode,
   }) {
     return AppConfig(
-      isLogin: isLogin ?? this.isLogin,
       hadShowGuide: hadShowGuide ?? this.hadShowGuide,
       themeMode: themeMode ?? this.themeMode,
     );
   }
 
   @override
-  List<Object?> get props => [
-        isLogin,
-        hadShowGuide,
-        themeMode,
-      ];
+  List<Object?> get props => [hadShowGuide, themeMode];
 }
