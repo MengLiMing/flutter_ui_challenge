@@ -4,14 +4,14 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/common/user_provider.
 import 'package:flutter_ui_challenge/examples/flutter_deer/common_router.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_utils.dart';
 
-class DeerHomePage extends ConsumerWidget {
-  const DeerHomePage({Key? key}) : super(key: key);
+class DeerMainPage extends ConsumerWidget {
+  const DeerMainPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: const Text('Main'),
       ),
       body: SizedBox.expand(
         child: Column(
@@ -21,7 +21,7 @@ class DeerHomePage extends ConsumerWidget {
             userInfo(),
             ElevatedButton(
               onPressed: () {
-                NavigatorUtils.pushNeedLogin(context, CommonRouter.home);
+                NavigatorUtils.pushNeedLogin(context, CommonRouter.main);
               },
               child: const Text('需要登录的跳转'),
             ),

@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/common/config_providers.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/common/deer_storage.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/common/user_provider.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/deer_main_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/loading_page.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/modules/home/deer_home_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/deer_routers.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/deer_theme.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/not_found_page.dart';
@@ -94,7 +94,7 @@ class DeerApp extends StatelessWidget {
   Widget _configHome() {
     return Consumer(builder: (context, ref, _) {
       final hadShowGuide = ref.watch(ConfigProviders.hadShowGuide);
-      return hadShowGuide ? const DeerHomePage() : const SplashPage();
+      return hadShowGuide ? const DeerMainPage() : const SplashPage();
     });
   }
 }
