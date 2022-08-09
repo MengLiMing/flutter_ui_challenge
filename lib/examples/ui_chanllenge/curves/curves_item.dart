@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui_challenge/examples/curves/curve_type.dart';
+import 'package:flutter_ui_challenge/examples/ui_chanllenge/curves/curve_type.dart';
 
 final frame = seconds * 60;
 

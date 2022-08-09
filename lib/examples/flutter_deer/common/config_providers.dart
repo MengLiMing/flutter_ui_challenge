@@ -9,9 +9,9 @@ class ConfigProviders {
     final result = await Future.wait<dynamic>(
       [
         SharedPreferences.getInstance(),
-        // Future.delayed(
-        //   const Duration(seconds: 3),
-        // ),
+        Future.delayed(
+          const Duration(seconds: 1),
+        ),
       ],
     );
 
@@ -41,9 +41,9 @@ class ConfigProviders {
 class AppConfigState extends StateNotifier<AppConfig> {
   AppConfigState(AppConfig config) : super(config);
 
-  void showedGuide() {
-    DeerStorage.hadShowGuide = true;
-    state = state.copyWith(hadShowGuide: true);
+  set hadShowGuide(bool value) {
+    DeerStorage.hadShowGuide = value;
+    state = state.copyWith(hadShowGuide: value);
   }
 
   /// 修改主题模式

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui_challenge/examples/custom_slider/custom_slider.dart';
+import 'package:flutter_ui_challenge/examples/ui_chanllenge/custom_slider/custom_slider.dart';
 
 class CustomSliderPage extends StatelessWidget {
   static const route = '自定义Slider: 自定义Widget+RenderObject';

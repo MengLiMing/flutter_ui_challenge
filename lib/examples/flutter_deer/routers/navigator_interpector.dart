@@ -23,8 +23,8 @@ class LoginInterpector with NavigatorInterpector {
       handler();
       return;
     }
-    NavigatorUtils.push(context, LoginRouter.login, resultCallback: (_) {
-      if (DeerStorage.isLogin) {
+    NavigatorUtils.push(context, LoginRouter.login, resultCallback: (value) {
+      if (value != null && DeerStorage.isLogin) {
         handler();
         return;
       }

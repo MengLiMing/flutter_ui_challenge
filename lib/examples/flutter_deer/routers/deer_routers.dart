@@ -1,6 +1,10 @@
 import 'package:fluro/fluro.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/common_router.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/goods_route.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/home/common_router.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/login/login_route.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/order_router.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/shop_router.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/statistics/statistics_router.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/not_found_page.dart';
 
 abstract class ModularRouterProvider {
@@ -23,6 +27,10 @@ class DeerRouters {
     /// 配置路由
     _listRouters.add(CommonRouter());
     _listRouters.add(LoginRouter());
+    _listRouters.add(GoodsRouter());
+    _listRouters.add(OrderRouter());
+    _listRouters.add(StatisticsRouter());
+    _listRouters.add(ShopRouter());
 
     for (final element in _listRouters) {
       element.initRouter(router);

@@ -42,6 +42,7 @@ dependencies:
   # 滚动到index
   scrollable_positioned_list: ^0.3.2
   equatable: ^2.0.3
+  flutter_screenutil: ^5.5.3+2
 
 dev_dependencies:
   flutter_test:

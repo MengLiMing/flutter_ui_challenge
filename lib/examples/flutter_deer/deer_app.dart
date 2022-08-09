@@ -3,12 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/common/config_providers.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/common/deer_storage.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/common/user_provider.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/deer_main_page.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/loading_page.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/home/deer_main_page.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/home/loading_page.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/home/splash_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/deer_routers.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/deer_theme.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/not_found_page.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/splash_page.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
 import 'package:oktoast/oktoast.dart';
 
 class DeerApp extends StatelessWidget {
@@ -35,9 +36,6 @@ class DeerApp extends StatelessWidget {
       child: app,
     );
 
-    /// 字体大小不受系统影响
-    app = MediaQuery(data: MediaQuery.of(context), child: app);
-
     return app;
   }
 
@@ -49,7 +47,10 @@ class DeerApp extends StatelessWidget {
       }, error: (_) {
         return _configScreen();
       }, loading: (_) {
-        return const LoadingPage();
+        return const MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: SplashPage(),
+        );
       });
     });
   }
@@ -73,12 +74,20 @@ class DeerApp extends StatelessWidget {
             navigatorKey: navigatorKey,
             onGenerateRoute: DeerRouters.router.generator,
             home: child,
+            builder: (context, child) {
+              ScreenUtils.config(context);
+              return MediaQuery(
+                data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+                child: child!,
+              );
+            },
             onUnknownRoute: (settings) {
               return MaterialPageRoute(builder: (context) {
                 return const NotFoundPage();
               });
             },
           );
+
           return GestureDetector(
             onTap: () {
               FocusManager.instance.primaryFocus?.unfocus();
@@ -94,7 +103,7 @@ class DeerApp extends StatelessWidget {
   Widget _configHome() {
     return Consumer(builder: (context, ref, _) {
       final hadShowGuide = ref.watch(ConfigProviders.hadShowGuide);
-      return hadShowGuide ? const DeerMainPage() : const SplashPage();
+      return hadShowGuide ? const DeerMainPage() : const DeerGuidePage();
     });
   }
 }

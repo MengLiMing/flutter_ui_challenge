@@ -37,6 +37,8 @@ class DeerTheme {
         hintStyle:
             isDarkMode ? TextStyles.textHint14 : TextStyles.textDarkGray14,
       ),
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
       appBarTheme: AppBarTheme(
         elevation: 0.5,
         foregroundColor: isDarkMode ? Colors.white : Colors.black,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui_challenge/examples/curves/curve_type.dart';
-import 'package:flutter_ui_challenge/examples/curves/curves_item.dart';
-
+import 'package:flutter_ui_challenge/examples/ui_chanllenge/curves/curve_type.dart';
+import 'package:flutter_ui_challenge/examples/ui_chanllenge/curves/curves_item.dart';
 
 class CurvesPage extends StatelessWidget {
   static const route = 'Curves - 效果展示';

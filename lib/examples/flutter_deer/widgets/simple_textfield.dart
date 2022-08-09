@@ -72,7 +72,7 @@ class _SimpleTextFieldState extends State<SimpleTextField> {
     final textField = TextField(
       controller: widget.controller,
       focusNode: widget.focusNode,
-      maxLength: 11,
+      maxLength: widget.maxLength,
       obscureText: widget.isSecret,
       keyboardType: widget.keyboardType,
       autofocus: false,
