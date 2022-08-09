@@ -7,6 +7,7 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/provide
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/widgets/order_list_item.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/widgets/order_tag_item.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/empty_view.dart';
 
 class OrderListPage extends ConsumerStatefulWidget {
   final OrderType orderType;
@@ -29,6 +30,8 @@ class OrderListPage extends ConsumerStatefulWidget {
 class _OrderListPageState extends ConsumerState<OrderListPage> {
   int get _index => widget.orderType.index;
 
+  final String id = UniqueKey().toString();
+
   @override
   void initState() {
     super.initState();
@@ -37,8 +40,10 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
   }
 
   void checkNeedRefresh() {
-    final dataManager =
-        ref.read(OrderListProviders.dataManager(widget.orderType));
+    final dataManager = ref.read(
+      OrderListProviders.dataManager(id),
+    );
+
     if (dataManager.datas.isEmpty) {
       request(true);
     }
@@ -86,13 +91,12 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
             child: SliverPadding(
               padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
               sliver: Consumer(builder: (context, ref, _) {
-                final datas =
-                    ref.watch(OrderListProviders.datas(widget.orderType));
+                final datas = ref.watch(OrderListProviders.datas(id));
                 return datas.isEmpty
                     ? SliverFillRemaining(
                         child: Container(
                           alignment: Alignment.center,
-                          child: Text('空数据'),
+                          child: const EmptyView(type: EmptyType.order),
                         ),
                       )
                     : SliverList(
@@ -131,7 +135,7 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
 
   Widget _footerWidget() {
     return Consumer(builder: (context, ref, _) {
-      final hadMore = ref.watch(OrderListProviders.hasMore(widget.orderType));
+      final hadMore = ref.watch(OrderListProviders.hasMore(id));
       if (hadMore) {
         request(false);
         return Container(
@@ -164,8 +168,8 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
 
   Future<void> request(bool isRefresh) async {
     if (ref.read(HeaderProviders.pageIndex) != _index) return;
-    final dataManager =
-        ref.read(OrderListProviders.dataManager(widget.orderType).notifier);
+    final dataManager = ref.read(OrderListProviders.dataManager(id).notifier);
+    dataManager.params = OrderListParams(orderType: widget.orderType);
     if (isRefresh) {
       await dataManager.refresh();
     } else {

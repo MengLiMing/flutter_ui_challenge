@@ -47,10 +47,10 @@ class OrderChooseItemData extends Equatable {
   final String title;
   final String unSelectImg;
   final String selectImg;
-  final int count;
+  int count;
   final OrderType orderType;
 
-  const OrderChooseItemData({
+  OrderChooseItemData({
     required this.title,
     required this.unSelectImg,
     required this.selectImg,
@@ -121,6 +121,7 @@ class _OrderTypeChooseItem extends ConsumerWidget {
     );
 
     content = GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () {
         ref.read(HeaderProviders.tapIndex.state).state = index;
       },

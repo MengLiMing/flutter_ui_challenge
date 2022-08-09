@@ -3,23 +3,38 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/models/order_models.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/page_request.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/utils/random_utils.dart';
+
+class OrderListParams extends Equatable {
+  final OrderType? orderType;
+  final String? keyword;
+
+  const OrderListParams({
+    this.orderType,
+    this.keyword,
+  });
+
+  @override
+  List<Object?> get props => [orderType, keyword];
+}
 
 class OrderListProviders {
+  /// 不同页面使用不同的managerId，推荐使用 uuid
   static final dataManager = StateNotifierProvider.autoDispose
-      .family<OrderListDataManager, OrderListData, OrderType>((ref, type) {
-    return OrderListDataManager(type);
+      .family<OrderListDataManager, OrderListData, String>((ref, managerId) {
+    return OrderListDataManager(managerId);
   });
 
   /// 是否有更多
   static final hasMore =
-      Provider.autoDispose.family<bool, OrderType>((ref, type) {
-    return ref.watch(dataManager(type)).hadMore;
+      Provider.autoDispose.family<bool, String>((ref, managerId) {
+    return ref.watch(dataManager(managerId)).hadMore;
   });
 
   /// 数据源
   static final datas = Provider.autoDispose
-      .family<List<OrderListItemData>, OrderType>((ref, type) {
-    return ref.watch(dataManager(type)).datas;
+      .family<List<OrderListItemData>, String>((ref, managerId) {
+    return ref.watch(dataManager(managerId)).datas;
   });
 
   /// 对应类型 当前展开的items
@@ -31,8 +46,11 @@ class OrderListProviders {
 
 class OrderListDataManager extends StateNotifier<OrderListData>
     with PageRequest<OrderListItemData> {
-  final OrderType orderType;
-  OrderListDataManager(this.orderType) : super(OrderListData.empty());
+  final String managerId;
+
+  OrderListParams params = OrderListParams();
+
+  OrderListDataManager(this.managerId) : super(OrderListData.empty());
 
   @override
   void cancelRequest() {}
@@ -54,15 +72,16 @@ class OrderListDataManager extends StateNotifier<OrderListData>
         page == 3 ? pageSize ~/ 2 : pageSize,
         (index) => OrderListItemData(
               index: page * pageSize + index,
-              orderType: orderType,
+              orderType: params.orderType ??
+                  OrderType.values[RandomUtil.number(OrderType.values.length)],
             ));
   }
 
   @override
   void endRequest(PageResponseWrapper<OrderListItemData> response) {
-    state = state.copyWith(hadMore: response.hasMore);
-
     if (mounted == false) return;
+
+    state = state.copyWith(hadMore: response.hasMore);
 
     switch (response.requestType) {
       case PageRequestType.none:

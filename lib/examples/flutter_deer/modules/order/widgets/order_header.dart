@@ -12,10 +12,13 @@ class OrderHeader extends SliverPersistentHeaderDelegate {
   final double minHeight;
   final List<OrderChooseItemData> items;
 
+  final VoidCallback onSearch;
+
   const OrderHeader({
     required this.items,
     required this.maxHeight,
     required this.minHeight,
+    required this.onSearch,
   });
 
   @override
@@ -57,7 +60,7 @@ class OrderHeader extends SliverPersistentHeaderDelegate {
             height: ScreenUtils.navBarHeight,
             child: IconButton(
               icon: LoadAssetImage('order/icon_search', width: 22, height: 22),
-              onPressed: () {},
+              onPressed: onSearch,
             ),
           ),
         ),

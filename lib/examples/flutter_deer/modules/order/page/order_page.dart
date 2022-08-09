@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/models/order_models.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/order_router.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/page/order_list_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/provider/order_header_provider.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/widgets/order_header.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/always_keep_alive.dart';
 
@@ -20,7 +22,11 @@ class _OrderPageState extends ConsumerState<OrderPage> {
 
   late final List<ScrollController?> _controllers;
 
-  final items = OrderType.values.map((e) => e.orderItemData).toList();
+  final items = OrderType.values.map((e) {
+    var data = e.orderItemData;
+    data.count = 10;
+    return data;
+  }).toList();
 
   @override
   void initState() {
@@ -37,6 +43,10 @@ class _OrderPageState extends ConsumerState<OrderPage> {
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  void search() {
+    NavigatorUtils.push(context, OrderRouter.search);
   }
 
   @override
@@ -61,6 +71,7 @@ class _OrderPageState extends ConsumerState<OrderPage> {
                     maxHeight: 173 + ScreenUtils.topPadding,
                     minHeight: 129 + ScreenUtils.topPadding,
                     items: items,
+                    onSearch: search,
                   ),
                   pinned: true,
                   floating: false,
