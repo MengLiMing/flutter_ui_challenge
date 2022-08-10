@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/models/order_models.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/order_router.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/provider/order_list_provider.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/widgets/payment_choose_dialog.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_utils.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/utils/dialog_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/utils/string_extension.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/toast.dart';
 
 class OrderListItem extends ConsumerStatefulWidget {
@@ -19,7 +24,30 @@ class OrderListItem extends ConsumerStatefulWidget {
 
 class _OrderListItemState extends ConsumerState<OrderListItem> {
   void tapAction(OrderListActionType actionType) {
-    Toast.show(actionType.title);
+    switch (actionType) {
+      case OrderListActionType.complete:
+        finishOrder();
+        break;
+      case OrderListActionType.track:
+        orderTrack();
+        break;
+      default:
+        Toast.show(actionType.title);
+    }
+  }
+
+  void orderTrack() {
+    NavigatorUtils.push(context, OrderRouter.track, arguments: '11111');
+  }
+
+  void finishOrder() {
+    DialogUtils.show(context, builder: (context) {
+      return PaymentChooseDialog(
+        handler: (value) {
+          Toast.show('付款方式 ${value.desc}');
+        },
+      );
+    });
   }
 
   @override
@@ -52,7 +80,7 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
             constraints:
                 BoxConstraints(maxWidth: ScreenUtils.width - 32 * 2 - 16),
             child: Text(
-              '西安市雁塔区 鱼化寨街道唐兴路'.split('').join('\u{200B}'),
+              '西安市雁塔区 鱼化寨街道唐兴路'.text,
               overflow: TextOverflow.ellipsis,
               softWrap: true,
             ),
@@ -78,7 +106,7 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
       actions(),
     ];
 
-    return Container(
+    final container = Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(
@@ -96,6 +124,22 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: children,
       ),
+    );
+
+    return GestureDetector(
+      // onTap: () => NavigatorUtils.push(
+      //   context,
+      //   OrderRouter.details,
+      //   parameters: {
+      //     'orderId': '11111',
+      //   },
+      // ),
+      onTap: () => NavigatorUtils.push(
+        context,
+        OrderRouter.details,
+        arguments: '11111',
+      ),
+      child: container,
     );
   }
 
@@ -131,8 +175,7 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
             Expanded(
                 child: OrderListActionType.contact.actionButton(tapAction)),
             const SizedBox(width: 39),
-            Expanded(
-                child: OrderListActionType.orderInfo.actionButton(tapAction)),
+            Expanded(child: OrderListActionType.track.actionButton(tapAction)),
             const SizedBox(width: 8),
             Expanded(
                 child: OrderListActionType.complete.actionButton(tapAction)),
@@ -145,8 +188,7 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
             Expanded(
                 child: OrderListActionType.contact.actionButton(tapAction)),
             SizedBox(width: 135),
-            Expanded(
-                child: OrderListActionType.orderInfo.actionButton(tapAction)),
+            Expanded(child: OrderListActionType.track.actionButton(tapAction)),
           ],
         );
     }
@@ -248,7 +290,7 @@ extension OrderListActionTypeExtension on OrderListActionType {
         return '接单';
       case OrderListActionType.start:
         return '开始配送';
-      case OrderListActionType.orderInfo:
+      case OrderListActionType.track:
         return '订单跟踪';
       case OrderListActionType.complete:
         return '完成配送';
@@ -280,7 +322,7 @@ extension OrderListActionTypeExtension on OrderListActionType {
         bgColor = const Color(0xFF4688FA);
         textStyle = const TextStyle(color: Colors.white, fontSize: 14);
         break;
-      case OrderListActionType.orderInfo:
+      case OrderListActionType.track:
         title = '订单跟踪';
         bgColor = const Color(0xFFF6F6F6);
         textStyle = const TextStyle(color: Colours.text, fontSize: 14);
@@ -323,7 +365,7 @@ enum OrderListActionType {
   start,
 
   /// 订单跟踪
-  orderInfo,
+  track,
 
   /// 完成
   complete,

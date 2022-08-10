@@ -40,15 +40,14 @@ class DeerTheme {
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       appBarTheme: AppBarTheme(
-        elevation: 0.5,
-        foregroundColor: isDarkMode ? Colors.white : Colors.black,
+        elevation: 0,
+        foregroundColor: isDarkMode ? Colors.white : Colours.text,
         backgroundColor: isDarkMode ? Colours.darkBgColor : Colors.white,
         shadowColor: isDarkMode ? Colors.transparent : Colors.black45,
         centerTitle: true,
         titleTextStyle: TextStyle(
           fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: isDarkMode ? Colors.white : Colors.black,
+          color: isDarkMode ? Colors.white : Colours.text,
         ),
         toolbarHeight: 44,
         systemOverlayStyle:

@@ -7,6 +7,7 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.da
 
 class SearchBar extends StatefulWidget implements PreferredSizeWidget {
   final String backImg;
+
   final hintText;
 
   final ValueChanged<String>? keywordChanged;
@@ -74,9 +75,15 @@ class _SearchBarState extends State<SearchBar> {
         decoration: const BoxDecoration(
             color: Colours.bgGray,
             borderRadius: BorderRadius.all(Radius.circular(4))),
-        child: TextField(
+        child: TextFormField(
+          onEditingComplete: () {
+            NavigatorUtils.unfocus();
+            widget.onSearch(editController.text);
+          },
           controller: editController,
+          textInputAction: TextInputAction.done,
           decoration: InputDecoration(
+            hintText: widget.hintText,
             contentPadding:
                 const EdgeInsets.only(left: -8, right: -16, bottom: 14),
             border: const UnderlineInputBorder(borderSide: BorderSide.none),

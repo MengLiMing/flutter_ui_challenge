@@ -29,10 +29,10 @@ class DeerApp extends StatelessWidget {
 
     /// Toast 配置
     app = OKToast(
-      position: ToastPosition.bottom,
+      position: ToastPosition.center,
       radius: 20,
       textPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      backgroundColor: Colors.black54,
+      backgroundColor: Colors.black87,
       child: app,
     );
 

@@ -84,8 +84,11 @@ class _OrderPageState extends ConsumerState<OrderPage> {
               if (notification.depth == 0 &&
                   notification is ScrollEndNotification) {
                 final index = _pageController.page?.round() ?? 0;
-                ref.read(HeaderProviders.stopIndex.state).state = index;
-                ref.read(HeaderProviders.tapIndex.state).state = index;
+                if (index == _pageController.page &&
+                    ref.read(HeaderProviders.stopIndex) != index) {
+                  ref.read(HeaderProviders.stopIndex.state).state = index;
+                  ref.read(HeaderProviders.tapIndex.state).state = index;
+                }
               }
               return false;
             },
@@ -121,7 +124,10 @@ class _OrderPageState extends ConsumerState<OrderPage> {
   void _scrolllToTop(int index) {
     for (int i = 0; i < _controllers.length; i++) {
       if (i != index) {
-        _controllers[i]?.jumpTo(0);
+        final controler = _controllers[i];
+        if (controler != null && controler.positions.length > 0) {
+          controler.jumpTo(0);
+        }
       }
     }
   }

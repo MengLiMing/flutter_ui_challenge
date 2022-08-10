@@ -5,6 +5,7 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/models/
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/provider/order_list_provider.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/widgets/order_list_item.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/toast.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/custom_show_loading.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/search_bar.dart';
 
 class OrderSearchPage extends ConsumerStatefulWidget {
@@ -17,6 +18,10 @@ class OrderSearchPage extends ConsumerStatefulWidget {
 class _OrderSearchPageState extends ConsumerState<OrderSearchPage> {
   final String id = UniqueKey().toString();
 
+  final loadingController = CustomShowLoadingController();
+
+  bool _isSearching = false;
+
   void searchAction(String keyword) {
     if (keyword.isEmpty) {
       Toast.show('请输入关键字');
@@ -24,30 +29,36 @@ class _OrderSearchPageState extends ConsumerState<OrderSearchPage> {
     }
     final manager = ref.read(OrderListProviders.dataManager(id).notifier);
     manager.params = OrderListParams(keyword: keyword);
-    request(true);
+    request(true, isSearching: true);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: SearchBar(
-        hintText: '时间/关键字查询',
-        onSearch: searchAction,
+    ref.listen(OrderListProviders.isLoading(id), (previous, next) {
+      loadingController.isLoading = _isSearching && (next as bool);
+    });
+    return CustomShowLoading(
+      controller: loadingController,
+      child: Scaffold(
+        appBar: SearchBar(
+          hintText: '时间/关键字查询',
+          onSearch: searchAction,
+        ),
+        body: Consumer(builder: (context, ref, _) {
+          final datas = ref.watch(OrderListProviders.datas(id));
+          return ListView.builder(
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 10),
+            itemBuilder: (context, index) {
+              if (index == datas.length) {
+                return _footerWidget();
+              } else {
+                return itemBuilder(context, index, datas);
+              }
+            },
+            itemCount: datas.isEmpty ? 0 : datas.length + 1,
+          );
+        }),
       ),
-      body: Consumer(builder: (context, ref, _) {
-        final datas = ref.watch(OrderListProviders.datas(id));
-        return ListView.builder(
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 10),
-          itemBuilder: (context, index) {
-            if (index == datas.length) {
-              return _footerWidget();
-            } else {
-              return itemBuilder(context, index, datas);
-            }
-          },
-          itemCount: datas.length == 0 ? 0 : datas.length + 1,
-        );
-      }),
     );
   }
 
@@ -93,7 +104,8 @@ class _OrderSearchPageState extends ConsumerState<OrderSearchPage> {
     );
   }
 
-  Future<void> request(bool isRefresh) async {
+  Future<void> request(bool isRefresh, {bool isSearching = false}) async {
+    _isSearching = isSearching;
     final dataManager = ref.read(OrderListProviders.dataManager(id).notifier);
     if (dataManager.params.keyword == null ||
         dataManager.params.keyword!.isEmpty) return;

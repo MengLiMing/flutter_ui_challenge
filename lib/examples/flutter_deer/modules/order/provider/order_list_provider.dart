@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/models/order_models.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/page_request.dart';
@@ -42,6 +43,12 @@ class OrderListProviders {
       StateProvider.family<OrderListItemData?, OrderType>((ref, type) {
     return null;
   });
+
+  /// 是否正在刷新
+  static final isLoading =
+      Provider.autoDispose.family<bool, String>((ref, managerId) {
+    return ref.watch(dataManager(managerId)).isLoading;
+  });
 }
 
 class OrderListDataManager extends StateNotifier<OrderListData>
@@ -78,10 +85,20 @@ class OrderListDataManager extends StateNotifier<OrderListData>
   }
 
   @override
+  void startRequest(int page, int pageSize, PageRequestType requestType) {
+    super.startRequest(page, pageSize, requestType);
+
+    if (mounted == false) return;
+    ServicesBinding.instance.addPostFrameCallback((timeStamp) {
+      state = state.copyWith(isLoading: true);
+    });
+  }
+
+  @override
   void endRequest(PageResponseWrapper<OrderListItemData> response) {
     if (mounted == false) return;
 
-    state = state.copyWith(hadMore: response.hasMore);
+    state = state.copyWith(hadMore: response.hasMore, isLoading: false);
 
     switch (response.requestType) {
       case PageRequestType.none:
@@ -107,7 +124,10 @@ class OrderListData extends Equatable {
   /// 当前刷新方式
   final PageRequestType requestType;
 
+  final bool isLoading;
+
   OrderListData({
+    required this.isLoading,
     required this.datas,
     required this.hadMore,
     required this.requestType,
@@ -115,6 +135,7 @@ class OrderListData extends Equatable {
 
   factory OrderListData.empty() {
     return OrderListData(
+      isLoading: false,
       datas: [],
       hadMore: true,
       requestType: PageRequestType.none,
@@ -124,15 +145,17 @@ class OrderListData extends Equatable {
   OrderListData copyWith({
     List<OrderListItemData>? datas,
     bool? hadMore,
+    bool? isLoading,
     PageRequestType? requestType,
   }) {
     return OrderListData(
       datas: datas ?? this.datas,
       hadMore: hadMore ?? this.hadMore,
+      isLoading: isLoading ?? this.isLoading,
       requestType: requestType ?? this.requestType,
     );
   }
 
   @override
-  List<Object?> get props => [datas, hadMore, requestType];
+  List<Object?> get props => [datas, hadMore, requestType, isLoading];
 }

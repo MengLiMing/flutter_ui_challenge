@@ -11,17 +11,25 @@ class NavigatorUtils {
     ValueChanged<dynamic>? resultCallback,
     bool replace = false,
     bool clearStack = false,
-    Object? argument,
+    Object? arguments,
+    Map<String, dynamic /*String|Iterable<String>*/ >? parameters,
     TransitionType transtion = TransitionType.cupertino,
     NavigatorInterpector? interpector,
   }) {
     void push() {
+      final String resultPath;
+      if (parameters != null) {
+        resultPath = Uri(path: path, queryParameters: parameters).toString();
+      } else {
+        resultPath = path;
+      }
       DeerRouters.router
           .navigateTo(
         context,
-        path,
+        resultPath,
         replace: replace,
         clearStack: clearStack,
+        routeSettings: RouteSettings(arguments: arguments),
         transition: transtion,
       )
           .then((value) {
@@ -43,7 +51,8 @@ class NavigatorUtils {
     ValueChanged<dynamic>? resultCallback,
     bool replace = false,
     bool clearStack = false,
-    Object? argument,
+    Object? arguments,
+    Map<String, dynamic /*String|Iterable<String>*/ >? parameters,
     TransitionType transtion = TransitionType.cupertino,
     NavigatorInterpector? interpector,
   }) {
@@ -53,7 +62,8 @@ class NavigatorUtils {
       resultCallback: resultCallback,
       replace: replace,
       clearStack: clearStack,
-      argument: argument,
+      parameters: parameters,
+      arguments: arguments,
       transtion: transtion,
       interpector: LoginInterpector()..next = interpector,
     );
