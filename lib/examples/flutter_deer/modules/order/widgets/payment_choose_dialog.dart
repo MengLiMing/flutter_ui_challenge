@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/models/order_models.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/text_styles.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_utils.dart';
@@ -154,15 +155,4 @@ class _PaymentChooseItem extends StatelessWidget {
       ),
     );
   }
-}
-
-enum PaymentType {
-  none,
-  alipay,
-  wechat,
-  cash,
-}
-
-extension PaymentTypeExtension on PaymentType {
-  String get desc => ['未付款', '支付宝', '微信', '现金'][index];
 }

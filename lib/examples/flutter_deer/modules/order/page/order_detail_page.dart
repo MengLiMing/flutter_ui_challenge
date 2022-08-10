@@ -1,10 +1,13 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/models/order_models.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/order_router.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/widgets/order_details_payment_dialog.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/text_styles.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_utils.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/utils/dialog_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/string_extension.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/toast.dart';
@@ -122,7 +125,13 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           borderRadius: BorderRadius.all(Radius.zero)),
       elevation: 0,
       onPressed: () {
-        Toast.show('开始配送');
+        DialogUtils.show(context, builder: (context) {
+          return OrderDetailsPaymentDialog(
+            handler: (PaymentType value) => Toast.show(
+              value.desc,
+            ),
+          );
+        });
       },
       child: const Text('开始配送', style: TextStyle(color: Colors.white)),
     );

@@ -30,7 +30,7 @@ class DialogUtils {
         final secondCurveAnimation =
             CurvedAnimation(parent: secondaryAnimation, curve: curve);
         if (transitionBuilder == null) {
-          return bottomToCenter(
+          return defaultTransitions(
               context, curveAnimation, secondCurveAnimation, child);
         } else {
           return transitionBuilder(
@@ -41,7 +41,7 @@ class DialogUtils {
   }
 
   /// 默认动画
-  static RouteTransitionsBuilder get bottomToCenter =>
+  static RouteTransitionsBuilder get defaultTransitions =>
       (context, animation, secondaryAnimation, child) {
         final opciatyTween = Tween<double>(begin: 0.5, end: 1);
         final offsetTween = Tween<Offset>(

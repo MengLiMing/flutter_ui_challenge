@@ -67,3 +67,14 @@ extension OrderTypeExtension on OrderType {
     }
   }
 }
+
+enum PaymentType {
+  none,
+  alipay,
+  wechat,
+  cash,
+}
+
+extension PaymentTypeExtension on PaymentType {
+  String get desc => ['未付款', '支付宝', '微信', '现金'][index];
+}

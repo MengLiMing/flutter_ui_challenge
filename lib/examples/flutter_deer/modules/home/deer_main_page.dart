@@ -10,6 +10,7 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/page/or
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/shop_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/statistics/page/statistics_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_interpector.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/always_keep_alive.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
 
@@ -75,7 +76,16 @@ class _DeerMainPageState extends ConsumerState<DeerMainPage> {
         final index = ref.watch(homeIndexProvider);
         return BottomNavigationBar(
           items: _tabbarItems,
-          onTap: (index) => _pageController.jumpToPage(index),
+          onTap: (index) {
+            if (index == 3) {
+              /// 假装需要拦截登录
+              LoginInterpector().interpector(context, () {
+                _pageController.jumpToPage(index);
+              });
+            } else {
+              _pageController.jumpToPage(index);
+            }
+          },
           type: BottomNavigationBarType.fixed,
           currentIndex: index,
           elevation: 5,

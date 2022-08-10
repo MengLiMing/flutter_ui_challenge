@@ -25,7 +25,7 @@ class _CodeLoginPageState extends ConsumerState<CodeLoginPage> {
   @override
   void initState() {
     super.initState();
-    phoneControler.text = ref.read(_codeLoginProvider.notifier).state.phone;
+    phoneControler.text = ref.read(_codeLoginProvider).phone;
 
     phoneControler.addListener(_editChanged);
 
