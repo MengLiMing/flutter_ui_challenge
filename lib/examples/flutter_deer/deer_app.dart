@@ -68,7 +68,7 @@ class DeerApp extends StatelessWidget {
           Widget content = MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: DeerTheme.getTheme(),
-            darkTheme: DeerTheme.getTheme(isDarkMode: true),
+            darkTheme: DeerTheme.getTheme(isDarkMode: false), // 未做适配
             themeMode: themeMode,
             title: 'Deer Demo',
             navigatorKey: navigatorKey,

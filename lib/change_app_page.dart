@@ -16,7 +16,7 @@ class ChangeAppPage extends ConsumerWidget {
       ),
       body: GridView(
         padding: const EdgeInsets.all(10),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           mainAxisSpacing: 10,
           crossAxisSpacing: 10,
@@ -35,7 +35,7 @@ class ChangeAppPage extends ConsumerWidget {
           ref.read(mainAppProvider.state).state = const FlutterChallengeApp();
         },
         child: _gridContainer(
-          Text('UI Chanllenge'),
+          const Text('UI Chanllenge'),
         ));
   }
 
@@ -44,7 +44,7 @@ class ChangeAppPage extends ConsumerWidget {
       onTap: () {
         ref.read(mainAppProvider.state).state = DeerApp();
       },
-      child: _gridContainer(LoadAssetImage(
+      child: _gridContainer(const LoadAssetImage(
         'logo',
         width: 80,
         height: 80,

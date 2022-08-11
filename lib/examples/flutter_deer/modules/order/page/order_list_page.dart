@@ -27,10 +27,9 @@ class OrderListPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _OrderListPageState();
 }
 
-class _OrderListPageState extends ConsumerState<OrderListPage> {
+class _OrderListPageState extends ConsumerState<OrderListPage>
+    with OrderListProviders {
   int get _index => widget.orderType.index;
-
-  final String id = UniqueKey().toString();
 
   @override
   void initState() {
@@ -40,11 +39,9 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
   }
 
   void checkNeedRefresh() {
-    final dataManager = ref.read(
-      OrderListProviders.dataManager(id),
-    );
+    final state = ref.read(dataManager);
 
-    if (dataManager.datas.isEmpty) {
+    if (state.datas.isEmpty) {
       request(true);
     }
   }
@@ -91,8 +88,8 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
             child: SliverPadding(
               padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
               sliver: Consumer(builder: (context, ref, _) {
-                final datas = ref.watch(OrderListProviders.datas(id));
-                return datas.isEmpty
+                final dataList = ref.watch(datas);
+                return dataList.isEmpty
                     ? SliverFillRemaining(
                         child: Container(
                           alignment: Alignment.center,
@@ -102,13 +99,13 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
                     : SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (context, index) {
-                            if (index == datas.length) {
+                            if (index == dataList.length) {
                               return _footerWidget();
                             } else {
-                              return itemBuilder(context, index, datas);
+                              return itemBuilder(context, index, dataList);
                             }
                           },
-                          childCount: datas.length + 1,
+                          childCount: dataList.length + 1,
                         ),
                       );
               }),
@@ -129,14 +126,15 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
     final itemData = datas[index];
     return OrderListItem(
       key: ValueKey(itemData.index),
+      unfoldItem: unfoldItem,
       itemData: itemData,
     );
   }
 
   Widget _footerWidget() {
     return Consumer(builder: (context, ref, _) {
-      final hadMore = ref.watch(OrderListProviders.hasMore(id));
-      if (hadMore) {
+      final value = ref.watch(hasMore);
+      if (value) {
         request(false);
         return Container(
           height: 50,
@@ -168,12 +166,12 @@ class _OrderListPageState extends ConsumerState<OrderListPage> {
 
   Future<void> request(bool isRefresh) async {
     if (ref.read(HeaderProviders.pageIndex) != _index) return;
-    final dataManager = ref.read(OrderListProviders.dataManager(id).notifier);
-    dataManager.params = OrderListParams(orderType: widget.orderType);
+    final notifier = ref.read(dataManager.notifier);
+    notifier.params = OrderListParams(orderType: widget.orderType);
     if (isRefresh) {
-      await dataManager.refresh();
+      await notifier.refresh();
     } else {
-      await dataManager.loadMore();
+      await notifier.loadMore();
     }
     return;
   }

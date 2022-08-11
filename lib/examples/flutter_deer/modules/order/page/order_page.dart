@@ -46,7 +46,7 @@ class _OrderPageState extends ConsumerState<OrderPage> {
   }
 
   void search() {
-    NavigatorUtils.push(context, OrderRouter.search);
+    NavigatorUtils.push(context, OrderRouter.order);
   }
 
   @override

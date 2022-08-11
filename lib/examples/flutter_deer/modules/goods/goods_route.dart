@@ -7,13 +7,8 @@ class GoodsRouter extends ModularRouterProvider {
   static const goods = '/goods';
   @override
   void initRouter(FluroRouter router) {
-    router.define(
-      goods,
-      handler: Handler(
-        handlerFunc: (context, _) {
-          return const GoodsPage();
-        },
-      ),
-    );
+    router.define(goods, handler: Handler(handlerFunc: (context, _) {
+      return const GoodsPage();
+    }));
   }
 }

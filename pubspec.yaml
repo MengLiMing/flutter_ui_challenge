@@ -9,9 +9,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   # 状态管理
   flutter_riverpod: ^1.0.4
@@ -41,9 +38,11 @@ dependencies:
   lottie: ^1.4.1
   # 滚动到index
   scrollable_positioned_list: ^0.3.2
+  # open url 打电话 - 打开外部网页等
+  url_launcher: ^6.1.5
   equatable: ^2.0.3
-  flutter_screenutil: ^5.5.3+2
-  uuid: ^3.0.6
+  # webview
+  webview_flutter: 3.0.4
 
 dev_dependencies:
   flutter_test:

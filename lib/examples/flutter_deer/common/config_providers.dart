@@ -5,7 +5,7 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/common/deer_storage.d
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ConfigProviders {
-  static final configInit = FutureProvider<void>((ref) async {
+  static final configInit = FutureProvider.autoDispose<void>((ref) async {
     final result = await Future.wait<dynamic>(
       [
         SharedPreferences.getInstance(),

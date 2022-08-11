@@ -53,33 +53,31 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
         appBar: AppBar(
           leading: const CustomBackButton(),
           actions: [
-            TextButton(
-              onPressed: () => NavigatorUtils.push(
-                context,
-                OrderRouter.track,
-                arguments: widget.orderId,
-              ),
-              child: const Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: Text(
-                  '订单跟踪',
-                  style: TextStyle(
-                    color: Colours.text,
-                    fontSize: 14,
+            if (_items.isNotEmpty)
+              TextButton(
+                onPressed: () => NavigatorUtils.push(
+                  context,
+                  OrderRouter.track,
+                  arguments: widget.orderId,
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: Text(
+                    '订单跟踪',
+                    style: TextStyle(
+                      color: Colours.text,
+                      fontSize: 14,
+                    ),
                   ),
                 ),
               ),
-            )
           ],
         ),
         body: Column(
           children: [
             Expanded(
               child: ListView.builder(
-                padding: EdgeInsets.only(
-                  left: 16,
-                  right: 16,
-                ),
+                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
                 itemBuilder: (context, index) => _items[index](context),
                 itemCount: _items.length,
               ),
@@ -88,13 +86,13 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               child: Container(
                 height: 44,
                 margin: const EdgeInsets.only(top: 10, left: 16, right: 16),
-                child: Row(
-                  children: [
+                child: Row(children: [
+                  if (_items.isNotEmpty) ...[
                     Expanded(child: _refuseButton()),
-                    SizedBox(width: 17),
+                    const SizedBox(width: 17),
                     Expanded(child: _startButton()),
                   ],
-                ),
+                ]),
               ),
             ),
           ],

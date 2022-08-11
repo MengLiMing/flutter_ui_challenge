@@ -16,6 +16,7 @@ class _AlwaysKeepAliveState extends State<AlwaysKeepAlive>
     with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return widget.child;
   }
 

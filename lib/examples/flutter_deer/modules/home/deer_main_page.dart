@@ -11,6 +11,7 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/sho
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/statistics/page/statistics_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_interpector.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/always_keep_alive.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
 
@@ -71,7 +72,14 @@ class _DeerMainPageState extends ConsumerState<DeerMainPage> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(UserProviders.isLogin, (previous, next) {
+      if (next == false) {
+        _pageController.jumpToPage(0);
+        NavigatorUtils.popToRoot(context);
+      }
+    });
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       bottomNavigationBar: Consumer(builder: (context, ref, _) {
         final index = ref.watch(homeIndexProvider);
         return BottomNavigationBar(
@@ -97,11 +105,11 @@ class _DeerMainPageState extends ConsumerState<DeerMainPage> {
         );
       }),
       body: PageView(
-        children: _pageList.map((e) => AlwaysKeepAlive(child: e)).toList(),
         controller: _pageController,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         onPageChanged: (index) =>
             ref.read(homeIndexProvider.state).state = index,
+        children: _pageList.map((e) => AlwaysKeepAlive(child: e)).toList(),
       ),
     );
   }

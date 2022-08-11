@@ -87,7 +87,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     /// 退出登录所有页面
     ref.listen(UserProviders.isLogin, (previous, next) {
       if (next == true) {
-        Navigator.of(context).popUntil(ModalRoute.withName(LoginRouter.login));
+        NavigatorUtils.popTo(context, LoginRouter.login);
         NavigatorUtils.pop(context, result: true);
       }
     });

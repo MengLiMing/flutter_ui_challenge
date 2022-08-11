@@ -19,45 +19,40 @@ class OrderListParams extends Equatable {
   List<Object?> get props => [orderType, keyword];
 }
 
-class OrderListProviders {
+mixin OrderListProviders {
   /// 不同页面使用不同的managerId，推荐使用 uuid
-  static final dataManager = StateNotifierProvider.autoDispose
-      .family<OrderListDataManager, OrderListData, String>((ref, managerId) {
-    return OrderListDataManager(managerId);
+  final dataManager =
+      StateNotifierProvider.autoDispose<OrderListDataManager, OrderListData>(
+          (ref) {
+    return OrderListDataManager();
   });
 
   /// 是否有更多
-  static final hasMore =
-      Provider.autoDispose.family<bool, String>((ref, managerId) {
-    return ref.watch(dataManager(managerId)).hadMore;
+  late final hasMore = Provider.autoDispose<bool>((ref) {
+    return ref.watch(dataManager).hadMore;
   });
 
   /// 数据源
-  static final datas = Provider.autoDispose
-      .family<List<OrderListItemData>, String>((ref, managerId) {
-    return ref.watch(dataManager(managerId)).datas;
+  late final datas = Provider.autoDispose<List<OrderListItemData>>((ref) {
+    return ref.watch(dataManager).datas;
   });
 
   /// 对应类型 当前展开的items
-  static final unfoldItem =
-      StateProvider.family<OrderListItemData?, OrderType>((ref, type) {
+  late final unfoldItem = StateProvider<OrderListItemData?>((ref) {
     return null;
   });
 
   /// 是否正在刷新
-  static final isLoading =
-      Provider.autoDispose.family<bool, String>((ref, managerId) {
-    return ref.watch(dataManager(managerId)).isLoading;
+  late final isLoading = Provider.autoDispose<bool>((ref) {
+    return ref.watch(dataManager).isLoading;
   });
 }
 
 class OrderListDataManager extends StateNotifier<OrderListData>
     with PageRequest<OrderListItemData> {
-  final String managerId;
-
   OrderListParams params = OrderListParams();
 
-  OrderListDataManager(this.managerId) : super(OrderListData.empty());
+  OrderListDataManager() : super(OrderListData.empty());
 
   @override
   void cancelRequest() {}

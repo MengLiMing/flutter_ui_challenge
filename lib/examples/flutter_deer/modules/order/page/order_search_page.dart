@@ -15,9 +15,8 @@ class OrderSearchPage extends ConsumerStatefulWidget {
   ConsumerState<OrderSearchPage> createState() => _OrderSearchPageState();
 }
 
-class _OrderSearchPageState extends ConsumerState<OrderSearchPage> {
-  final String id = UniqueKey().toString();
-
+class _OrderSearchPageState extends ConsumerState<OrderSearchPage>
+    with OrderListProviders {
   final loadingController = CustomShowLoadingController();
 
   bool _isSearching = false;
@@ -27,14 +26,14 @@ class _OrderSearchPageState extends ConsumerState<OrderSearchPage> {
       Toast.show('请输入关键字');
       return;
     }
-    final manager = ref.read(OrderListProviders.dataManager(id).notifier);
+    final manager = ref.read(dataManager.notifier);
     manager.params = OrderListParams(keyword: keyword);
     request(true, isSearching: true);
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(OrderListProviders.isLoading(id), (previous, next) {
+    ref.listen(isLoading, (previous, next) {
       loadingController.isLoading = _isSearching && (next as bool);
     });
     return CustomShowLoading(
@@ -45,17 +44,17 @@ class _OrderSearchPageState extends ConsumerState<OrderSearchPage> {
           onSearch: searchAction,
         ),
         body: Consumer(builder: (context, ref, _) {
-          final datas = ref.watch(OrderListProviders.datas(id));
+          final dataList = ref.watch(datas);
           return ListView.builder(
             padding: const EdgeInsets.only(left: 16, right: 16, top: 10),
             itemBuilder: (context, index) {
-              if (index == datas.length) {
+              if (index == dataList.length) {
                 return _footerWidget();
               } else {
-                return itemBuilder(context, index, datas);
+                return itemBuilder(context, index, dataList);
               }
             },
-            itemCount: datas.isEmpty ? 0 : datas.length + 1,
+            itemCount: dataList.isEmpty ? 0 : dataList.length + 1,
           );
         }),
       ),
@@ -64,8 +63,8 @@ class _OrderSearchPageState extends ConsumerState<OrderSearchPage> {
 
   Widget _footerWidget() {
     return Consumer(builder: (context, ref, _) {
-      final hadMore = ref.watch(OrderListProviders.hasMore(id));
-      if (hadMore) {
+      final value = ref.watch(hasMore);
+      if (value) {
         request(false);
         return Container(
           height: 50,
@@ -100,20 +99,21 @@ class _OrderSearchPageState extends ConsumerState<OrderSearchPage> {
     final itemData = datas[index];
     return OrderListItem(
       key: ValueKey(itemData.index),
+      unfoldItem: unfoldItem,
       itemData: itemData,
     );
   }
 
   Future<void> request(bool isRefresh, {bool isSearching = false}) async {
     _isSearching = isSearching;
-    final dataManager = ref.read(OrderListProviders.dataManager(id).notifier);
-    if (dataManager.params.keyword == null ||
-        dataManager.params.keyword!.isEmpty) return;
+    final notifier = ref.read(dataManager.notifier);
+    if (notifier.params.keyword == null || notifier.params.keyword!.isEmpty)
+      return;
 
     if (isRefresh) {
-      await dataManager.refresh();
+      await notifier.refresh();
     } else {
-      await dataManager.loadMore();
+      await notifier.loadMore();
     }
     return;
   }

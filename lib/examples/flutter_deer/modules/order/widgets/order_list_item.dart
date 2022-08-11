@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/models/order_models.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/order_router.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/provider/order_list_provider.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/widgets/payment_choose_dialog.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_utils.dart';
@@ -13,9 +12,12 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/utils/toast.dart';
 
 class OrderListItem extends ConsumerStatefulWidget {
   final OrderListItemData itemData;
+  final StateProvider<OrderListItemData?> unfoldItem;
+
   const OrderListItem({
     Key? key,
     required this.itemData,
+    required this.unfoldItem,
   }) : super(key: key);
 
   @override
@@ -199,11 +201,9 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
     final TextStyle? textTextStyle =
         Theme.of(context).textTheme.bodyText2?.copyWith(fontSize: 12);
     return Consumer(builder: (context, ref, child) {
-      final unfoldItem =
-          ref.watch(OrderListProviders.unfoldItem(widget.itemData.orderType));
+      final unfoldItem = ref.watch(widget.unfoldItem);
 
-      final unfoldState = ref
-          .read(OrderListProviders.unfoldItem(widget.itemData.orderType).state);
+      final unfoldState = ref.read(widget.unfoldItem.state);
       final isUnfold = unfoldItem == widget.itemData;
       List<Widget> children;
       if (isUnfold) {
@@ -220,19 +220,14 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
                 ],
               ),
             ),
-            SizedBox(
-              height: 8,
-            ),
+            const SizedBox(height: 8),
           ],
           GestureDetector(
             onTap: () => unfoldState.state = null,
             child: Container(
               alignment: Alignment.centerRight,
-              child: Icon(
-                Icons.keyboard_arrow_up,
-                color: Colours.textGrayC,
-                size: 16,
-              ),
+              child: const Icon(Icons.keyboard_arrow_up,
+                  color: Colours.textGrayC, size: 16),
             ),
           )
         ];
@@ -248,18 +243,16 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
               ],
             ),
           ),
-          SizedBox(
-            height: 8,
-          ),
+          const SizedBox(height: 8),
           GestureDetector(
             onTap: () => unfoldState.state = widget.itemData,
             child: Row(
               children: [
-                Text('…'),
+                const Text('…'),
                 Expanded(
                   child: Container(
                     alignment: Alignment.centerRight,
-                    child: Icon(
+                    child: const Icon(
                       Icons.keyboard_arrow_down,
                       color: Colours.textGrayC,
                       size: 16,
