@@ -23,7 +23,7 @@ class _GoodsHeadTitleState extends State<GoodsHeadTitle> {
 
   Matrix4 get unfold => () {
         var result = Matrix4.identity();
-        final double offset = 10.0;
+        const offset = 10.0;
         result.translate(offset, offset);
         result.rotateZ(pi * 0.6);
         result.translate(-offset, -offset);

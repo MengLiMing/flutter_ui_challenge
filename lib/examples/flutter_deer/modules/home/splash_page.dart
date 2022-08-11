@@ -22,7 +22,8 @@ class _SplashPageState extends ConsumerState<DeerGuidePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView(
-        physics: ClampingScrollPhysics(parent: RangeMaintainingScrollPhysics()),
+        physics: const ClampingScrollPhysics(
+            parent: RangeMaintainingScrollPhysics()),
         children: [
           for (int i = 0; i < _guideList.length; i++)
             if (i == _guideList.length - 1)

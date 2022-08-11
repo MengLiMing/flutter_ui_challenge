@@ -73,23 +73,19 @@ class _CodeLoginPageState extends ConsumerState<CodeLoginPage> {
               margin: const EdgeInsets.only(top: 20),
               alignment: Alignment.centerLeft,
               height: 32,
-              child: Text(
+              child: const Text(
                 '验证码登录',
                 style: TextStyles.textBold26,
               ),
             ),
-            SizedBox(
-              height: 16,
-            ),
+            const SizedBox(height: 16),
             SimpleTextField(
               hintText: '请输入手机号',
               controller: phoneControler,
               maxLength: 11,
               keyboardType: TextInputType.number,
             ),
-            SizedBox(
-              height: 9,
-            ),
+            const SizedBox(height: 9),
             SimpleTextField(
               hintText: '请输入验证码',
               isShowHint: () => true,
@@ -164,13 +160,10 @@ class _CodeLoginPageState extends ConsumerState<CodeLoginPage> {
           alignment: Alignment.center,
           decoration: BoxDecoration(
               color: Colours.textGrayC,
-              borderRadius: BorderRadius.all(Radius.circular(2))),
+              borderRadius: const BorderRadius.all(Radius.circular(2))),
           child: Text(
             '已发送(${config.timeCount}s)',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-            ),
+            style: const TextStyle(color: Colors.white, fontSize: 12),
           ),
         );
       } else {
@@ -181,11 +174,11 @@ class _CodeLoginPageState extends ConsumerState<CodeLoginPage> {
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border.all(color: Colours.appMain, width: 1),
-              borderRadius: BorderRadius.all(Radius.circular(2)),
+              borderRadius: const BorderRadius.all(Radius.circular(2)),
             ),
             child: Text(
               config.hadSendCode ? '重新获取' : '获取验证码',
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colours.appMain,
                 fontSize: 12,
               ),

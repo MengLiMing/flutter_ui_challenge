@@ -1,5 +1,4 @@
 import 'package:fluro/fluro.dart';
-import 'package:fluro/src/fluro_router.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/home/deer_main_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/home/web_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/deer_routers.dart';

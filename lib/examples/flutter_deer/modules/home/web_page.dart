@@ -82,16 +82,20 @@ class _WebViewPageState extends State<WebViewPage> {
   }
 
   void backAction() async {
+    void pop() {
+      NavigatorUtils.pop(context);
+    }
+
     final controller = webViewController;
     if (controller == null) {
-      NavigatorUtils.pop(context);
+      pop();
       return;
     }
     final canGoback = await controller.canGoBack();
     if (canGoback) {
       controller.goBack();
     } else {
-      NavigatorUtils.pop(context);
+      pop();
     }
   }
 }

@@ -14,7 +14,7 @@ class DeerStorage {
     if (value != null) {
       final userJson = jsonDecode(value as String) as Map<String, dynamic>;
 
-      return DeerUserInfo.fromJson(userJson as Map<String, dynamic>);
+      return DeerUserInfo.fromJson(userJson);
     }
     return null;
   }
@@ -24,7 +24,6 @@ class DeerStorage {
       sp.remove(StorageKey.userInfo);
       return;
     }
-    ;
     final jsonString = jsonEncode(value.toJson());
     sp.setString(StorageKey.userInfo, jsonString);
   }
