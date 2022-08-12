@@ -56,4 +56,8 @@ class DialogUtils {
           ),
         );
       };
+
+  /// 无动画
+  static RouteTransitionsBuilder get noAnimation =>
+      (context, animation, secondaryAnimation, child) => child;
 }

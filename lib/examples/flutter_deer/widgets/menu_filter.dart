@@ -142,7 +142,6 @@ class _MenuFilterState extends State<MenuFilter> with TickerProviderStateMixin {
                   return AnimatedBuilder(
                     animation: animationController,
                     builder: (context, _) {
-                      print('变化高度: ${heightChangedAnimation.value}');
                       return Container(
                         color: Colors.white,
                         height: max(

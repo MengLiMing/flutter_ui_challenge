@@ -5,6 +5,7 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/provide
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_head_title.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_type_choose.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/option_selected_view.dart';
 
 class GoodsPage extends ConsumerStatefulWidget {
   const GoodsPage({Key? key}) : super(key: key);
@@ -14,6 +15,8 @@ class GoodsPage extends ConsumerStatefulWidget {
 }
 
 class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
+  final GlobalKey addButtonKey = GlobalKey();
+
   List<GoodsTypeItem> items = const [
     GoodsTypeItem(title: '全部商品', count: 10),
     GoodsTypeItem(title: '个人护理', count: 1),
@@ -41,6 +44,7 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
                     width: 24, height: 24)),
           ),
           IconButton(
+            key: addButtonKey,
             onPressed: showAddMenu,
             icon: Container(
                 padding: const EdgeInsets.only(right: 5),
@@ -65,12 +69,12 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
                     selectedIndex: ref.watch(selectedIndex),
                     datas: items,
                     onChoose: (value) {
-                      ref.watch(goodType.notifier).setUnfold(false);
-                      ref.read(goodType.notifier).setSelectedIndex(value);
+                      ref.watch(goodsState.notifier).setUnfold(false);
+                      ref.read(goodsState.notifier).setSelectedIndex(value);
                     },
                     isShow: ref.watch(unfold),
                     onDismiss: () =>
-                        ref.read(goodType.notifier).setUnfold(false),
+                        ref.read(goodsState.notifier).setUnfold(false),
                   );
                 })
               ],
@@ -97,9 +101,39 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
 
   void searchAction() {}
 
-  void showAddMenu() {}
+  OverlayEntry? optionEntry;
+
+  void showAddMenu() {
+    if (optionEntry != null && optionEntry!.mounted) return;
+    final addBtnRender =
+        addButtonKey.currentContext?.findRenderObject() as RenderBox?;
+    final addBtnSize = addBtnRender?.size ?? Size.zero;
+    final addBtnOffset =
+        addBtnRender?.localToGlobal(Offset.zero) ?? Offset.zero;
+
+    final entry = OverlayEntry(
+      builder: (context) {
+        return OptionSelectedView(
+          top: addBtnSize.height + addBtnOffset.dy,
+          right: 8,
+          arrowPointScale: 0.85,
+          width: 120,
+          child: Container(
+            height: 80,
+            color: Colors.white,
+          ),
+          onEnd: () {
+            optionEntry?.remove();
+            optionEntry = null;
+          },
+        );
+      },
+    );
+    Overlay.of(context)?.insert(entry);
+    optionEntry = entry;
+  }
 
   void showGoodsTypeChoose() {
-    ref.read(goodType.notifier).autoUnfold();
+    ref.read(goodsState.notifier).autoUnfold();
   }
 }

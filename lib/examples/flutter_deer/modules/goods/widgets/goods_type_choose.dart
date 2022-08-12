@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/utils/menu_filter.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/menu_filter.dart';
 
 const double _itemHeight = 42;
 
@@ -33,7 +33,10 @@ class GoodsTypeChoose extends StatelessWidget {
     return MenuFilter(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
-      contentHeight: min(maxHeight, datas.length * _itemHeight),
+      contentHeight: min(
+          maxHeight,
+          (datas.length - 0) * _itemHeight +
+              8), // 感兴趣的可以修改此处的高度 (datas.length - some)，看看动画效果，对于电商类搜索框弹出，切换选项分类时，这样处理动画不会很僵硬
       isShow: isShow,
       onDismiss: onDismiss,
       builder: (context) {

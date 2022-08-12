@@ -2,17 +2,17 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 mixin GoodsPageProviders {
-  final goodType = StateNotifierProvider.autoDispose<
+  final goodsState = StateNotifierProvider.autoDispose<
       GoodsTypeChooseStateNotifier, GoodsTypeChooseState>((ref) {
     return GoodsTypeChooseStateNotifier();
   });
 
   late final unfold = Provider.autoDispose<bool>((ref) {
-    return ref.watch(goodType).unfold;
+    return ref.watch(goodsState).unfold;
   });
 
   late final selectedIndex = Provider.autoDispose<int>((ref) {
-    return ref.watch(goodType).selectedIndex;
+    return ref.watch(goodsState).selectedIndex;
   });
 }
 
