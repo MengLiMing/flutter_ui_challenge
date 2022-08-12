@@ -87,6 +87,7 @@ class _MenuFilterState extends State<MenuFilter> with TickerProviderStateMixin {
     }
 
     /// 某些场景 调整高度 提供动画
+    /// 比如： 多个筛选弹窗 - 可共用一个 高度改变 动画，比直接重新弹出要好
     if (widget.isShow &&
         animationController.value == 1 &&
         oldWidget.contentHeight != widget.contentHeight) {

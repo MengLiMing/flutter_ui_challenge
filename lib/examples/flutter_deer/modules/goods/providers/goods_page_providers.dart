@@ -7,14 +7,22 @@ mixin GoodsPageProviders {
     return GoodsTypeChooseStateNotifier();
   });
 
-  late final isShow = Provider.autoDispose<bool>((ref) {
+  late final unfold = Provider.autoDispose<bool>((ref) {
     return ref.watch(goodType).unfold;
+  });
+
+  late final selectedIndex = Provider.autoDispose<int>((ref) {
+    return ref.watch(goodType).selectedIndex;
   });
 }
 
 class GoodsTypeChooseStateNotifier extends StateNotifier<GoodsTypeChooseState> {
   GoodsTypeChooseStateNotifier()
-      : super(const GoodsTypeChooseState(unfold: false, title: '全部商品'));
+      : super(const GoodsTypeChooseState(unfold: false));
+
+  void setSelectedIndex(int value) {
+    state = state.copyWith(selectedIndex: value);
+  }
 
   void setUnfold(bool value) {
     state = state.copyWith(unfold: value);
@@ -31,23 +39,24 @@ class GoodsTypeChooseStateNotifier extends StateNotifier<GoodsTypeChooseState> {
 
 class GoodsTypeChooseState extends Equatable {
   final bool unfold;
-  final String title;
+  final int selectedIndex;
 
   const GoodsTypeChooseState({
     required this.unfold,
-    required this.title,
+    this.selectedIndex = 0,
   });
 
   GoodsTypeChooseState copyWith({
     bool? unfold,
     String? title,
+    int? selectedIndex,
   }) {
     return GoodsTypeChooseState(
       unfold: unfold ?? this.unfold,
-      title: title ?? this.title,
+      selectedIndex: selectedIndex ?? this.selectedIndex,
     );
   }
 
   @override
-  List<Object?> get props => [unfold, title];
+  List<Object?> get props => [unfold, selectedIndex];
 }

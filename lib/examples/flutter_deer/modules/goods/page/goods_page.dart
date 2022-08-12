@@ -14,7 +14,17 @@ class GoodsPage extends ConsumerStatefulWidget {
 }
 
 class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
-  ValueNotifier<bool> unfold = ValueNotifier(false);
+  List<GoodsTypeItem> items = const [
+    GoodsTypeItem(title: '全部商品', count: 10),
+    GoodsTypeItem(title: '个人护理', count: 1),
+    GoodsTypeItem(title: '饮料', count: 2),
+    GoodsTypeItem(title: '沐浴洗护', count: 1),
+    GoodsTypeItem(title: '厨房用具', count: 1),
+    GoodsTypeItem(title: '休闲食品', count: 1),
+    GoodsTypeItem(title: '生鲜水果', count: 1),
+    GoodsTypeItem(title: '酒水', count: 2),
+    GoodsTypeItem(title: '家庭清洁', count: 1)
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +62,13 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
               children: [
                 Consumer(builder: (context, ref, _) {
                   return GoodsTypeChoose(
-                    isShow: ref.watch(isShow),
+                    selectedIndex: ref.watch(selectedIndex),
+                    datas: items,
+                    onChoose: (value) {
+                      ref.watch(goodType.notifier).setUnfold(false);
+                      ref.read(goodType.notifier).setSelectedIndex(value);
+                    },
+                    isShow: ref.watch(unfold),
                     onDismiss: () =>
                         ref.read(goodType.notifier).setUnfold(false),
                   );
@@ -69,8 +85,12 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
     return GestureDetector(
       onTap: showGoodsTypeChoose,
       child: Consumer(builder: (context, ref, _) {
-        final state = ref.watch(goodType);
-        return GoodsHeadTitle(title: state.title, unfold: state.unfold);
+        final index = ref.watch(selectedIndex);
+        final item = items[index];
+        return GoodsHeadTitle(
+          title: item.title,
+          unfold: ref.watch(unfold),
+        );
       }),
     );
   }
