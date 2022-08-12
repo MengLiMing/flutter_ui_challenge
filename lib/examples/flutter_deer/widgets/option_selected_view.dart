@@ -16,11 +16,22 @@ class OptionSelectedView extends StatefulWidget {
   final double width;
   final double top;
   final double right;
+
+  /// controller
   final OptionSelectedController controller;
 
   /// 箭头所在位置百分比 （0 - 1）
   final double arrowPointScale;
+
+  /// 消失回调
   final VoidCallback onEnd;
+
+  final Duration duration;
+
+  final Curve curve;
+
+  /// 箭头宽
+  final Size arrowSize;
 
   const OptionSelectedView({
     Key? key,
@@ -31,6 +42,9 @@ class OptionSelectedView extends StatefulWidget {
     required this.arrowPointScale,
     required this.onEnd,
     required this.controller,
+    this.duration = const Duration(milliseconds: 500),
+    this.curve = Curves.easeInOut,
+    this.arrowSize = const Size(8.0, 4.0),
   }) : super(key: key);
 
   @override
@@ -44,10 +58,10 @@ class _OptionSelectedViewState extends State<OptionSelectedView>
   late Animation<double> scale;
 
   /// 箭头宽
-  double get arrowWidth => 8;
+  double get arrowWidth => widget.arrowSize.width;
 
   /// 箭头高
-  double get arrowHeight => 4;
+  double get arrowHeight => widget.arrowSize.height;
 
   /// arrowPointScale 百分比为0-1，alignment 为 -1 - 1，转换一下
   double alignmentX() {
@@ -64,17 +78,17 @@ class _OptionSelectedViewState extends State<OptionSelectedView>
 
     configController();
 
-    animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500))
-      ..forward()
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.dismissed) {
-          widget.onEnd();
-        }
-      });
+    animationController =
+        AnimationController(vsync: this, duration: widget.duration)
+          ..forward()
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.dismissed) {
+              widget.onEnd();
+            }
+          });
 
     scale = Tween<double>(begin: 0, end: 1)
-        .chain(CurveTween(curve: Curves.easeInOut))
+        .chain(CurveTween(curve: widget.curve))
         .animate(animationController);
   }
 
@@ -131,14 +145,14 @@ class _OptionSelectedViewState extends State<OptionSelectedView>
                   scale.value,
                   0,
                 ),
-                child: CustomPaint(
-                  child: child,
-                ),
+                child: child,
               );
             },
-            child: Padding(
-              padding: EdgeInsets.only(top: arrowHeight),
-              child: widget.child,
+            child: CustomPaint(
+              child: Padding(
+                padding: EdgeInsets.only(top: arrowHeight),
+                child: widget.child,
+              ),
             ),
           ),
         )
@@ -146,3 +160,18 @@ class _OptionSelectedViewState extends State<OptionSelectedView>
     );
   }
 }
+
+// class _ArrowPainter extends CustomPainter {
+//   final Size arrowSize;
+
+//   final Scal
+
+//   @override
+//   void paint(Canvas canvas, Size size) {}
+
+//   @override
+//   bool shouldRepaint(covariant CustomPainter oldDelegate) {
+//     // TODO: implement shouldRepaint
+//     throw UnimplementedError();
+//   }
+// }
