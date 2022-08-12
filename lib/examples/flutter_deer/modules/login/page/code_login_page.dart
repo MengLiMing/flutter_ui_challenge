@@ -152,15 +152,17 @@ class _CodeLoginPageState extends ConsumerState<CodeLoginPage> {
 
   Widget _sendCodeButton() {
     return Consumer(builder: (context, ref, _) {
-      final notifier = ref.watch(_codeLoginProvider.notifier);
-      if (notifier.timeCount != 0) {
+      final config = ref.watch(_codeLoginProvider);
+
+      final notifier = ref.read(_codeLoginProvider.notifier);
+      if (config.timeCount != 0) {
         return Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
               color: Colours.textGrayC,
               borderRadius: const BorderRadius.all(Radius.circular(2))),
           child: Text(
-            '已发送(${notifier.timeCount}s)',
+            '已发送(${config.timeCount}s)',
             style: const TextStyle(color: Colors.white, fontSize: 12),
           ),
         );
@@ -175,7 +177,7 @@ class _CodeLoginPageState extends ConsumerState<CodeLoginPage> {
               borderRadius: const BorderRadius.all(Radius.circular(2)),
             ),
             child: Text(
-              notifier.hadSendCode ? '重新获取' : '获取验证码',
+              config.hadSendCode ? '重新获取' : '获取验证码',
               style: const TextStyle(
                 color: Colours.appMain,
                 fontSize: 12,

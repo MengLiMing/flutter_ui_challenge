@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/providers/goods_page_providers.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_head_title.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_type_choose.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
 
 class GoodsPage extends ConsumerStatefulWidget {
@@ -46,6 +47,19 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           _headTitle(),
+          Expanded(
+            child: Stack(
+              children: [
+                Consumer(builder: (context, ref, _) {
+                  return GoodsTypeChoose(
+                    isShow: ref.watch(isShow),
+                    onDismiss: () =>
+                        ref.read(goodType.notifier).setUnfold(false),
+                  );
+                })
+              ],
+            ),
+          )
         ],
       ),
     );

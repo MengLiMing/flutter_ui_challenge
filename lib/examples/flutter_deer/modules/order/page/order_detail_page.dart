@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -82,18 +83,20 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                 itemCount: _items.length,
               ),
             ),
-            SafeArea(
-              child: Container(
-                height: 44,
-                margin: const EdgeInsets.only(top: 10, left: 16, right: 16),
-                child: Row(children: [
-                  if (_items.isNotEmpty) ...[
-                    Expanded(child: _refuseButton()),
-                    const SizedBox(width: 17),
-                    Expanded(child: _startButton()),
-                  ],
-                ]),
-              ),
+            Container(
+              height: 44,
+              margin: EdgeInsets.only(
+                  top: 10,
+                  left: 16,
+                  right: 16.0,
+                  bottom: max(10, ScreenUtils.bottomPadding)),
+              child: Row(children: [
+                if (_items.isNotEmpty) ...[
+                  Expanded(child: _refuseButton()),
+                  const SizedBox(width: 17),
+                  Expanded(child: _startButton()),
+                ],
+              ]),
             ),
           ],
         ),

@@ -6,17 +6,25 @@ mixin GoodsPageProviders {
       GoodsTypeChooseStateNotifier, GoodsTypeChooseState>((ref) {
     return GoodsTypeChooseStateNotifier();
   });
+
+  late final isShow = Provider.autoDispose<bool>((ref) {
+    return ref.watch(goodType).unfold;
+  });
 }
 
 class GoodsTypeChooseStateNotifier extends StateNotifier<GoodsTypeChooseState> {
   GoodsTypeChooseStateNotifier()
       : super(const GoodsTypeChooseState(unfold: false, title: '全部商品'));
 
+  void setUnfold(bool value) {
+    state = state.copyWith(unfold: value);
+  }
+
   void autoUnfold() {
     state = state.copyWith(unfold: !state.unfold);
   }
 
-  void changeTitle(String title) {
+  void setTitle(String title) {
     state = state.copyWith(title: title);
   }
 }
