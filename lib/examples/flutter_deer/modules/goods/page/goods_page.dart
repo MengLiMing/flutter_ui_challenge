@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/providers/goods_page_providers.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_head_title.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_type_choose.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/utils/overlay_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/option_selected_view.dart';
 
@@ -16,6 +17,11 @@ class GoodsPage extends ConsumerStatefulWidget {
 
 class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
   final GlobalKey addButtonKey = GlobalKey();
+
+  OverlayEntry? optionEntry;
+
+  final OptionSelectedController selectedController =
+      OptionSelectedController();
 
   List<GoodsTypeItem> items = const [
     GoodsTypeItem(title: '全部商品', count: 10),
@@ -101,8 +107,6 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
 
   void searchAction() {}
 
-  OverlayEntry? optionEntry;
-
   void showAddMenu() {
     if (optionEntry != null && optionEntry!.mounted) return;
     final addBtnRender =
@@ -111,26 +115,26 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
     final addBtnOffset =
         addBtnRender?.localToGlobal(Offset.zero) ?? Offset.zero;
 
-    final entry = OverlayEntry(
-      builder: (context) {
-        return OptionSelectedView(
-          top: addBtnSize.height + addBtnOffset.dy,
-          right: 8,
-          arrowPointScale: 0.85,
-          width: 120,
+    optionEntry = OverlayUtils.showEntry(context, (context) {
+      return OptionSelectedView(
+        top: addBtnSize.height + addBtnOffset.dy,
+        right: 8,
+        arrowPointScale: 0.85,
+        width: 120,
+        controller: selectedController,
+        child: GestureDetector(
+          onTap: () => selectedController.dismiss(),
           child: Container(
             height: 80,
             color: Colors.white,
           ),
-          onEnd: () {
-            optionEntry?.remove();
-            optionEntry = null;
-          },
-        );
-      },
-    );
-    Overlay.of(context)?.insert(entry);
-    optionEntry = entry;
+        ),
+        onEnd: () {
+          optionEntry?.remove();
+          optionEntry = null;
+        },
+      );
+    });
   }
 
   void showGoodsTypeChoose() {

@@ -1,4 +1,14 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+
+class OptionSelectedController {
+  VoidCallback? _dismissHandler;
+
+  void dismiss() {
+    _dismissHandler?.call();
+  }
+}
 
 /// 没有封装完 只是完成ui效果
 class OptionSelectedView extends StatefulWidget {
@@ -6,6 +16,7 @@ class OptionSelectedView extends StatefulWidget {
   final double width;
   final double top;
   final double right;
+  final OptionSelectedController controller;
 
   /// 箭头所在位置百分比 （0 - 1）
   final double arrowPointScale;
@@ -19,6 +30,7 @@ class OptionSelectedView extends StatefulWidget {
     required this.right,
     required this.arrowPointScale,
     required this.onEnd,
+    required this.controller,
   }) : super(key: key);
 
   @override
@@ -37,12 +49,23 @@ class _OptionSelectedViewState extends State<OptionSelectedView>
   /// 箭头高
   double get arrowHeight => 4;
 
+  /// arrowPointScale 百分比为0-1，alignment 为 -1 - 1，转换一下
+  double alignmentX() {
+    if (widget.arrowPointScale <= 0.5) {
+      return lerpDouble(-1, 0, widget.arrowPointScale * 2)!;
+    } else {
+      return lerpDouble(0, 1, (widget.arrowPointScale - 0.5) * 2)!;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
 
+    configController();
+
     animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 600))
+        vsync: this, duration: const Duration(milliseconds: 500))
       ..forward()
       ..addStatusListener((status) {
         if (status == AnimationStatus.dismissed) {
@@ -55,10 +78,23 @@ class _OptionSelectedViewState extends State<OptionSelectedView>
         .animate(animationController);
   }
 
+  void configController() {
+    widget.controller._dismissHandler = () {
+      animationController.reverse();
+    };
+  }
+
   @override
   void dispose() {
     animationController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant OptionSelectedView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    oldWidget.controller._dismissHandler = null;
+    configController();
   }
 
   @override
@@ -78,7 +114,7 @@ class _OptionSelectedViewState extends State<OptionSelectedView>
                 child: child,
               );
             },
-            child: ColoredBox(color: Colors.black38),
+            child: const ColoredBox(color: Colors.black38),
           ),
         ),
         Positioned(
@@ -89,7 +125,7 @@ class _OptionSelectedViewState extends State<OptionSelectedView>
             animation: scale,
             builder: (context, child) {
               return Transform(
-                alignment: const Alignment(0.7, -1),
+                alignment: Alignment(alignmentX(), -1),
                 transform: Matrix4.diagonal3Values(
                   scale.value,
                   scale.value,
