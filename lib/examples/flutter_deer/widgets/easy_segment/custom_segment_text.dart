@@ -3,11 +3,7 @@ import 'package:flutter/material.dart';
 import 'easy_segment.dart';
 
 /// 只提供文字样式 - 可以参照 自定义其他效果
-class CustomSegmentText extends StatefulWidget
-    with EasySegmentControllerProvider {
-  @override
-  final EasySegmentController controller;
-
+class CustomSegmentText extends StatefulWidget {
   final TextStyle normalStyle;
   final TextStyle selectedStyle;
 
@@ -19,7 +15,6 @@ class CustomSegmentText extends StatefulWidget
 
   const CustomSegmentText({
     Key? key,
-    required this.controller,
     required this.content,
     required this.normalStyle,
     required this.selectedStyle,
@@ -41,9 +36,7 @@ class _CustomSegmentTextState extends State<CustomSegmentText>
   void initState() {
     super.initState();
 
-    textStyle = ValueNotifier(controller.currentIndex == widget.index
-        ? widget.selectedStyle
-        : widget.normalStyle);
+    textStyle = ValueNotifier(widget.normalStyle);
     styleTween = TextStyleTween(begin: textStyle.value, end: textStyle.value);
   }
 
@@ -59,14 +52,18 @@ class _CustomSegmentTextState extends State<CustomSegmentText>
 
   @override
   void tapChanged() {
+    final controller = this.controller;
+    if (controller == null) return;
+
     final oldIndex = controller.oldSelectedIndex;
-    if (oldIndex != null && oldIndex == widget.index) {
-      styleTween.begin = textStyle.value;
-      styleTween.end = widget.normalStyle;
-      animationController.forward(from: 0);
-    } else if (controller.currentIndex == widget.index) {
+
+    if (controller.currentIndex == widget.index) {
       styleTween.begin = textStyle.value;
       styleTween.end = widget.selectedStyle;
+      animationController.forward(from: 0);
+    } else if (oldIndex != null && oldIndex == widget.index) {
+      styleTween.begin = textStyle.value;
+      styleTween.end = widget.normalStyle;
       animationController.forward(from: 0);
     } else {
       textStyle.value = widget.normalStyle;
@@ -75,6 +72,9 @@ class _CustomSegmentTextState extends State<CustomSegmentText>
 
   @override
   void scrollChanged() {
+    final controller = this.controller;
+    if (controller == null) return;
+
     final startIndex = controller.preIndex;
     final endIndex = controller.nextIndex;
 

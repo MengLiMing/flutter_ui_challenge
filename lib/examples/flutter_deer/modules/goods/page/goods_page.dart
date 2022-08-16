@@ -8,6 +8,7 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/text_styles.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/overlay_utils.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/utils/random_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/toast.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/easy_segment/easy_segment.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
@@ -28,10 +29,10 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
   final OptionSelectedController selectedController =
       OptionSelectedController();
 
-  final EasySegmentController segmentController =
-      EasySegmentController(initialIndex: 5);
+  EasySegmentController segmentController =
+      EasySegmentController(initialIndex: 7);
 
-  final PageController pageController = PageController(initialPage: 5);
+  final PageController pageController = PageController(initialPage: 7);
 
   List<GoodsTypeItem> items = const [
     GoodsTypeItem(title: '全部商品', count: 10),
@@ -59,7 +60,7 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
           .setSelectedIndex(segmentController.currentIndex);
     });
 
-    ref.read(goodsState.notifier).setSelectedIndex(5);
+    ref.read(goodsState.notifier).setSelectedIndex(7);
   }
 
   @override
@@ -167,7 +168,6 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
           bottom: 0,
           height: 3,
           animation: false,
-          controller: segmentController,
         ),
         CustomSegmentLineIndicator(
           index: 1,
@@ -176,7 +176,6 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
           bottom: 5,
           height: 3,
           animation: true,
-          controller: segmentController,
         ),
         CustomSegmentLineIndicator(
           index: 2,
@@ -184,13 +183,12 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
           top: 3,
           height: 3,
           animation: true,
-          controller: segmentController,
         ),
       ],
       children: List.generate(
         items.length,
         (index) => CustomSegmentText(
-          controller: segmentController,
+          key: ValueKey(items[index].title),
           content: items[index].title,
           index: index,
           height: 50,
@@ -222,7 +220,13 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
     );
   }
 
-  void searchAction() {}
+  void searchAction() {
+    int index = RandomUtil.number(items.length);
+
+    segmentController.resetInitialIndex(index);
+    ref.read(goodsState.notifier).setSelectedIndex(index);
+    pageController.jumpToPage(index);
+  }
 
   void showAddMenu() {
     if (optionEntry != null && optionEntry!.mounted) return;

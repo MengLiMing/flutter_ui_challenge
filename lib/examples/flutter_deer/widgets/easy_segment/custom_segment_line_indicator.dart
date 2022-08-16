@@ -8,11 +8,7 @@ import 'easy_segment.dart';
 
 /// 本来是想提供多种动画，但是~ 起名字太难了，还好自定义很简单-,-，所以我就只实现一种抱砖引玉吧。
 
-class CustomSegmentLineIndicator extends StatefulWidget
-    with EasySegmentControllerProvider {
-  @override
-  final EasySegmentController controller;
-
+class CustomSegmentLineIndicator extends StatefulWidget {
   /// 请于添加指示器的顺序对应
   final int index;
 
@@ -31,7 +27,6 @@ class CustomSegmentLineIndicator extends StatefulWidget
 
   const CustomSegmentLineIndicator({
     Key? key,
-    required this.controller,
     required this.color,
     required this.index,
     this.bottom,
@@ -52,6 +47,8 @@ class _CustomSegmentLineIndicatorState extends State<CustomSegmentLineIndicator>
     with SingleTickerProviderStateMixin, EasySegmentControllerConfig {
   final Tween<double> leftTween = Tween(begin: 0, end: 0);
   final Tween<double> widthTween = Tween(begin: 0, end: 0);
+
+  int? oldSelectedIndex;
 
   @override
   void initState() {
@@ -87,66 +84,9 @@ class _CustomSegmentLineIndicatorState extends State<CustomSegmentLineIndicator>
 
   @override
   void animationHandler() {
-    final left = leftTween
-        .chain(CurveTween(curve: Curves.easeInOut))
-        .evaluate(animationController);
-    final width = widthTween
-        .chain(CurveTween(curve: Curves.easeInOut))
-        .evaluate(animationController);
-
-    controller.indicatorConfig(widget.index).value = EasyIndicatorConfig(
-      left: left,
-      width: width,
-      bottom: widget.bottom,
-      height: widget.height,
-      top: widget.top,
-    );
-  }
-
-  @override
-  Duration get duration => const Duration(milliseconds: 300);
-
-  @override
-  void scrollChanged() {
-    final leftIndex = controller.preIndex;
-    final endIndex = controller.nextIndex;
-
-    final leftData = controller.itemDatas[leftIndex];
-    final rightData = controller.itemDatas[endIndex];
-
-    if (leftData == null || rightData == null) return;
-    final progress = controller.progress - leftIndex;
-
-    if (widget.width != null) {
-      if (widget.animation) {
-        fixedWidthAnimation(
-          lineWidth: widget.width!,
-          leftData: leftData,
-          rightData: rightData,
-          progress: progress,
-        );
-      } else {
-        fixedWidth(
-          lineWidth: widget.width!,
-          leftData: leftData,
-          rightData: rightData,
-          progress: progress,
-        );
-      }
-    } else {
-      if (widget.animation) {
-        dynamicWidthAnimation(
-            leftData: leftData, rightData: rightData, progress: progress);
-      } else {
-        dynamicWidth(
-            leftData: leftData, rightData: rightData, progress: progress);
-      }
-    }
-  }
-
-  @override
-  void tapChanged() {
-    final oldIndex = controller.oldSelectedIndex;
+    final controller = this.controller;
+    if (controller == null) return;
+    final oldIndex = oldSelectedIndex;
     final currentData = controller.itemDatas[controller.currentIndex];
     if (currentData == null) return;
 
@@ -185,18 +125,78 @@ class _CustomSegmentLineIndicatorState extends State<CustomSegmentLineIndicator>
 
         widthTween.begin = fixedWidth;
         widthTween.end = fixedWidth;
-
-        animationController.forward(from: 0);
       } else {
         leftTween.begin = oldData.offset.dx;
         leftTween.end = currentData.offset.dx;
 
         widthTween.begin = oldData.size.width;
         widthTween.end = currentData.size.width;
+      }
 
-        animationController.forward(from: 0);
+      final left = leftTween
+          .chain(CurveTween(curve: Curves.easeInOut))
+          .evaluate(animationController);
+      final width = widthTween
+          .chain(CurveTween(curve: Curves.easeInOut))
+          .evaluate(animationController);
+
+      controller.indicatorConfig(widget.index).value = EasyIndicatorConfig(
+        left: left,
+        width: width,
+        bottom: widget.bottom,
+        height: widget.height,
+        top: widget.top,
+      );
+    }
+  }
+
+  @override
+  Duration get duration => const Duration(milliseconds: 300);
+
+  @override
+  void scrollChanged() {
+    final controller = this.controller;
+    if (controller == null) return;
+    final leftIndex = controller.preIndex;
+    final endIndex = controller.nextIndex;
+
+    final leftData = controller.itemDatas[leftIndex];
+    final rightData = controller.itemDatas[endIndex];
+
+    if (leftData == null || rightData == null) return;
+    final progress = controller.progress - leftIndex;
+
+    if (widget.width != null) {
+      if (widget.animation) {
+        fixedWidthAnimation(
+          lineWidth: widget.width!,
+          leftData: leftData,
+          rightData: rightData,
+          progress: progress,
+        );
+      } else {
+        fixedWidth(
+          lineWidth: widget.width!,
+          leftData: leftData,
+          rightData: rightData,
+          progress: progress,
+        );
+      }
+    } else {
+      if (widget.animation) {
+        dynamicWidthAnimation(
+            leftData: leftData, rightData: rightData, progress: progress);
+      } else {
+        dynamicWidth(
+            leftData: leftData, rightData: rightData, progress: progress);
       }
     }
+  }
+
+  @override
+  void tapChanged() {
+    oldSelectedIndex = controller?.oldSelectedIndex;
+    animationController.forward(from: 0);
   }
 }
 
@@ -210,7 +210,7 @@ extension on _CustomSegmentLineIndicatorState {
     final startLeft = leftData.center.dx - lineWidth / 2;
     final endLeft = rightData.center.dx - lineWidth / 2;
     final left = lerpDouble(startLeft, endLeft, progress) ?? 0;
-    controller.indicatorConfig(widget.index).value = EasyIndicatorConfig(
+    controller?.indicatorConfig(widget.index).value = EasyIndicatorConfig(
       left: left,
       width: lineWidth,
       bottom: widget.bottom,
@@ -235,7 +235,7 @@ extension on _CustomSegmentLineIndicatorState {
 
       final width = lerpDouble(startWidth, endWidth, progress * 2) ?? 0;
 
-      controller.indicatorConfig(widget.index).value = EasyIndicatorConfig(
+      controller?.indicatorConfig(widget.index).value = EasyIndicatorConfig(
         left: left,
         width: width,
         bottom: widget.bottom,
@@ -252,7 +252,7 @@ extension on _CustomSegmentLineIndicatorState {
 
       final width = lerpDouble(startWidth, endWidth, (progress - 0.5) * 2) ?? 0;
 
-      controller.indicatorConfig(widget.index).value = EasyIndicatorConfig(
+      controller?.indicatorConfig(widget.index).value = EasyIndicatorConfig(
         left: left,
         width: width,
         bottom: widget.bottom,
@@ -276,7 +276,7 @@ extension on _CustomSegmentLineIndicatorState {
 
     final width = lerpDouble(startWidth, endWidth, progress) ?? 0;
 
-    controller.indicatorConfig(widget.index).value = EasyIndicatorConfig(
+    controller?.indicatorConfig(widget.index).value = EasyIndicatorConfig(
       left: left,
       width: width,
       bottom: widget.bottom,
@@ -298,7 +298,7 @@ extension on _CustomSegmentLineIndicatorState {
 
       final width = lerpDouble(startWidth, endWidth, progress * 2) ?? 0;
 
-      controller.indicatorConfig(widget.index).value = EasyIndicatorConfig(
+      controller?.indicatorConfig(widget.index).value = EasyIndicatorConfig(
         left: left,
         width: width,
         bottom: widget.bottom,
@@ -315,7 +315,7 @@ extension on _CustomSegmentLineIndicatorState {
 
       final width = lerpDouble(startWidth, endWidth, (progress - 0.5) * 2) ?? 0;
 
-      controller.indicatorConfig(widget.index).value = EasyIndicatorConfig(
+      controller?.indicatorConfig(widget.index).value = EasyIndicatorConfig(
         left: left,
         width: width,
         bottom: widget.bottom,

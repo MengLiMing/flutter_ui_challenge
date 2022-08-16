@@ -11,7 +11,7 @@ class EasySegmentControllerProvider1 extends InheritedWidget {
     required this.controller,
   }) : super(key: key, child: child);
 
-  EasySegmentController? of(BuildContext context) {
+  static EasySegmentController? of(BuildContext context) {
     final controlerProvider = context
         .getElementForInheritedWidgetOfExactType<
             EasySegmentControllerProvider1>()
@@ -25,15 +25,16 @@ class EasySegmentControllerProvider1 extends InheritedWidget {
   }
 }
 
-mixin EasySegmentControllerProvider on StatefulWidget {
-  EasySegmentController get controller;
-}
-
-mixin EasySegmentControllerConfig<T extends EasySegmentControllerProvider,
-    R extends State<T>> on State<T>, SingleTickerProviderStateMixin<T> {
+mixin EasySegmentControllerConfig<T extends StatefulWidget, R extends State<T>>
+    on State<T>, SingleTickerProviderStateMixin<T> {
   Duration get duration;
 
-  EasySegmentController get controller => widget.controller;
+  EasySegmentController? get controller {
+    if (mounted) {
+      return EasySegmentControllerProvider1.of(context);
+    }
+    return null;
+  }
 
   late final AnimationController animationController;
 
@@ -49,12 +50,10 @@ mixin EasySegmentControllerConfig<T extends EasySegmentControllerProvider,
   }
 
   @override
-  void didUpdateWidget(covariant T oldWidget) {
-    if (oldWidget.controller != widget.controller) {
-      oldWidget.controller.dispose();
-      _configController();
-    }
-    super.didUpdateWidget(oldWidget);
+  void didChangeDependencies() {
+    _configController();
+
+    super.didChangeDependencies();
   }
 
   @override
@@ -64,6 +63,8 @@ mixin EasySegmentControllerConfig<T extends EasySegmentControllerProvider,
   }
 
   void _configController() {
+    final controller = this.controller;
+    if (controller == null) return;
     controller.addListener(() {
       switch (controller.changeType) {
         case EasySegmentChangeType.scroll:

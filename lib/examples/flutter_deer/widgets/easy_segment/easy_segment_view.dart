@@ -19,7 +19,9 @@ enum EasySegmentChangeType {
 }
 
 class EasySegmentController extends ChangeNotifier {
-  final int initialIndex;
+  int _initialIndex;
+
+  int _maxNumber = 0;
 
   double _progress = -1;
 
@@ -55,10 +57,27 @@ class EasySegmentController extends ChangeNotifier {
   /// 点击切换时的上一个坐标 用来外部对其做动画
   int? get oldSelectedIndex => _oldSelectedIndex;
 
-  EasySegmentController({this.initialIndex = 0});
+  EasySegmentController({int initialIndex = 0}) : _initialIndex = initialIndex;
+
+  /// 重置
+  void resetInitialIndex(int index) {
+    if (index >= _maxNumber || index < 0) return;
+
+    _initialIndex = index;
+    _changeType = EasySegmentChangeType.tap;
+
+    if (currentIndex < _maxNumber && currentIndex >= 0) {
+      _oldSelectedIndex = currentIndex;
+    } else {
+      _oldSelectedIndex = null;
+    }
+    _progress = index.toDouble();
+    notifyListeners();
+  }
 
   /// 滚动到当前下标
   void scrollToIndex(int index) {
+    if (index >= _maxNumber || index < 0) return;
     if (_progress == index.toDouble()) return;
     _changeType = EasySegmentChangeType.tap;
 
@@ -68,6 +87,7 @@ class EasySegmentController extends ChangeNotifier {
   }
 
   void changeProgress(double progress) {
+    if (progress >= _maxNumber || progress < 0) return;
     if (_progress == progress) return;
     _progress = progress;
     _changeType = EasySegmentChangeType.scroll;
@@ -77,9 +97,6 @@ class EasySegmentController extends ChangeNotifier {
   /// 标记是否滚动到初始位置
   var _hadScrollToInitialIndex = false;
 
-  /// 标记是否校正
-  var _hadCorrectInitialIndex = false;
-
   void _configData(int index, EasySegmentItemData data) {
     final old = itemDatas[index];
     itemDatas[index] = data;
@@ -87,16 +104,7 @@ class EasySegmentController extends ChangeNotifier {
     /// 滚动到初始位置
     if (_hadScrollToInitialIndex == false) {
       _hadScrollToInitialIndex = true;
-      changeProgress(initialIndex.toDouble());
-    }
-
-    /// 测试发现滚动到初始位置 会出现size不同的情况，再次调整
-    if (_hadCorrectInitialIndex == false &&
-        old != null &&
-        initialIndex == index &&
-        old != data) {
-      _hadCorrectInitialIndex = true;
-      notifyListeners();
+      resetInitialIndex(_initialIndex);
     }
   }
 }
@@ -109,7 +117,7 @@ class EasySegment extends StatefulWidget {
   final EasySegmentController controller;
   final ValueChanged<int>? onTap;
 
-  const EasySegment({
+  EasySegment({
     Key? key,
     this.space = 10,
     this.padding = const EdgeInsets.only(left: 10, right: 10),
@@ -117,7 +125,9 @@ class EasySegment extends StatefulWidget {
     required this.children,
     this.indicators = const [],
     this.onTap,
-  }) : super(key: key);
+  }) : super(key: key) {
+    controller._maxNumber = children.length;
+  }
 
   @override
   State<EasySegment> createState() => _EasySegmentState();
@@ -133,7 +143,9 @@ class _EasySegmentState extends State<EasySegment>
 
   late final AnimationController animationController;
 
-  final Tween<double> progressTween = Tween(begin: 0, end: 0);
+  final Tween<double> offsetTween = Tween(begin: 0, end: 0);
+
+  double? animationStartOffset;
 
   @override
   void initState() {
@@ -141,12 +153,7 @@ class _EasySegmentState extends State<EasySegment>
 
     animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 300))
-      ..addListener(() {
-        final offset = progressTween
-            .chain(CurveTween(curve: Curves.easeInOut))
-            .evaluate(animationController);
-        scrollController.jumpTo(offset);
-      });
+      ..addListener(animationHandler);
 
     configController();
   }
@@ -176,11 +183,11 @@ class _EasySegmentState extends State<EasySegment>
 
   @override
   void didUpdateWidget(covariant EasySegment oldWidget) {
-    super.didUpdateWidget(oldWidget);
     if (oldWidget.controller != widget.controller) {
       oldWidget.controller.dispose();
       configController();
     }
+    super.didUpdateWidget(oldWidget);
   }
 
   /// 相对于起点 停止时的偏移
@@ -212,6 +219,7 @@ class _EasySegmentState extends State<EasySegment>
 
     final position = scrollController.position;
     final centerOffsetX = offsetX - position.viewportDimension / 2;
+
     return max(min(centerOffsetX, position.maxScrollExtent), 0);
   }
 
@@ -225,22 +233,21 @@ class _EasySegmentState extends State<EasySegment>
 
   /// 点击动画置中
   void animatedToMiddle() {
-    final result = toMiddleOffsetX();
-    if (result != null) {
-      progressTween.begin = scrollController.offset;
-      progressTween.end = result;
-      animationController.forward(from: 0);
-    }
+    animationStartOffset = scrollController.offset;
+    animationController.forward(from: 0);
   }
 
-  /// 所有item配置完成后 滚动到初始化位置
-  void configCompleted() {
-    if (widget.children.isEmpty ||
-        widget.controller.itemDatas.length != widget.children.length) return;
-    if (widget.controller._hadScrollToInitialIndex == false) {
-      widget.controller._hadScrollToInitialIndex = true;
-      segController.changeProgress(segController.initialIndex.toDouble());
+  void animationHandler() {
+    final result = toMiddleOffsetX();
+    if (result != null) {
+      offsetTween.begin = scrollController.offset;
+      offsetTween.end = result;
     }
+
+    final offset = offsetTween
+        .chain(CurveTween(curve: Curves.easeInOut))
+        .evaluate(animationController);
+    scrollController.jumpTo(offset);
   }
 
   @override
