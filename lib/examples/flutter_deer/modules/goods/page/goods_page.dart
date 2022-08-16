@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/providers/goods_page_providers.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_head_title.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_list_view.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_page_option.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_type_choose.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/res/text_styles.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/overlay_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/random_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/toast.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/always_keep_alive.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/easy_segment/easy_segment.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/option_selected_view.dart';
@@ -105,6 +106,7 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
             children: [
               _headTitle(),
               _segmentView(),
+              Divider(),
               Expanded(
                 child: _pageView(),
               )
@@ -165,7 +167,7 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
           index: 0,
           color: Colours.appMain,
           width: 40,
-          bottom: 0,
+          bottom: 2,
           height: 3,
           animation: false,
         ),
@@ -173,7 +175,7 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
           index: 1,
           color: Colours.red,
           width: 40,
-          bottom: 5,
+          bottom: 7,
           height: 3,
           animation: true,
         ),
@@ -207,13 +209,10 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
   Widget _pageView() {
     return PageView.builder(
       itemBuilder: (context, index) {
-        return Container(
-          alignment: Alignment.center,
-          child: Text(
-            '$index',
-            style: TextStyles.textBold26,
-          ),
-        );
+        return AlwaysKeepAlive(
+            child: GoodsListView(
+          index: index,
+        ));
       },
       itemCount: items.length,
       controller: pageController,

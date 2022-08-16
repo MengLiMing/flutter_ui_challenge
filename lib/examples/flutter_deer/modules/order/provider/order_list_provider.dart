@@ -81,8 +81,6 @@ class OrderListDataManager extends StateNotifier<OrderListData>
 
   @override
   void startRequest(int page, int pageSize, PageRequestType requestType) {
-    super.startRequest(page, pageSize, requestType);
-
     if (mounted == false) return;
     ServicesBinding.instance.addPostFrameCallback((timeStamp) {
       state = state.copyWith(isLoading: true);
@@ -116,16 +114,12 @@ class OrderListData extends Equatable {
   /// 没有更多数据
   final bool hadMore;
 
-  /// 当前刷新方式
-  final PageRequestType requestType;
-
   final bool isLoading;
 
   OrderListData({
     required this.isLoading,
     required this.datas,
     required this.hadMore,
-    required this.requestType,
   });
 
   factory OrderListData.empty() {
@@ -133,7 +127,6 @@ class OrderListData extends Equatable {
       isLoading: false,
       datas: [],
       hadMore: true,
-      requestType: PageRequestType.none,
     );
   }
 
@@ -141,16 +134,14 @@ class OrderListData extends Equatable {
     List<OrderListItemData>? datas,
     bool? hadMore,
     bool? isLoading,
-    PageRequestType? requestType,
   }) {
     return OrderListData(
       datas: datas ?? this.datas,
       hadMore: hadMore ?? this.hadMore,
       isLoading: isLoading ?? this.isLoading,
-      requestType: requestType ?? this.requestType,
     );
   }
 
   @override
-  List<Object?> get props => [datas, hadMore, requestType, isLoading];
+  List<Object?> get props => [datas, hadMore, isLoading];
 }
