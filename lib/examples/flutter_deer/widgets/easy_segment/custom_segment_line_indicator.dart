@@ -1,10 +1,4 @@
-import 'dart:math';
-import 'dart:ui';
-
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
-import 'easy_segment.dart';
+part of easy_segment;
 
 /// 本来是想提供多种动画，但是~ 起名字太难了，还好自定义很简单-,-，所以我就只实现一种抱砖引玉吧。
 

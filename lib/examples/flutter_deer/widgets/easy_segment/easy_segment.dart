@@ -1,7 +1,15 @@
 library easy_segment;
 
-export 'custom_segment_line_indicator.dart';
-export 'custom_segment_text.dart';
-export 'easy_segment_controller_config.dart';
-export 'easy_segment_view.dart';
-export 'layout_after.dart';
+import 'dart:math';
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
+
+part 'custom_segment_line_indicator.dart';
+part 'custom_segment_text.dart';
+part 'easy_segment_controller.dart';
+part 'easy_segment_view.dart';
+part 'layout_after.dart';

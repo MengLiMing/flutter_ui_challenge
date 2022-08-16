@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-
-import 'easy_segment.dart';
+part of easy_segment;
 
 /// 只提供文字样式 - 可以参照 自定义其他效果
 class CustomSegmentText extends StatefulWidget {

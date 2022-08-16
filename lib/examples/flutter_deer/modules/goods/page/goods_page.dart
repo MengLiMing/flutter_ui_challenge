@@ -162,7 +162,8 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
       onTap: (index) {
         pageController.jumpToPage(index);
       },
-      indicators: [
+      indicators: const [
+        /// 固定宽度无动画
         CustomSegmentLineIndicator(
           index: 0,
           color: Colours.appMain,
@@ -171,6 +172,8 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
           height: 3,
           animation: false,
         ),
+
+        /// 固定宽度有动画
         CustomSegmentLineIndicator(
           index: 1,
           color: Colours.red,
@@ -179,12 +182,23 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
           height: 3,
           animation: true,
         ),
+
+        /// 动态宽度(和item保持宽度一致) 有动画
         CustomSegmentLineIndicator(
           index: 2,
           color: Colors.yellow,
-          top: 3,
+          top: 0,
           height: 3,
           animation: true,
+        ),
+
+        /// 动态宽度(和item保持宽度一致) 无动画
+        CustomSegmentLineIndicator(
+          index: 3,
+          color: Colors.green,
+          top: 5,
+          height: 3,
+          animation: false,
         ),
       ],
       children: List.generate(

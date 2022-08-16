@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/scheduler.dart';
+part of easy_segment;
 
 typedef LayoutAfterHandler = void Function(RenderBox renderBox);
 
