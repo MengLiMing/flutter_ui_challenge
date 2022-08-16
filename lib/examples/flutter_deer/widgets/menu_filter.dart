@@ -122,9 +122,12 @@ class _MenuFilterState extends State<MenuFilter> with TickerProviderStateMixin {
               child: AnimatedBuilder(
                 animation: opacity,
                 builder: (context, child) {
-                  return Opacity(
-                    opacity: opacity.value,
-                    child: child,
+                  return IgnorePointer(
+                    ignoring: opacity.value == 0,
+                    child: Opacity(
+                      opacity: opacity.value,
+                      child: child,
+                    ),
                   );
                 },
                 child: ColoredBox(

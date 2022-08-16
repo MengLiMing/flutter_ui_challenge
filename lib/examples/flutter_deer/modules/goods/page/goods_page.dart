@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/providers/goods_page_providers.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_head_title.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_page_option.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_type_choose.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/res/text_styles.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/overlay_utils.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/utils/toast.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/easy_segment/easy_segment.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/option_selected_view.dart';
 
@@ -23,6 +28,11 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
   final OptionSelectedController selectedController =
       OptionSelectedController();
 
+  final EasySegmentController segmentController =
+      EasySegmentController(initialIndex: 5);
+
+  final PageController pageController = PageController(initialPage: 5);
+
   List<GoodsTypeItem> items = const [
     GoodsTypeItem(title: '全部商品', count: 10),
     GoodsTypeItem(title: '个人护理', count: 1),
@@ -34,6 +44,29 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
     GoodsTypeItem(title: '酒水', count: 2),
     GoodsTypeItem(title: '家庭清洁', count: 1)
   ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    pageController.addListener(() {
+      segmentController.changeProgress(pageController.page ?? 0);
+    });
+
+    segmentController.addListener(() {
+      ref
+          .read(goodsState.notifier)
+          .setSelectedIndex(segmentController.currentIndex);
+    });
+
+    ref.read(goodsState.notifier).setSelectedIndex(5);
+  }
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,30 +95,43 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
           ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
+      body: Stack(
+        fit: StackFit.expand,
         children: [
-          _headTitle(),
-          Expanded(
-            child: Stack(
-              children: [
-                Consumer(builder: (context, ref, _) {
-                  return GoodsTypeChoose(
-                    selectedIndex: ref.watch(selectedIndex),
-                    datas: items,
-                    onChoose: (value) {
-                      ref.watch(goodsState.notifier).setUnfold(false);
-                      ref.read(goodsState.notifier).setSelectedIndex(value);
-                    },
-                    isShow: ref.watch(unfold),
-                    onDismiss: () =>
-                        ref.read(goodsState.notifier).setUnfold(false),
-                  );
-                })
-              ],
-            ),
-          )
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              _headTitle(),
+              _segmentView(),
+              Expanded(
+                child: _pageView(),
+              )
+            ],
+          ),
+          Consumer(
+            builder: (context, ref, _) {
+              return Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                top: 49,
+                child: GoodsTypeChoose(
+                  selectedIndex: ref.watch(selectedIndex),
+                  datas: items,
+                  onChoose: (value) {
+                    segmentController.scrollToIndex(value);
+                    pageController.jumpToPage(value);
+                    ref.read(goodsState.notifier).setUnfold(false);
+                    ref.read(goodsState.notifier).setSelectedIndex(value);
+                  },
+                  isShow: ref.watch(unfold),
+                  onDismiss: () =>
+                      ref.read(goodsState.notifier).setUnfold(false),
+                ),
+              );
+            },
+          ),
         ],
       ),
     );
@@ -105,6 +151,77 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
     );
   }
 
+  Widget _segmentView() {
+    return EasySegment(
+      controller: segmentController,
+      space: 15,
+      padding: const EdgeInsets.only(left: 15, right: 15),
+      onTap: (index) {
+        pageController.jumpToPage(index);
+      },
+      indicators: [
+        CustomSegmentLineIndicator(
+          index: 0,
+          color: Colours.appMain,
+          width: 40,
+          bottom: 0,
+          height: 3,
+          animation: false,
+          controller: segmentController,
+        ),
+        CustomSegmentLineIndicator(
+          index: 1,
+          color: Colours.red,
+          width: 40,
+          bottom: 5,
+          height: 3,
+          animation: true,
+          controller: segmentController,
+        ),
+        CustomSegmentLineIndicator(
+          index: 2,
+          color: Colors.yellow,
+          top: 3,
+          height: 3,
+          animation: true,
+          controller: segmentController,
+        ),
+      ],
+      children: List.generate(
+        items.length,
+        (index) => CustomSegmentText(
+          controller: segmentController,
+          content: items[index].title,
+          index: index,
+          height: 50,
+          normalStyle: const TextStyle(
+              color: Colors.black, fontSize: 16, fontWeight: FontWeight.normal),
+          selectedStyle: const TextStyle(
+            color: Colours.appMain,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _pageView() {
+    return PageView.builder(
+      itemBuilder: (context, index) {
+        return Container(
+          alignment: Alignment.center,
+          child: Text(
+            '$index',
+            style: TextStyles.textBold26,
+          ),
+        );
+      },
+      itemCount: items.length,
+      controller: pageController,
+    );
+  }
+
   void searchAction() {}
 
   void showAddMenu() {
@@ -117,18 +234,15 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
 
     optionEntry = OverlayUtils.showEntry(context, (context) {
       return OptionSelectedView(
-        top: addBtnSize.height + addBtnOffset.dy,
+        top: addBtnSize.height + addBtnOffset.dy - 10,
         right: 8,
+        radius: 8,
         arrowPointScale: 0.85,
-        width: 120,
         controller: selectedController,
-        child: GestureDetector(
-          onTap: () => selectedController.dismiss(),
-          child: Container(
-            height: 80,
-            color: Colors.white,
-          ),
-        ),
+        child: GoodsPageOptionView(onTap: (value) {
+          Toast.show(value.title);
+          selectedController.dismiss();
+        }),
         onEnd: () {
           optionEntry?.remove();
           optionEntry = null;

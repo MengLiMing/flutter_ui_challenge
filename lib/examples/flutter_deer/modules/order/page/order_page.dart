@@ -33,11 +33,7 @@ class _OrderPageState extends ConsumerState<OrderPage> {
     super.initState();
 
     _controllers = List.generate(items.length, (index) => null);
-
-    _pageController.addListener(_pageControllerChanged);
   }
-
-  void _pageControllerChanged() {}
 
   @override
   void dispose() {

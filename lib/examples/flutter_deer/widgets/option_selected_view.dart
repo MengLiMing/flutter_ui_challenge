@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -10,12 +11,11 @@ class OptionSelectedController {
   }
 }
 
-/// 没有封装完 只是完成ui效果
 class OptionSelectedView extends StatefulWidget {
   final Widget child;
-  final double width;
   final double top;
   final double right;
+  final double radius;
 
   /// controller
   final OptionSelectedController controller;
@@ -35,14 +35,14 @@ class OptionSelectedView extends StatefulWidget {
 
   const OptionSelectedView({
     Key? key,
-    required this.width,
     required this.child,
     required this.top,
     required this.right,
     required this.arrowPointScale,
     required this.onEnd,
+    this.radius = 0,
     required this.controller,
-    this.duration = const Duration(milliseconds: 500),
+    this.duration = const Duration(milliseconds: 300),
     this.curve = Curves.easeInOut,
     this.arrowSize = const Size(8.0, 4.0),
   }) : super(key: key);
@@ -113,7 +113,6 @@ class _OptionSelectedViewState extends State<OptionSelectedView>
 
   @override
   Widget build(BuildContext context) {
-    /// 计算剩余宽度
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -134,7 +133,6 @@ class _OptionSelectedViewState extends State<OptionSelectedView>
         Positioned(
           right: widget.right,
           top: widget.top,
-          width: widget.width,
           child: AnimatedBuilder(
             animation: scale,
             builder: (context, child) {
@@ -149,6 +147,11 @@ class _OptionSelectedViewState extends State<OptionSelectedView>
               );
             },
             child: CustomPaint(
+              painter: _ArrowPainter(
+                arrowSize: widget.arrowSize,
+                arrowPointScale: widget.arrowPointScale,
+                radius: widget.radius,
+              ),
               child: Padding(
                 padding: EdgeInsets.only(top: arrowHeight),
                 child: widget.child,
@@ -161,17 +164,55 @@ class _OptionSelectedViewState extends State<OptionSelectedView>
   }
 }
 
-// class _ArrowPainter extends CustomPainter {
-//   final Size arrowSize;
+class _ArrowPainter extends CustomPainter {
+  final Size arrowSize;
 
-//   final Scal
+  final double arrowPointScale;
 
-//   @override
-//   void paint(Canvas canvas, Size size) {}
+  final double radius;
 
-//   @override
-//   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-//     // TODO: implement shouldRepaint
-//     throw UnimplementedError();
-//   }
-// }
+  const _ArrowPainter({
+    required this.arrowSize,
+    required this.arrowPointScale,
+    required this.radius,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (size.width <= 0 || size.height <= 0) return;
+
+    /// 根据size计算pointScale的范围
+    final minScale = (radius + arrowSize.width / 2) / size.width;
+    final maxScale = 1 - minScale;
+    final pointScale = min(max(minScale, arrowPointScale), maxScale);
+
+    final rectPath = Path()
+      ..addRRect(RRect.fromRectXY(
+          Rect.fromLTWH(0, arrowSize.height, size.width, size.height),
+          radius,
+          radius));
+
+    final arrowPath = Path()
+      ..lineTo(arrowPointScale * size.width, 0)
+      ..relativeLineTo(arrowSize.width / 2, arrowSize.height)
+      ..relativeLineTo(-arrowSize.width, 0)
+      ..relativeLineTo(arrowSize.width / 2, -arrowSize.height);
+
+    final path = Path.combine(PathOperation.union, rectPath, arrowPath);
+
+    canvas.drawPath(
+        path,
+        Paint()
+          ..color = Colors.white
+          ..strokeJoin = StrokeJoin.round
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.fill);
+  }
+
+  @override
+  bool shouldRepaint(covariant _ArrowPainter oldDelegate) {
+    return oldDelegate.arrowSize != arrowSize ||
+        oldDelegate.arrowPointScale != arrowPointScale ||
+        oldDelegate.radius != radius;
+  }
+}

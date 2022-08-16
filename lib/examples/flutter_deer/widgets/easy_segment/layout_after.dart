@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 
-typedef LayoutAfterHandler = ValueChanged<Size>;
+typedef LayoutAfterHandler = void Function(RenderBox renderBox);
 
 class LayoutAfter extends SingleChildRenderObjectWidget {
   final LayoutAfterHandler handler;
@@ -47,7 +47,7 @@ class _RenderLayoutAfter extends RenderProxyBoxWithHitTestBehavior {
   void performLayout() {
     super.performLayout();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      _handler(size);
+      _handler(this);
     });
   }
 }
