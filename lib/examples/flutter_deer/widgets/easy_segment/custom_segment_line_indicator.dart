@@ -285,11 +285,12 @@ extension on _CustomSegmentLineIndicatorState {
     required double progress,
   }) {
     if (progress < 0.5) {
-      final left = leftData.offset.dx;
+      final startLeft = leftData.offset.dx;
+      final endLeft = leftData.center.dx;
+      final left = lerpDouble(startLeft, endLeft, progress * 2) ?? 0;
 
       final startWidth = leftData.size.width;
-      final endWidth = rightData.center.dx - leftData.offset.dx;
-
+      final endWidth = rightData.center.dx - leftData.center.dx;
       final width = lerpDouble(startWidth, endWidth, progress * 2) ?? 0;
 
       controller?.indicatorConfig(widget.index).value = EasyIndicatorConfig(
@@ -300,13 +301,12 @@ extension on _CustomSegmentLineIndicatorState {
         top: widget.top,
       );
     } else {
-      final startLeft = leftData.offset.dx;
+      final startLeft = leftData.center.dx;
       final endLeft = rightData.offset.dx;
       final left = lerpDouble(startLeft, endLeft, (progress - 0.5) * 2) ?? 0;
 
-      final startWidth = rightData.center.dx - leftData.offset.dx;
+      final startWidth = rightData.center.dx - leftData.center.dx;
       final endWidth = rightData.size.width;
-
       final width = lerpDouble(startWidth, endWidth, (progress - 0.5) * 2) ?? 0;
 
       controller?.indicatorConfig(widget.index).value = EasyIndicatorConfig(
