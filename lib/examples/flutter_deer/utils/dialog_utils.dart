@@ -39,7 +39,12 @@ class DialogUtils {
           type: MaterialType.transparency,
           child: AnnotatedRegion<SystemUiOverlayStyle>(
             value: SystemUiOverlayStyle.light,
-            child: child,
+            child: MediaQuery(
+                data: MediaQuery.of(context).removePadding(
+                  removeTop: true,
+                  removeBottom: true,
+                ),
+                child: child),
           ),
         );
       },

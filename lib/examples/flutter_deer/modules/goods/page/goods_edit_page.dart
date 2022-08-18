@@ -1,11 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/models/goods_type_model/goods_type_model.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/providers/goods_edit_providers.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/providers/goods_type_choose_providers.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_type_choose_sheet.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/text_styles.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/utils/dialog_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/toast.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/custon_back_button.dart';
@@ -25,6 +28,9 @@ class _GoodsEditPageState extends ConsumerState<GoodsEditPage>
   final ScrollController controller = ScrollController();
 
   final ValueNotifier<double> keyboardHeight = ValueNotifier(0);
+
+  final GoodsTypeChooseStateNotifier goodChooseNotifier =
+      GoodsTypeChooseStateNotifier();
 
   @override
   void initState() {
@@ -51,7 +57,6 @@ class _GoodsEditPageState extends ConsumerState<GoodsEditPage>
       if (_lastKeyboard < ScreenUtils.keyboardHeight) {
         // 弹出键盘
         showKeyboard.value = true;
-        showKeyboardAction();
       } else {
         // 隐藏键盘
         showKeyboard.value = false;
@@ -61,25 +66,21 @@ class _GoodsEditPageState extends ConsumerState<GoodsEditPage>
     _lastKeyboard = ScreenUtils.keyboardHeight;
   }
 
-  /// 修改高度
-  bool _showedKeyboard = false;
-  void showKeyboardAction() {
-    if (_showedKeyboard) return;
-
-    _showedKeyboard = true;
-    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      _showedKeyboard = false;
-      print('键盘弹出了');
-    });
-  }
-
   /// 提交
   void commitAction() {
     ref.read(manager.notifier).commit();
   }
 
   /// 选择类型
-  void chooseGoodsType() {}
+  void chooseGoodsType() {
+    DialogUtils.show(context, builder: (context) {
+      return GoodsTypeChooseSheet(notifier: goodChooseNotifier);
+    }).then((value) {
+      if (value is GoodsTypeModel) {
+        ref.read(manager.notifier).changeGoodsData(goodsType: value.name);
+      }
+    });
+  }
 
   /// 选择规格
   void chooseGoodsSpec() {}
@@ -113,6 +114,7 @@ class _GoodsEditPageState extends ConsumerState<GoodsEditPage>
                         children: [
                           sectionTitle('基本信息', top: 21),
                           selectedImage(),
+                          space(16),
                           textField(
                             '商品名称',
                             '填写商品名称',

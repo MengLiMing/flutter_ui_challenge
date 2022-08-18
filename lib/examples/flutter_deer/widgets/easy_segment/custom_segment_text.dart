@@ -93,7 +93,6 @@ class _CustomSegmentTextState extends State<CustomSegmentText>
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      color: Colors.transparent,
       height: widget.height,
       child: ValueListenableBuilder<TextStyle>(
         valueListenable: textStyle,

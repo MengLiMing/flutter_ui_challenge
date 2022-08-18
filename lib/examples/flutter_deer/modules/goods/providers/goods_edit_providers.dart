@@ -92,6 +92,8 @@ class GoodsEditStateNotifier extends StateNotifier<GoodsEditState> {
     String? remark,
     double? reducePrice,
     double? discountPrice,
+    String? goodsType,
+    String? goodsSpec,
   }) {
     state = state.copyWith(
         data: state.data.copyWith(
@@ -103,6 +105,8 @@ class GoodsEditStateNotifier extends StateNotifier<GoodsEditState> {
       remark: remark,
       reducePrice: reducePrice,
       discountPrice: discountPrice,
+      goodsType: goodsType,
+      goodsSpec: goodsSpec,
     ));
   }
 }

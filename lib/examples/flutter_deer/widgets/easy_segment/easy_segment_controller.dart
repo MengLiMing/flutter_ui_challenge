@@ -52,10 +52,15 @@ class EasySegmentController extends ChangeNotifier {
 
   EasySegmentController({int initialIndex = 0}) : _initialIndex = initialIndex;
 
+  void _setMaxNumber(int maxNumber) {
+    if (_maxNumber != maxNumber) {
+      _markNeedClear();
+    }
+    _maxNumber = maxNumber;
+  }
+
   /// 重置
   void resetInitialIndex(int index) {
-    if (index >= _maxNumber || index < 0) return;
-
     _initialIndex = index;
     _changeType = EasySegmentChangeType.tap;
 
@@ -70,7 +75,6 @@ class EasySegmentController extends ChangeNotifier {
 
   /// 滚动到当前下标
   void scrollToIndex(int index) {
-    if (index >= _maxNumber || index < 0) return;
     if (_progress == index.toDouble()) return;
     _changeType = EasySegmentChangeType.tap;
 
@@ -79,9 +83,8 @@ class EasySegmentController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void changeProgress(double progress) {
-    if (progress >= _maxNumber || progress < 0) return;
-    if (_progress == progress) return;
+  void changeProgress(double progress, {bool force = false}) {
+    if (force == false && _progress == progress) return;
     _progress = progress;
     _changeType = EasySegmentChangeType.scroll;
     notifyListeners();
@@ -90,14 +93,40 @@ class EasySegmentController extends ChangeNotifier {
   /// 标记是否滚动到初始位置
   var _hadScrollToInitialIndex = false;
 
+  var _needClear = false;
+  void _markNeedClear() {
+    _dataUpdated = false;
+    _needClear = true;
+  }
+
+  /// 数据比较上一次build是否需要更新
+  var _dataUpdated = false;
+
   void _configData(int index, EasySegmentItemData data) {
     final old = itemDatas[index];
+
+    if (_needClear) {
+      _needClear = false;
+      itemDatas.clear();
+    }
+
     itemDatas[index] = data;
 
     /// 滚动到初始位置
     if (_hadScrollToInitialIndex == false) {
       _hadScrollToInitialIndex = true;
       resetInitialIndex(_initialIndex);
+    }
+
+    if (old != data) {
+      _dataUpdated = true;
+    }
+
+    if (_dataUpdated && itemDatas.length == _maxNumber) {
+      _dataUpdated = false;
+      _progress = currentIndex.toDouble();
+      _changeType = EasySegmentChangeType.scroll;
+      notifyListeners();
     }
   }
 }
@@ -113,9 +142,7 @@ class EasySegmentControllerProvider extends InheritedWidget {
 
   static EasySegmentController? of(BuildContext context) {
     final controlerProvider = context
-        .getElementForInheritedWidgetOfExactType<
-            EasySegmentControllerProvider>()
-        ?.widget as EasySegmentControllerProvider?;
+        .dependOnInheritedWidgetOfExactType<EasySegmentControllerProvider>();
     return controlerProvider?.controller;
   }
 
@@ -129,12 +156,10 @@ mixin EasySegmentControllerConfig<T extends StatefulWidget, R extends State<T>>
     on State<T>, SingleTickerProviderStateMixin<T> {
   Duration get duration;
 
-  EasySegmentController? get controller {
-    if (mounted) {
-      return EasySegmentControllerProvider.of(context);
-    }
-    return null;
-  }
+  EasySegmentController? _controller;
+
+  EasySegmentController? get controller =>
+      mounted ? EasySegmentControllerProvider.of(context) : null;
 
   late final AnimationController animationController;
 
@@ -149,7 +174,14 @@ mixin EasySegmentControllerConfig<T extends StatefulWidget, R extends State<T>>
 
   @override
   void didChangeDependencies() {
-    _configController();
+    if (_controller != controller) {
+      _controller?.removeListener(_segControllerListener);
+      _controller = controller;
+      _controller?.addListener(_segControllerListener);
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+        _segControllerListener();
+      });
+    }
 
     super.didChangeDependencies();
   }
@@ -157,13 +189,8 @@ mixin EasySegmentControllerConfig<T extends StatefulWidget, R extends State<T>>
   @override
   void dispose() {
     animationController.dispose();
-    controller?.removeListener(_segControllerListener);
+    _controller?.removeListener(_segControllerListener);
     super.dispose();
-  }
-
-  void _configController() {
-    controller?.removeListener(_segControllerListener);
-    controller?.addListener(_segControllerListener);
   }
 
   void _segControllerListener() {

@@ -9,7 +9,7 @@ class EasySegment extends StatefulWidget {
   final EasySegmentController controller;
   final ValueChanged<int>? onTap;
 
-  EasySegment({
+  const EasySegment({
     Key? key,
     this.space = 10,
     this.padding = const EdgeInsets.only(left: 10, right: 10),
@@ -17,9 +17,7 @@ class EasySegment extends StatefulWidget {
     required this.children,
     this.indicators = const [],
     this.onTap,
-  }) : super(key: key) {
-    controller._maxNumber = children.length;
-  }
+  }) : super(key: key);
 
   @override
   State<EasySegment> createState() => _EasySegmentState();
@@ -146,6 +144,7 @@ class _EasySegmentState extends State<EasySegment>
 
   @override
   Widget build(BuildContext context) {
+    widget.controller._setMaxNumber(widget.children.length);
     return EasySegmentControllerProvider(
       controller: widget.controller,
       child: SingleChildScrollView(
@@ -163,10 +162,13 @@ class _EasySegmentState extends State<EasySegment>
                 top: widget.padding.top,
                 bottom: widget.padding.bottom,
               ),
-              child: Wrap(
-                spacing: widget.space,
+              child: Row(
                 children: [
-                  for (int i = 0; i < widget.children.length; i++)
+                  for (int i = 0; i < widget.children.length; i++) ...[
+                    if (i != 0)
+                      SizedBox(
+                        width: widget.space,
+                      ),
                     LayoutAfter(
                       child: GestureDetector(
                         onTap: () {
@@ -178,7 +180,7 @@ class _EasySegmentState extends State<EasySegment>
                       ),
                       handler: (renderBox) {
                         final parentData =
-                            renderBox.parentData as WrapParentData;
+                            renderBox.parentData as BoxParentData;
                         final offset = parentData.offset;
                         final size = renderBox.size;
                         widget.controller._configData(
@@ -188,6 +190,7 @@ class _EasySegmentState extends State<EasySegment>
                         );
                       },
                     ),
+                  ],
                 ],
               ),
             ),
