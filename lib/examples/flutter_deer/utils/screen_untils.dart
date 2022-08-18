@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 class ScreenUtils {
   ScreenUtils._();
 
-  static final instance = ScreenUtils._();
+  static final _instance = ScreenUtils._();
 
   BuildContext? _context;
 
-  static BuildContext get _currentContext => instance._context!;
+  static BuildContext get _currentContext => _instance._context!;
 
   static void config(BuildContext context) {
-    instance._context = context;
+    _instance._context = context;
   }
 
   static MediaQueryData get mediaQuery => MediaQuery.of(_currentContext);
@@ -24,4 +24,9 @@ class ScreenUtils {
   static double get width => mediaQuery.size.width;
 
   static double get height => mediaQuery.size.height;
+
+  static double get keyboardHeight =>
+      MediaQueryData.fromWindow(WidgetsBinding.instance.window)
+          .viewInsets
+          .bottom;
 }

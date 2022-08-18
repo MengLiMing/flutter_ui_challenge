@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/providers/goods_page_providers.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/providers/goods_providers.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_head_title.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_list_view.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_page_option.dart';
@@ -22,7 +22,7 @@ class GoodsPage extends ConsumerStatefulWidget {
   ConsumerState<GoodsPage> createState() => _GoodsPageState();
 }
 
-class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
+class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsProviders {
   final GlobalKey addButtonKey = GlobalKey();
 
   OverlayEntry? optionEntry;
@@ -67,12 +67,14 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsPageProviders {
   @override
   void dispose() {
     pageController.dispose();
+    segmentController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         actions: [
           IconButton(

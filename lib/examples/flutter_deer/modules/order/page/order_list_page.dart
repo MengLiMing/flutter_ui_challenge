@@ -8,6 +8,7 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/widgets
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/widgets/order_tag_item.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/empty_view.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_more_footer.dart';
 
 class OrderListPage extends ConsumerStatefulWidget {
   final OrderType orderType;
@@ -35,6 +36,9 @@ class _OrderListPageState extends ConsumerState<OrderListPage>
   void initState() {
     super.initState();
 
+    final notifier = ref.read(dataManager.notifier);
+    notifier.params = OrderListParams(orderType: widget.orderType);
+
     checkNeedRefresh();
   }
 
@@ -42,8 +46,16 @@ class _OrderListPageState extends ConsumerState<OrderListPage>
     final state = ref.read(dataManager);
 
     if (state.datas.isEmpty) {
-      request(true);
+      refresh();
     }
+  }
+
+  Future<void> refresh() {
+    return ref.read(dataManager.notifier).refresh();
+  }
+
+  Future<void> loadMore() {
+    return ref.read(dataManager.notifier).loadMore();
   }
 
   @override
@@ -53,47 +65,52 @@ class _OrderListPageState extends ConsumerState<OrderListPage>
         checkNeedRefresh();
       }
     });
-    return RefreshIndicator(
-        key: ValueKey(_index),
-        edgeOffset: 173 + ScreenUtils.topPadding - 40,
-        child: NotificationListener(
-          onNotification: (ScrollNotification notification) {
-            if (notification.depth == 0 &&
-                notification is ScrollUpdateNotification) {
-              final offset = notification.metrics.pixels;
-              if (ref.read(HeaderProviders.pageIndex) == _index &&
-                  offset <= 0) {
-                widget.scrollOnTop(_index);
-              }
-            }
-            return false;
-          },
-          child: Consumer(
-            builder: (context, ref, child) {
-              final stopIndex = ref.watch(HeaderProviders.stopIndex);
-              final controller = stopIndex == _index ? null : widget.controller;
 
-              return CustomScrollView(
-                key: PageStorageKey<String>('$_index'),
-                controller: controller,
-                slivers: [
-                  SliverOverlapInjector(
-                    handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                        context),
-                  ),
-                  child!,
-                ],
-              );
-            },
-            child: SliverPadding(
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
-              sliver: Consumer(builder: (context, ref, _) {
+    return RefreshIndicator(
+      key: ValueKey(_index),
+      edgeOffset: 173 + ScreenUtils.topPadding - 40,
+      onRefresh: refresh,
+      child: NotificationListener(
+        onNotification: (ScrollNotification notification) {
+          if (notification.depth == 0 &&
+              notification is ScrollUpdateNotification) {
+            final offset = notification.metrics.pixels;
+            if (ref.read(HeaderProviders.pageIndex) == _index && offset <= 0) {
+              widget.scrollOnTop(_index);
+            }
+          }
+          return false;
+        },
+        child: Consumer(
+          builder: (context, ref, child) {
+            final stopIndex = ref.watch(HeaderProviders.stopIndex);
+            final controller = stopIndex == _index ? null : widget.controller;
+
+            return CustomScrollView(
+              key: PageStorageKey<String>('$_index'),
+              controller: controller,
+              slivers: [
+                SliverOverlapInjector(
+                  handle:
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                ),
+                child!,
+              ],
+            );
+          },
+          child: SliverPadding(
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
+            sliver: Consumer(
+              builder: (context, ref, _) {
                 final dataList = ref.watch(datas);
+                final isHadLoaded = ref.watch(hadLoaded);
                 return dataList.isEmpty
                     ? SliverFillRemaining(
                         child: Container(
                           alignment: Alignment.center,
-                          child: const EmptyView(type: EmptyType.order),
+                          child: isHadLoaded
+                              ? const EmptyView(type: EmptyType.order)
+                              : const CupertinoActivityIndicator(),
                         ),
                       )
                     : SliverList(
@@ -108,11 +125,12 @@ class _OrderListPageState extends ConsumerState<OrderListPage>
                           childCount: dataList.length + 1,
                         ),
                       );
-              }),
+              },
             ),
           ),
         ),
-        onRefresh: () async => await request(true));
+      ),
+    );
   }
 
   Widget itemBuilder(
@@ -133,46 +151,11 @@ class _OrderListPageState extends ConsumerState<OrderListPage>
 
   Widget _footerWidget() {
     return Consumer(builder: (context, ref, _) {
-      final value = ref.watch(hasMore);
-      if (value) {
-        request(false);
-        return Container(
-          height: 50,
-          alignment: Alignment.center,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Text('正在加载更多'),
-              SizedBox(
-                width: 10,
-              ),
-              SizedBox(
-                width: 10,
-                height: 10,
-                child: CupertinoActivityIndicator(),
-              )
-            ],
-          ),
-        );
-      } else {
-        return Container(
-          height: 50,
-          alignment: Alignment.center,
-          child: const Text('到底了 ~'),
-        );
+      final result = ref.watch(hasMore);
+      if (result) {
+        loadMore();
       }
+      return LoadMoreFooter(hasMore: result);
     });
-  }
-
-  Future<void> request(bool isRefresh) async {
-    if (ref.read(HeaderProviders.pageIndex) != _index) return;
-    final notifier = ref.read(dataManager.notifier);
-    notifier.params = OrderListParams(orderType: widget.orderType);
-    if (isRefresh) {
-      await notifier.refresh();
-    } else {
-      await notifier.loadMore();
-    }
-    return;
   }
 }

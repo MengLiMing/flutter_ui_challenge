@@ -144,8 +144,6 @@ mixin EasySegmentControllerConfig<T extends StatefulWidget, R extends State<T>>
     animationController = AnimationController(vsync: this, duration: duration)
       ..addListener(animationHandler);
 
-    _configController();
-
     super.initState();
   }
 
@@ -159,24 +157,28 @@ mixin EasySegmentControllerConfig<T extends StatefulWidget, R extends State<T>>
   @override
   void dispose() {
     animationController.dispose();
+    controller?.removeListener(_segControllerListener);
     super.dispose();
   }
 
   void _configController() {
+    controller?.removeListener(_segControllerListener);
+    controller?.addListener(_segControllerListener);
+  }
+
+  void _segControllerListener() {
     final controller = this.controller;
     if (controller == null) return;
-    controller.addListener(() {
-      switch (controller.changeType) {
-        case EasySegmentChangeType.scroll:
-          scrollChanged();
-          break;
-        case EasySegmentChangeType.tap:
-          tapChanged();
-          break;
-        default:
-          return;
-      }
-    });
+    switch (controller.changeType) {
+      case EasySegmentChangeType.scroll:
+        scrollChanged();
+        break;
+      case EasySegmentChangeType.tap:
+        tapChanged();
+        break;
+      default:
+        return;
+    }
   }
 
   /// 点击切换时的动画回调

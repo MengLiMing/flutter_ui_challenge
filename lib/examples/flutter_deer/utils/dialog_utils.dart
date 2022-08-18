@@ -2,6 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class DialogUtils {
+  static Future<T?> showBottomSheet<T extends Object?>(
+    BuildContext context, {
+    required WidgetBuilder builder,
+  }) async {
+    return showModalBottomSheet(
+      context: context,
+      barrierColor: Colors.black54,
+      builder: (context) {
+        final child = builder(context);
+        return Material(
+          child: SafeArea(
+            child: child,
+          ),
+        );
+      },
+    );
+  }
+
   static Future<T?> show<T extends Object?>(
     BuildContext context, {
     Duration duration = const Duration(milliseconds: 300),

@@ -53,24 +53,26 @@ class _EasySegmentState extends State<EasySegment>
   @override
   void dispose() {
     scrollController.dispose();
-    segController.dispose();
+    segController.removeListener(_segListener);
     animationController.dispose();
     super.dispose();
   }
 
+  void _segListener() {
+    switch (segController.changeType) {
+      case EasySegmentChangeType.scroll:
+        toMiddle();
+        break;
+      case EasySegmentChangeType.tap:
+        animatedToMiddle();
+        break;
+      default:
+        break;
+    }
+  }
+
   void configController() {
-    segController.addListener(() {
-      switch (segController.changeType) {
-        case EasySegmentChangeType.scroll:
-          toMiddle();
-          break;
-        case EasySegmentChangeType.tap:
-          animatedToMiddle();
-          break;
-        default:
-          break;
-      }
-    });
+    segController.addListener(_segListener);
   }
 
   @override

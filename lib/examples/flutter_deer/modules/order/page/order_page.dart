@@ -121,7 +121,7 @@ class _OrderPageState extends ConsumerState<OrderPage> {
     for (int i = 0; i < _controllers.length; i++) {
       if (i != index) {
         final controler = _controllers[i];
-        if (controler != null && controler.positions.length > 0) {
+        if (controler != null && controler.hasClients) {
           controler.jumpTo(0);
         }
       }

@@ -6,6 +6,7 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/provide
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/widgets/order_list_item.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/toast.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/custom_show_loading.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_more_footer.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/search_bar.dart';
 
 class OrderSearchPage extends ConsumerStatefulWidget {
@@ -63,34 +64,11 @@ class _OrderSearchPageState extends ConsumerState<OrderSearchPage>
 
   Widget _footerWidget() {
     return Consumer(builder: (context, ref, _) {
-      final value = ref.watch(hasMore);
-      if (value) {
+      final result = ref.watch(hasMore);
+      if (result) {
         request(false);
-        return Container(
-          height: 50,
-          alignment: Alignment.center,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Text('正在加载更多'),
-              SizedBox(
-                width: 10,
-              ),
-              SizedBox(
-                width: 10,
-                height: 10,
-                child: CupertinoActivityIndicator(),
-              )
-            ],
-          ),
-        );
-      } else {
-        return Container(
-          height: 50,
-          alignment: Alignment.center,
-          child: const Text('到底了 ~'),
-        );
       }
+      return LoadMoreFooter(hasMore: result);
     });
   }
 

@@ -46,6 +46,10 @@ mixin OrderListProviders {
   late final isLoading = Provider.autoDispose<bool>((ref) {
     return ref.watch(dataManager).isLoading;
   });
+
+  late final hadLoaded = Provider.autoDispose<bool>((ref) {
+    return ref.watch(dataManager).hadLoaded;
+  });
 }
 
 class OrderListDataManager extends StateNotifier<OrderListData>
@@ -60,23 +64,28 @@ class OrderListDataManager extends StateNotifier<OrderListData>
   @override
   Future<PageResponseWrapper<OrderListItemData>> request(
       int page, int pageSize, PageRequestType requestType) async {
-    final list = await _request(page, pageSize);
+    await Future.delayed(const Duration(seconds: 1));
+
+    List<OrderListItemData> list;
+    if (params.orderType != null && params.orderType == OrderType.completed) {
+      /// 模拟空数据
+      list = [];
+    } else {
+      list = List<OrderListItemData>.generate(
+          page == 2 ? pageSize ~/ 2 : pageSize,
+          (index) => OrderListItemData(
+                index: page * pageSize + index,
+                orderType: params.orderType ??
+                    OrderType
+                        .values[RandomUtil.number(OrderType.values.length)],
+              ));
+    }
+
     return PageResponseWrapper(
         page: page,
         requestType: requestType,
         hasMore: list.length >= pageSize,
         responseList: list);
-  }
-
-  Future<List<OrderListItemData>> _request(int page, int pageSize) async {
-    await Future.delayed(const Duration(seconds: 1));
-    return List<OrderListItemData>.generate(
-        page == 3 ? pageSize ~/ 2 : pageSize,
-        (index) => OrderListItemData(
-              index: page * pageSize + index,
-              orderType: params.orderType ??
-                  OrderType.values[RandomUtil.number(OrderType.values.length)],
-            ));
   }
 
   @override
@@ -97,11 +106,11 @@ class OrderListDataManager extends StateNotifier<OrderListData>
       case PageRequestType.none:
         break;
       case PageRequestType.refresh:
-        state = state.copyWith(datas: response.responseList);
+        state = state.copyWith(datas: response.responseList, hadLoaded: true);
         break;
       case PageRequestType.loadMore:
-        state =
-            state.copyWith(datas: [...state.datas, ...response.responseList]);
+        state = state.copyWith(
+            datas: [...state.datas, ...response.responseList], hadLoaded: true);
         break;
     }
   }
@@ -116,17 +125,21 @@ class OrderListData extends Equatable {
 
   final bool isLoading;
 
+  final bool hadLoaded;
+
   OrderListData({
     required this.isLoading,
     required this.datas,
     required this.hadMore,
+    this.hadLoaded = false,
   });
 
   factory OrderListData.empty() {
     return OrderListData(
       isLoading: false,
-      datas: [],
+      datas: const [],
       hadMore: true,
+      hadLoaded: false,
     );
   }
 
@@ -134,14 +147,16 @@ class OrderListData extends Equatable {
     List<OrderListItemData>? datas,
     bool? hadMore,
     bool? isLoading,
+    bool? hadLoaded,
   }) {
     return OrderListData(
       datas: datas ?? this.datas,
       hadMore: hadMore ?? this.hadMore,
       isLoading: isLoading ?? this.isLoading,
+      hadLoaded: hadLoaded ?? this.hadLoaded,
     );
   }
 
   @override
-  List<Object?> get props => [datas, hadMore, isLoading];
+  List<Object?> get props => [datas, hadMore, isLoading, hadLoaded];
 }

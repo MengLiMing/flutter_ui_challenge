@@ -14,7 +14,7 @@ mixin GoodsListProvider {
       Provider.autoDispose<bool>((ref) => ref.watch(manager).isLoading);
 
   /// 数据源
-  late final datas = Provider.autoDispose<List<GoodsListDataItem>>(
+  late final datas = Provider.autoDispose<List<GoodsListItemData>>(
       (ref) => ref.watch(manager).datas);
 
   /// 是否有更多
@@ -24,16 +24,25 @@ mixin GoodsListProvider {
   /// 是否加载过
   late final hadLoaded =
       Provider.autoDispose<bool>((ref) => ref.watch(manager).hadLoaded);
+
+  /// 当前点击的下标
+  final showMenuIndex = StateProvider.autoDispose<int?>((ref) => null);
 }
 
 class GoodsListStateNotifier extends StateNotifier<GoodsListState>
-    with PageRequest<GoodsListDataItem> {
+    with PageRequest<GoodsListItemData> {
   int? type;
 
   GoodsListStateNotifier() : super(GoodsListState());
 
   @override
   void cancelRequest() {}
+
+  void delete(int index) {
+    var itemDatas = List<GoodsListItemData>.from(state.datas);
+    itemDatas.removeAt(index);
+    state = state.copyWith(datas: itemDatas);
+  }
 
   @override
   void startRequest(int page, int pageSize, PageRequestType requestType) {
@@ -44,7 +53,7 @@ class GoodsListStateNotifier extends StateNotifier<GoodsListState>
   }
 
   @override
-  void endRequest(PageResponseWrapper<GoodsListDataItem> response) {
+  void endRequest(PageResponseWrapper<GoodsListItemData> response) {
     if (mounted == false) return;
 
     switch (response.requestType) {
@@ -75,9 +84,9 @@ class GoodsListStateNotifier extends StateNotifier<GoodsListState>
   }
 
   @override
-  Future<PageResponseWrapper<GoodsListDataItem>> request(
+  Future<PageResponseWrapper<GoodsListItemData>> request(
       int page, int pageSize, PageRequestType requestType) async {
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(milliseconds: 300));
 
     /// 模拟一下无数据
     if ((type ?? 0) % 2 == 0) {
@@ -88,10 +97,10 @@ class GoodsListStateNotifier extends StateNotifier<GoodsListState>
         responseList: [],
       );
     }
-    List<GoodsListDataItem> results = List<GoodsListDataItem>.generate(
+    List<GoodsListItemData> results = List<GoodsListItemData>.generate(
         page == 3 ? pageSize ~/ 2 : pageSize, (i) {
       final index = page * pageSize + i;
-      return GoodsListDataItem(id: index);
+      return GoodsListItemData(id: index);
     });
 
     return PageResponseWrapper(
@@ -104,7 +113,7 @@ class GoodsListStateNotifier extends StateNotifier<GoodsListState>
 }
 
 class GoodsListState {
-  final List<GoodsListDataItem> datas;
+  final List<GoodsListItemData> datas;
 
   final bool isLoading;
 
@@ -121,7 +130,7 @@ class GoodsListState {
   });
 
   GoodsListState copyWith({
-    List<GoodsListDataItem>? datas,
+    List<GoodsListItemData>? datas,
     bool? isLoading,
     bool? hasMore,
     bool? hadLoaded,
@@ -135,13 +144,13 @@ class GoodsListState {
   }
 }
 
-class GoodsListDataItem {
+class GoodsListItemData {
   final int id;
 
-  const GoodsListDataItem({required this.id});
+  const GoodsListItemData({required this.id});
 
   @override
-  bool operator ==(covariant GoodsListDataItem other) {
+  bool operator ==(covariant GoodsListItemData other) {
     if (identical(this, other)) return true;
 
     return other.id == id;
