@@ -16,6 +16,7 @@ class SimpleTextField extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final bool hasLine;
   final String? defaultText;
+  final double height;
 
   const SimpleTextField({
     Key? key,
@@ -28,6 +29,7 @@ class SimpleTextField extends StatefulWidget {
     this.keyboardType,
     this.onChanged,
     this.hasLine = true,
+    this.height = 50,
     this.hintStyle = TextStyles.textHint14,
     this.style = TextStyles.text,
     this.defaultText,
@@ -130,7 +132,7 @@ class _SimpleTextFieldState extends State<SimpleTextField> {
     return Column(
       children: [
         SizedBox(
-          height: 50,
+          height: widget.height,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

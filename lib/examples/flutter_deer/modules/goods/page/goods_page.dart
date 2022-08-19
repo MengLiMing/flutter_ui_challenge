@@ -1,12 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/goods_route.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/providers/goods_providers.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_head_title.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_list_view.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_page_option.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_type_choose.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/overlay_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/random_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/toast.dart';
@@ -259,8 +261,14 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsProviders {
         arrowPointScale: 0.85,
         controller: selectedController,
         child: GoodsPageOptionView(onTap: (value) {
-          Toast.show(value.title);
-          selectedController.dismiss();
+          switch (value) {
+            case GoodsPageOption.add:
+              addGoodsAction();
+              break;
+            case GoodsPageOption.scan:
+              scanAddAction();
+              break;
+          }
         }),
         onEnd: () {
           optionEntry?.remove();
@@ -268,6 +276,16 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsProviders {
         },
       );
     });
+  }
+
+  void addGoodsAction() {
+    selectedController.dismiss(animation: false);
+    NavigatorUtils.push(context, GoodsRouter.edit);
+  }
+
+  void scanAddAction() {
+    selectedController.dismiss(animation: true);
+    Toast.show('扫码添加');
   }
 
   void showGoodsTypeChoose() {

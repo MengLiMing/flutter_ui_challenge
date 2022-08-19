@@ -17,11 +17,12 @@ mixin GoodsEditProviders {
   /// 商品图片
   late final goodsImage = Provider.autoDispose<ImageProvider>((ref) {
     final result = ref.watch(manager);
-    if (result.image.image == null) {
-      return ImageUtils.getImageProvider(result.data.imageUrl,
-          holderImg: 'store/icon_zj');
+    if (result.image.url == null && result.image.imageFile != null) {
+      return FileImage(result.image.imageFile!);
     } else {
-      return FileImage(result.image.image!);
+      return ImageUtils.getImageProvider(
+          result.image.url ?? result.data.imageUrl,
+          holderImg: 'store/icon_zj');
     }
   });
 
@@ -67,7 +68,7 @@ class GoodsEditStateNotifier extends StateNotifier<GoodsEditState> {
   /// 上传图片
   Future<void> uploadImage() async {
     if (state.image.url != null) return;
-    if (state.image.image == null) {
+    if (state.image.imageFile == null) {
       Toast.show('请选择图片');
       return;
     }
@@ -77,6 +78,7 @@ class GoodsEditStateNotifier extends StateNotifier<GoodsEditState> {
       image: state.image.copyWith(
         url:
             'https://avatars.githubusercontent.com/u/19296728?s=400&u=7a099a186684090f50459c87176cf4d291a27ac7&v=4',
+        image: state.image.imageFile,
       ),
     );
     return;
@@ -96,18 +98,19 @@ class GoodsEditStateNotifier extends StateNotifier<GoodsEditState> {
     String? goodsSpec,
   }) {
     state = state.copyWith(
-        data: state.data.copyWith(
-      imageUrl: imageUrl,
-      name: name,
-      desc: desc,
-      price: price,
-      code: code,
-      remark: remark,
-      reducePrice: reducePrice,
-      discountPrice: discountPrice,
-      goodsType: goodsType,
-      goodsSpec: goodsSpec,
-    ));
+      data: state.data.copyWith(
+        imageUrl: imageUrl,
+        name: name,
+        desc: desc,
+        price: price,
+        code: code,
+        remark: remark,
+        reducePrice: reducePrice,
+        discountPrice: discountPrice,
+        goodsType: goodsType,
+        goodsSpec: goodsSpec,
+      ),
+    );
   }
 }
 
@@ -122,7 +125,7 @@ class GoodsEditState {
   final GoodsData data;
 
   bool get canCommit =>
-      image.image != null &&
+      image.imageFile != null &&
       data.name.isNotEmpty &&
       data.desc.isNotEmpty &&
       data.price != 0 &&
@@ -258,20 +261,20 @@ class GoodsData {
 }
 
 class UploadImage {
-  final File? image;
+  final File? imageFile;
   final String? url;
 
-  const UploadImage({this.image, this.url});
+  const UploadImage({this.imageFile, this.url});
 
   @override
   bool operator ==(covariant UploadImage other) {
     if (identical(this, other)) return true;
 
-    return other.image?.path == image?.path && other.url == url;
+    return other.imageFile?.path == imageFile?.path && other.url == url;
   }
 
   @override
-  int get hashCode => (image?.path ?? '').hashCode ^ url.hashCode;
+  int get hashCode => (imageFile?.path ?? '').hashCode ^ url.hashCode;
 
   UploadImage copyWith({
     File? image,
@@ -281,7 +284,7 @@ class UploadImage {
       return const UploadImage();
     } else {
       return UploadImage(
-        image: image,
+        imageFile: image,
         url: url ?? this.url,
       );
     }

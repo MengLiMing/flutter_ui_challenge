@@ -12,8 +12,9 @@ class GoodsRouter extends ModularRouterProvider {
       return const GoodsPage();
     }));
 
-    router.define(edit, handler: Handler(handlerFunc: (context, _) {
-      return const GoodsEditPage();
+    router.define(edit, handler: Handler(handlerFunc: (context, params) {
+      final isEdit = params['isEdit']?.first as String?;
+      return GoodsEditPage(isEdit: isEdit == '1');
     }));
   }
 }

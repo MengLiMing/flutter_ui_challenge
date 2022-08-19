@@ -1,22 +1,34 @@
+import 'dart:io';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/models/goods_type_model/goods_type_model.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/providers/goods_edit_providers.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/providers/goods_type_choose_providers.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_spec_edit.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/widgets/goods_type_choose_sheet.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/text_styles.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/dialog_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/toast.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/custom_show_loading.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/custon_back_button.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/simple_textfield.dart';
+import 'package:image_picker/image_picker.dart';
 
 class GoodsEditPage extends ConsumerStatefulWidget {
-  const GoodsEditPage({Key? key}) : super(key: key);
+  /// 简单标记，实际开发应该是id -请求数据或者直接传入数据
+  final bool isEdit;
+
+  const GoodsEditPage({
+    Key? key,
+    required this.isEdit,
+  }) : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _GoodsEditPageState();
@@ -24,51 +36,51 @@ class GoodsEditPage extends ConsumerStatefulWidget {
 
 class _GoodsEditPageState extends ConsumerState<GoodsEditPage>
     with GoodsEditProviders, WidgetsBindingObserver {
-  final ValueNotifier<bool> showKeyboard = ValueNotifier(false);
-  final ScrollController controller = ScrollController();
+  final ImagePicker _picker = ImagePicker();
 
-  final ValueNotifier<double> keyboardHeight = ValueNotifier(0);
+  final ScrollController controller = ScrollController();
 
   final GoodsTypeChooseStateNotifier goodChooseNotifier =
       GoodsTypeChooseStateNotifier();
 
+  final CustomShowLoadingController loadingController =
+      CustomShowLoadingController();
+
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance.addObserver(this);
-    ref.read(manager.notifier).changeGoodsData(name: '我是默认商品名称');
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  double _lastKeyboard = 0;
-
-  @override
-  void didChangeMetrics() {
-    if (_lastKeyboard != ScreenUtils.keyboardHeight) {
-      // SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-
-      // });
-      if (_lastKeyboard < ScreenUtils.keyboardHeight) {
-        // 弹出键盘
-        showKeyboard.value = true;
-      } else {
-        // 隐藏键盘
-        showKeyboard.value = false;
-      }
+    if (widget.isEdit) {
+      ref.read(manager.notifier).changeGoodsData(
+            name: '我是默认商品名称',
+            desc: '默认简介',
+            price: 1,
+            reducePrice: 1,
+            discountPrice: 1,
+            imageUrl:
+                'https://avatars.githubusercontent.com/u/19296728?s=400&u=7a099a186684090f50459c87176cf4d291a27ac7&v=4',
+          );
     }
-    keyboardHeight.value = ScreenUtils.keyboardHeight;
-    _lastKeyboard = ScreenUtils.keyboardHeight;
   }
 
   /// 提交
   void commitAction() {
     ref.read(manager.notifier).commit();
+  }
+
+  Future<void> chooseImage() async {
+    try {
+      final result = await _picker.pickImage(
+          source: ImageSource.gallery, imageQuality: 10);
+      if (result != null) {
+        ref.read(manager.notifier).setImage(File(result.path));
+      }
+    } catch (e) {
+      if (e is MissingPluginException) {
+        Toast.show('当前平台暂不支持！');
+      } else {
+        Toast.show('没有权限，无法打开相册！');
+      }
+    }
   }
 
   /// 选择类型
@@ -83,22 +95,37 @@ class _GoodsEditPageState extends ConsumerState<GoodsEditPage>
   }
 
   /// 选择规格
-  void chooseGoodsSpec() {}
+  void chooseGoodsSpec() {
+    DialogUtils.show(context, builder: (context) {
+      return GoodsSpecEdit(
+        spec: ref.read(goodsSpecChange),
+      );
+    }).then((value) {
+      if (value is String && value.isNotEmpty) {
+        ref.read(manager.notifier).changeGoodsData(goodsSpec: value);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final readNotifier = ref.read(manager.notifier);
     final readGoodData = ref.read(goodsData);
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        leading: const CustomBackButton(),
-        title: const Text('编辑商品'),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: LayoutBuilder(
+    ref.listen<bool>(isLoading, (_, next) {
+      loadingController.isLoading = next;
+    });
+    return CustomShowLoading(
+      controller: loadingController,
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          leading: const CustomBackButton(),
+          title: Text(widget.isEdit ? '编辑商品' : "添加商品"),
+        ),
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            LayoutBuilder(
               builder: (context, constraints) {
                 return Scaffold(
                   resizeToAvoidBottomInset: true,
@@ -222,7 +249,7 @@ class _GoodsEditPageState extends ConsumerState<GoodsEditPage>
                               );
                             }),
                           ),
-                          space(16),
+                          space(16 + max(ScreenUtils.bottomPadding, 8) + 44),
                         ],
                       ),
                     ),
@@ -230,41 +257,39 @@ class _GoodsEditPageState extends ConsumerState<GoodsEditPage>
                 );
               },
             ),
-          ),
-          ValueListenableBuilder<bool>(
-            valueListenable: showKeyboard,
-            builder: (context, value, child) {
-              return ConstrainedBox(
-                constraints: BoxConstraints(
-                    minHeight: 0, maxHeight: value ? 0 : double.infinity),
-                child: child,
-              );
-            },
-            child: Container(
-              padding: EdgeInsets.only(
-                top: 8,
-                left: 16,
-                right: 16,
-                bottom: max(ScreenUtils.bottomPadding, 8),
-              ),
-              child: Consumer(builder: (context, ref, _) {
-                final value = ref.watch(canCommit);
-                return MaterialButton(
-                  color: value ? Colours.appMain : Colours.buttonDisabled,
-                  minWidth: double.infinity,
-                  elevation: 0,
-                  height: 44,
-                  onPressed: () {
-                    if (value == false) return;
-                    commitAction();
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                color: Colors.white,
+                padding: EdgeInsets.only(
+                  top: 8,
+                  left: 16,
+                  right: 16,
+                  bottom: max(ScreenUtils.bottomPadding, 8),
+                ),
+                child: Consumer(
+                  builder: (context, ref, _) {
+                    final value = ref.watch(canCommit);
+                    return MaterialButton(
+                      color: value ? Colours.appMain : Colours.buttonDisabled,
+                      minWidth: double.infinity,
+                      elevation: 0,
+                      height: 44,
+                      onPressed: () {
+                        if (value == false) return;
+                        commitAction();
+                      },
+                      child: const Text('点击',
+                          style: TextStyle(color: Colors.white)),
+                    );
                   },
-                  child:
-                      const Text('点击', style: TextStyle(color: Colors.white)),
-                );
-              }),
+                ),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -363,11 +388,15 @@ class _GoodsEditPageState extends ConsumerState<GoodsEditPage>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image(
-                fit: BoxFit.contain,
-                image: ref.watch(goodsImage),
-                width: 96,
-                height: 96,
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: chooseImage,
+                child: Image(
+                  fit: BoxFit.cover,
+                  image: ref.watch(goodsImage),
+                  width: 96,
+                  height: 96,
+                ),
               ),
               space(8),
               const Text(

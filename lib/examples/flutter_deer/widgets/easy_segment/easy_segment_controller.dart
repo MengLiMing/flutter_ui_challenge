@@ -122,10 +122,11 @@ class EasySegmentController extends ChangeNotifier {
       _dataUpdated = true;
     }
 
+    /// 数据刷新  且数据构造完成后 刷新矫正一次
     if (_dataUpdated && itemDatas.length == _maxNumber) {
       _dataUpdated = false;
       _progress = currentIndex.toDouble();
-      _changeType = EasySegmentChangeType.scroll;
+      _changeType = EasySegmentChangeType.none;
       notifyListeners();
     }
   }

@@ -4,10 +4,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class OptionSelectedController {
-  VoidCallback? _dismissHandler;
+  ValueChanged<bool>? _dismissHandler;
 
-  void dismiss() {
-    _dismissHandler?.call();
+  void dismiss({bool animation = false}) {
+    _dismissHandler?.call(animation);
   }
 }
 
@@ -93,8 +93,12 @@ class _OptionSelectedViewState extends State<OptionSelectedView>
   }
 
   void configController() {
-    widget.controller._dismissHandler = () {
-      animationController.reverse();
+    widget.controller._dismissHandler = (animation) {
+      if (animation) {
+        animationController.reverse();
+      } else {
+        animationController.value = 0;
+      }
     };
   }
 

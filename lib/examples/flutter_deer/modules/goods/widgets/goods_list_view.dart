@@ -343,7 +343,9 @@ class _GoodsLisItemState extends State<GoodsLisItem>
         deleteAction();
         break;
       case _MenuAction.edit:
-        NavigatorUtils.push(context, GoodsRouter.edit);
+        NavigatorUtils.push(context, GoodsRouter.edit, parameters: {
+          'isEdit': '1',
+        });
         break;
       default:
         Toast.show(action.title);
