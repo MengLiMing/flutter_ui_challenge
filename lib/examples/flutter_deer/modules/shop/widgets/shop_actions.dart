@@ -27,9 +27,10 @@ class ShopActions extends StatelessWidget {
       delegate: SliverChildBuilderDelegate((context, index) {
         return ShopActionItem(itemData: actions[index]);
       }, childCount: actions.length),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        childAspectRatio: 1.18,
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        crossAxisSpacing: 16,
+        maxCrossAxisExtent: 64,
+        childAspectRatio: 64 / 88,
       ),
     );
   }
@@ -49,13 +50,13 @@ class ShopActionItem extends StatelessWidget {
       onTap: itemData.onTap,
       child: Column(
         children: [
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           LoadAssetImage(
             itemData.image,
             width: 32,
             height: 32,
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           Text(itemData.title),
         ],
       ),

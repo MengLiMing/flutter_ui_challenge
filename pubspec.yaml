@@ -20,22 +20,8 @@ dependencies:
   oktoast: ^3.2.0
   # 图片选择
   image_picker: ^0.8.5+3
-  # 滑动删除
-  flutter_slidable: ^2.0.0
-  # 键盘事件
-  keyboard_actions: ^4.0.1
-  # 悬停头部
-  sticky_headers: ^0.3.0+2
   # 图片缓存
   cached_network_image: ^3.2.1
-  # 二维码
-  qr_code_scanner: ^1.0.0
-  # 设备信息
-  device_info_plus: ^4.0.1
-  # 桌面端
-  desktop_window: ^0.4.0
-  # 动画
-  lottie: ^1.4.1
   # 滚动到index
   scrollable_positioned_list: ^0.3.2
   # open url 打电话 - 打开外部网页等

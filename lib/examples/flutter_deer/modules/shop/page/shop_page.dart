@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/settings/setting_router.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/shop_router.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/widgets/shop_actions.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/widgets/shop_header.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_utils.dart';
@@ -41,7 +42,12 @@ class ShopPage extends StatelessWidget {
             const SliverToBoxAdapter(child: Divider()),
             SliverToBoxAdapter(child: sectionTitle('账户', top: 24)),
             ShopActions(actions: [
-              ShopAction(title: '账户流水', image: 'shop/zhls', onTap: () {}),
+              ShopAction(
+                  title: '账户流水',
+                  image: 'shop/zhls',
+                  onTap: () {
+                    NavigatorUtils.push(context, ShopRouter.record);
+                  }),
               ShopAction(title: '资金管理', image: 'shop/zjgl', onTap: () {}),
               ShopAction(title: '提现账号', image: 'shop/txzh', onTap: () {})
             ]),
