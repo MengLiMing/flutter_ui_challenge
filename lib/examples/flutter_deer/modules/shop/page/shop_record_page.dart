@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/widgets/flutter_table_view.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/random_utils.dart';
@@ -13,11 +15,11 @@ class ShopRecordPage extends StatefulWidget {
 
 class _ShopRecordPageState extends State<ShopRecordPage> {
   List<ShopRecordSectionModel> dataSource = List.generate(
-    3,
+    100,
     (index) => ShopRecordSectionModel(
       data: '时间',
       models: List.generate(
-        5,
+        300,
         (index) => ShopRecordModel(type: '类型$index', price: '100'),
       ),
     ),
@@ -26,7 +28,20 @@ class _ShopRecordPageState extends State<ShopRecordPage> {
   final controller = FlutterTableViewController();
 
   void randomDelete() {
-    if (dataSource.isEmpty) return;
+    if (dataSource.isEmpty) {
+      dataSource = List.generate(
+        RandomUtil.number(3) + 1,
+        (index) => ShopRecordSectionModel(
+          data: '时间',
+          models: List.generate(
+            4,
+            (index) => ShopRecordModel(type: '类型$index', price: '100'),
+          ),
+        ),
+      );
+      controller.refreshSuccess();
+      return;
+    }
 
     final randomSection = RandomUtil.number(dataSource.length);
     final sectionModel = dataSource[randomSection];
@@ -44,6 +59,23 @@ class _ShopRecordPageState extends State<ShopRecordPage> {
     });
   }
 
+  Timer? timer;
+
+  @override
+  void initState() {
+    super.initState();
+
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      randomDelete();
+    });
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +91,7 @@ class _ShopRecordPageState extends State<ShopRecordPage> {
       ),
       body: FlutterTableView(
         controller: controller,
-        sectionCount: dataSource.length,
+        sectionCount: () => dataSource.length,
         rowCount: (sectionIndex) {
           final sectionModel = dataSource[sectionIndex];
           return sectionModel.models.length;

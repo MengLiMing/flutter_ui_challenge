@@ -62,7 +62,7 @@ class FlutterTableViewController {
 }
 
 class FlutterTableView extends StatefulWidget {
-  final int sectionCount;
+  final int Function() sectionCount;
   final int Function(int) rowCount;
   final FlutterTableViewController controller;
   final Widget Function(BuildContext context, IndexPath indexPath) itemBuilder;
@@ -205,7 +205,7 @@ class _SectionCache {
 }
 
 class _TableViewDataSource {
-  int sectionCount = 0;
+  late int Function() sectionCount;
 
   late int Function(int) rowCount;
 
@@ -232,7 +232,6 @@ class _TableViewCountManager extends ChangeNotifier
   int _value = 0;
   set value(int newValue) {
     if (_value == newValue) return;
-    print(newValue);
     _value = newValue;
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       notifyListeners();
@@ -257,12 +256,14 @@ class _TableViewCountManager extends ChangeNotifier
   }
 
   void loadMore(int oldCount, int startSectionIndex) {
-    var sectionIndex = startSectionIndex;
-    if (sectionIndex >= dataSource.sectionCount) return;
+    final sectionCount = dataSource.sectionCount();
 
-    while (sectionIndex < dataSource.sectionCount && value == oldCount) {
-      if (_sectionCountCache[sectionIndex] != null &&
-          _sectionCountCache[sectionIndex] != 0) {
+    var sectionIndex = startSectionIndex;
+    if (sectionIndex >= sectionCount) return;
+
+    while (sectionIndex < sectionCount && value == oldCount) {
+      final cache = _sectionCountCache[sectionIndex];
+      if (cache != null && cache.rowCount != 0) {
         break;
       }
       int rowCount = dataSource.rowCount(sectionIndex);
@@ -273,10 +274,7 @@ class _TableViewCountManager extends ChangeNotifier
 
   /// 清空当前section的数据
   void removeSection(int sectionIndex) {
-    if (dataSource.sectionCount == 0) return;
-
     final oldRowCount = _sectionCountCache[sectionIndex]?.rowCount ?? 0;
-    dataSource.sectionCount -= 1;
 
     Map<int, _SectionCache> sectionCountCache = {};
     _sectionCountCache.forEach((section, cache) {
@@ -305,8 +303,6 @@ class _TableViewCountManager extends ChangeNotifier
 
     final newCount = rowCount ?? dataSource.rowCount(sectionIndex);
     if (oldCache == null) {
-      final preCache = _sectionCountCache[sectionIndex - 1];
-
       int startSection = 0;
       int lastIndex = -1;
       while (startSection < sectionIndex) {
@@ -373,7 +369,7 @@ class _TableViewCountManager extends ChangeNotifier
     IndexPath? result;
 
     int startSection = (preSectionCache?.sectionIndex ?? -1) + 1;
-    while (startSection < dataSource.sectionCount) {
+    while (startSection < dataSource.sectionCount()) {
       final rowCount = dataSource.rowCount(startSection);
       if ((lastIndex + rowCount) >= index) {
         result = IndexPath(row: index - lastIndex - 1, section: startSection);
@@ -382,7 +378,6 @@ class _TableViewCountManager extends ChangeNotifier
           rowCount: rowCount,
           lastIndex: lastIndex + rowCount,
         );
-        _dirtyIndex = startSection + 1;
         break;
       }
       lastIndex += rowCount;
