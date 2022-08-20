@@ -80,7 +80,10 @@ class _CustomShowLoadingState extends State<CustomShowLoading> {
                     borderRadius: BorderRadius.all(Radius.circular(10))),
                 width: 80,
                 height: 80,
-                child: const CupertinoActivityIndicator(color: Colors.white),
+                child: CupertinoActivityIndicator(
+                  color: Colors.white,
+                  animating: value,
+                ),
               ),
             );
             final bg = AnimatedOpacity(

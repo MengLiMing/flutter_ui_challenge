@@ -29,8 +29,8 @@ class ShopActions extends StatelessWidget {
       }, childCount: actions.length),
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         crossAxisSpacing: 16,
-        maxCrossAxisExtent: 64,
-        childAspectRatio: 64 / 88,
+        maxCrossAxisExtent: 70,
+        childAspectRatio: 70 / 88,
       ),
     );
   }

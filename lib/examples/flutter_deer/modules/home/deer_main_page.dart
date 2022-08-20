@@ -22,7 +22,8 @@ class DeerMainPage extends ConsumerStatefulWidget {
   ConsumerState<DeerMainPage> createState() => _DeerMainPageState();
 }
 
-class _DeerMainPageState extends ConsumerState<DeerMainPage> {
+class _DeerMainPageState extends ConsumerState<DeerMainPage>
+    with HomeProviders {
   static const _tabImageSize = 25.0;
   final PageController _pageController = PageController();
 
@@ -68,6 +69,12 @@ class _DeerMainPageState extends ConsumerState<DeerMainPage> {
       const StatisticsPage(),
       const ShopPage(),
     ];
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override

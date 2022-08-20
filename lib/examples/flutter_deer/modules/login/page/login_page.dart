@@ -131,7 +131,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             focusNode: pwdNode,
             hintText: '请输入密码',
             isSecret: value,
-            keyboardType: TextInputType.number,
             isShowHint: () => true,
             hintWidget: GestureDetector(
               child: LoadAssetImage(
@@ -161,16 +160,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           builder: (context, value, child) {
             return MaterialButton(
               onPressed: value ? _login : null,
+              color: themeData.primaryColor,
+              disabledColor: Colours.buttonDisabled,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.zero),
+              ),
               child: Text(
                 '登录',
                 style: TextStyle(
                   color: value ? Colors.white : Colours.textDisabled,
                 ),
-              ),
-              color: themeData.primaryColor,
-              disabledColor: Colours.buttonDisabled,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.zero),
               ),
             );
           },
