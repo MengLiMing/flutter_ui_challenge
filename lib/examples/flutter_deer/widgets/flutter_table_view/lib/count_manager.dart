@@ -117,9 +117,10 @@ class _TableViewCountManager extends ChangeNotifier
         break;
       }
     }
-    if (zeroSections.isNotEmpty) {
-      zeroSections.forEach((index) => autoRemoveZeroAction?.call(index));
+    for (final index in zeroSections) {
+      autoRemoveZeroAction?.call(index);
     }
+
     value += changed;
     print('当前个数:$value');
   }

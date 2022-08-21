@@ -22,11 +22,3 @@ class IndexPath {
   @override
   int get hashCode => row.hashCode ^ section.hashCode;
 }
-
-class _TableViewDataSource {
-  late int Function() sectionCount;
-
-  late int Function(int) rowCount;
-
-  _TableViewDataSource();
-}
