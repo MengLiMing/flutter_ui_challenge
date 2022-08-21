@@ -1,10 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/widgets/flutter_table_view.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/utils/random_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/custon_back_button.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/flutter_table_view/flutter_table_view.dart';
 
 class ShopRecordPage extends StatefulWidget {
   const ShopRecordPage({Key? key}) : super(key: key);
@@ -15,11 +12,11 @@ class ShopRecordPage extends StatefulWidget {
 
 class _ShopRecordPageState extends State<ShopRecordPage> {
   List<ShopRecordSectionModel> dataSource = List.generate(
-    100,
+    5,
     (index) => ShopRecordSectionModel(
       data: '时间',
       models: List.generate(
-        300,
+        20,
         (index) => ShopRecordModel(type: '类型$index', price: '100'),
       ),
     ),
@@ -27,67 +24,12 @@ class _ShopRecordPageState extends State<ShopRecordPage> {
 
   final controller = FlutterTableViewController();
 
-  void randomDelete() {
-    if (dataSource.isEmpty) {
-      dataSource = List.generate(
-        RandomUtil.number(3) + 1,
-        (index) => ShopRecordSectionModel(
-          data: '时间',
-          models: List.generate(
-            4,
-            (index) => ShopRecordModel(type: '类型$index', price: '100'),
-          ),
-        ),
-      );
-      controller.refreshSuccess();
-      return;
-    }
-
-    final randomSection = RandomUtil.number(dataSource.length);
-    final sectionModel = dataSource[randomSection];
-
-    if (sectionModel.models.isEmpty) return;
-    final randomIndex = RandomUtil.number(sectionModel.models.length);
-
-    List<ShopRecordModel> models = List.from(sectionModel.models);
-    models.removeAt(randomIndex);
-    dataSource[randomSection] = sectionModel.copyWith(models: models);
-
-    controller.dataChangeWithSection(randomSection, rowCount: models.length,
-        removeSection: (index) {
-      dataSource.removeAt(randomSection);
-    });
-  }
-
-  Timer? timer;
-
-  @override
-  void initState() {
-    super.initState();
-
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      randomDelete();
-    });
-  }
-
-  @override
-  void dispose() {
-    timer?.cancel();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: const CustomBackButton(),
         title: const Text('账户流水'),
-        actions: [
-          IconButton(
-            onPressed: randomDelete,
-            icon: const Icon(Icons.delete_rounded),
-          ),
-        ],
       ),
       body: FlutterTableView(
         controller: controller,

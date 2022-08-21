@@ -31,6 +31,7 @@ dependencies:
   webview_flutter: 3.0.4
   freezed_annotation: ^2.1.0
   json_annotation: ^4.6.0
+  synchronized: ^3.0.0+2
 
 dev_dependencies:
   flutter_test:
