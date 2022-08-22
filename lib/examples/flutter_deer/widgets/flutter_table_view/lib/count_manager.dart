@@ -4,10 +4,12 @@ class _TableViewCountManager extends ChangeNotifier
     implements ValueListenable<int> {
   final _TableViewDataSource dataSource;
 
+  Function()? setState;
+
   _TableViewCountManager({required this.dataSource});
 
   /// 记录分区
-  Map<int, _SectionCache> _sectionCountCache = {};
+  final Map<int, _Section> _sectionCache = {};
 
   /// 记录index对应的path
   final Map<int, IndexPath> _indexPathCache = {};
@@ -27,7 +29,7 @@ class _TableViewCountManager extends ChangeNotifier
   }
 
   void clear() {
-    _sectionCountCache.clear();
+    _sectionCache.clear();
     _indexPathCache.clear();
     value = 0;
     _dirtyIndex = -1;
@@ -56,9 +58,9 @@ class _TableViewCountManager extends ChangeNotifier
     int changed = 0;
     int startIndex = 0;
 
-    if (from != 0 && _sectionCountCache[from] != null) {
+    if (from != 0 && _sectionCache[from] != null) {
       startIndex = from;
-      final cache = _sectionCountCache[from]!;
+      final cache = _sectionCache[from]!;
       lastIndex = cache.lastIndex - cache.rowCount;
     }
 
@@ -67,7 +69,7 @@ class _TableViewCountManager extends ChangeNotifier
     int sectionOffset = 0;
     for (int i = startIndex; i < sectionCount; i++) {
       final rowCount = dataSource.rowCount(i);
-      final cache = _sectionCountCache[i];
+      final cache = _sectionCache[i];
 
       final realSectionIndex = i + sectionOffset;
       if (cache == null) {
@@ -77,7 +79,7 @@ class _TableViewCountManager extends ChangeNotifier
           _dirtyIndex = newDirty;
         }
         lastIndex += rowCount;
-        _sectionCountCache[realSectionIndex] = _SectionCache(
+        _sectionCache[realSectionIndex] = _Section(
           sectionIndex: i,
           rowCount: rowCount,
           lastIndex: lastIndex,
@@ -90,7 +92,7 @@ class _TableViewCountManager extends ChangeNotifier
 
         final newLastIndex = cache.lastIndex + sectionRowChange;
 
-        _sectionCountCache[realSectionIndex] = cache.copyWith(
+        _sectionCache[realSectionIndex] = cache.copyWith(
           rowCount: rowCount,
           lastIndex: newLastIndex,
         );
@@ -122,10 +124,27 @@ class _TableViewCountManager extends ChangeNotifier
     }
 
     value += changed;
-    print('当前个数:$value');
   }
 
-  IndexPath? indexPathBy(int index) {
+  int? indexWithIndexPath(
+    IndexPath indexPath,
+  ) {
+    final sectionIndex = indexPath.section;
+    var cache = _sectionCache[sectionIndex];
+
+    if (cache == null) {
+      /// 没有缓存就需要重新获取
+      reloadSection(from: sectionIndex, earyEnd: true);
+      cache = _sectionCache[sectionIndex];
+    }
+
+    if (cache != null) {
+      return cache.lastIndex - cache.rowCount + 1 + indexPath.row;
+    }
+    return null;
+  }
+
+  IndexPath? indexPathWithIndex(int index) {
     /// 标脏之后的index不可信，需要重新获取 有缓存就取缓存
     if (index < _dirtyIndex && _indexPathCache[index] != null) {
       return _indexPathCache[index];
@@ -134,10 +153,10 @@ class _TableViewCountManager extends ChangeNotifier
     /// 正常滑动加载的过程中，可以取前一个indexPath使用
     final preIndexPath = _indexPathCache[index - 1];
 
-    _SectionCache? preSectionCache;
+    _Section? preSectionCache;
     if ((index - 1) < _dirtyIndex && preIndexPath != null) {
       final preSection = preIndexPath.section;
-      preSectionCache = _sectionCountCache[preSection];
+      preSectionCache = _sectionCache[preSection];
     }
 
     final result = indexPathByPreSectionCache(preSectionCache, index);
@@ -150,12 +169,11 @@ class _TableViewCountManager extends ChangeNotifier
     return null;
   }
 
-  IndexPath? indexPathByPreSectionCache(
-      _SectionCache? preSectionCache, int index) {
+  IndexPath? indexPathByPreSectionCache(_Section? preSectionCache, int index) {
     int lastIndex = preSectionCache?.lastIndex ?? -1;
-    if (lastIndex >= index) {
+    if (lastIndex >= index && preSectionCache != null) {
       return IndexPath(
-          row: preSectionCache!.rowCount - (lastIndex - index) - 1,
+          row: preSectionCache.rowCount - (lastIndex - index) - 1,
           section: preSectionCache.sectionIndex);
     }
     IndexPath? result;
@@ -163,9 +181,9 @@ class _TableViewCountManager extends ChangeNotifier
     int startSection = (preSectionCache?.sectionIndex ?? -1) + 1;
     while (startSection < dataSource.sectionCount()) {
       final rowCount = dataSource.rowCount(startSection);
-      if ((lastIndex + rowCount) >= index) {
+      if ((lastIndex + rowCount) >= index && index >= 0) {
         result = IndexPath(row: index - lastIndex - 1, section: startSection);
-        _sectionCountCache[startSection] = _SectionCache(
+        _sectionCache[startSection] = _Section(
           sectionIndex: startSection,
           rowCount: rowCount,
           lastIndex: lastIndex + rowCount,
@@ -179,7 +197,7 @@ class _TableViewCountManager extends ChangeNotifier
   }
 }
 
-class _SectionCache {
+class _Section {
   final int sectionIndex;
 
   /// 当前section row的个数
@@ -188,17 +206,17 @@ class _SectionCache {
   /// 当前section最后一个对应的 下标
   final int lastIndex;
 
-  const _SectionCache(
+  const _Section(
       {required this.sectionIndex,
       required this.rowCount,
       required this.lastIndex});
 
-  _SectionCache copyWith({
+  _Section copyWith({
     int? sectionIndex,
     int? rowCount,
     int? lastIndex,
   }) {
-    return _SectionCache(
+    return _Section(
       sectionIndex: sectionIndex ?? this.sectionIndex,
       rowCount: rowCount ?? this.rowCount,
       lastIndex: lastIndex ?? this.lastIndex,

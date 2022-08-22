@@ -3,18 +3,20 @@ part of flutter_table_view;
 class FlutterTableViewController {
   ItemScrollController? _itemScrollController;
   ItemScrollController? get itemScrollController => _itemScrollController;
-  var _lock = Lock();
+  final _lock = Lock();
 
   ItemPositionsListener? _itemPositionsListener;
   ItemPositionsListener? get itemPositionsListener => _itemPositionsListener;
 
   _TableViewCountManager? _countManger;
 
-  void _unwrapCountManager(
-      void Function(_TableViewCountManager countManager) then) {
+  Future<void> _unwrapCountManager(
+      void Function(_TableViewCountManager countManager) then) async {
     final countManager = _countManger;
     if (countManager == null) return;
-    then(countManager);
+    await _lock.synchronized(() {
+      then(countManager);
+    });
   }
 
   /// 数据刷新成功后调用
@@ -29,9 +31,14 @@ class FlutterTableViewController {
   /// 加载更多成功后调用
   void loadMoreSuccess() {
     _unwrapCountManager((countManager) {
-      final currentIndexPath = countManager.indexPathBy(countManager.value - 1);
-      if (currentIndexPath != null) {
-        countManager.loadNextSection(currentIndexPath.section);
+      if (countManager.value == 0) {
+        refreshSuccess();
+      } else {
+        final currentIndexPath =
+            countManager.indexPathWithIndex(countManager.value - 1);
+        if (currentIndexPath != null) {
+          countManager.loadNextSection(currentIndexPath.section);
+        }
       }
     });
   }
@@ -42,12 +49,51 @@ class FlutterTableViewController {
     Function(int sectionIndex)? removeAction,
   }) {
     _unwrapCountManager((countManager) {
-      _lock.synchronized(() {
-        countManager.reloadSection(
-          from: sectionIndex,
-          autoRemoveZeroAction: removeAction,
+      countManager.reloadSection(
+        from: sectionIndex,
+        autoRemoveZeroAction: removeAction,
+      );
+    });
+  }
+
+  void jumpToSection(int section) {
+    jumpTo(indexPath: IndexPath(row: 0, section: section));
+  }
+
+  void jumpTo({required IndexPath indexPath, double alignment = 0}) {
+    _unwrapCountManager((countManager) {
+      // countManager.reloadSection();
+      final index = countManager.indexWithIndexPath(indexPath);
+      final itemScrollController = _itemScrollController;
+      if (index != null &&
+          itemScrollController != null &&
+          itemScrollController.isAttached) {
+        itemScrollController.jumpTo(index: index, alignment: alignment);
+      }
+    });
+  }
+
+  Future<void> scrollTo({
+    required IndexPath indexPath,
+    double alignment = 0,
+    required Duration duration,
+    Curve curve = Curves.linear,
+    List<double> opacityAnimationWeights = const [40, 20, 40],
+  }) async {
+    _unwrapCountManager((countManager) async {
+      // countManager.reloadSection();
+      final index = countManager.indexWithIndexPath(indexPath);
+      final itemScrollController = _itemScrollController;
+      if (index != null &&
+          itemScrollController != null &&
+          itemScrollController.isAttached) {
+        await itemScrollController.scrollTo(
+          index: index,
+          duration: duration,
+          alignment: alignment,
+          opacityAnimationWeights: opacityAnimationWeights,
         );
-      });
+      }
     });
   }
 }
