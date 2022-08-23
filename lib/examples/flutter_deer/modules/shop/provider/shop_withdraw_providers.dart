@@ -27,30 +27,21 @@ class ShopWithdrawStateNotifier extends StateNotifier<ShopWithdrawState> {
           accountModel: ShopWithdrawAccountModel.samples.first,
         ));
 
-  @override
-  set state(ShopWithdrawState value) {
-    super.state = value;
-    _checkCanCommit();
-  }
-
   void change({
     ShopWithdrawAccountModel? accountModel,
     ShopWithdrawStyle? withdrawStyle,
     String? money,
   }) {
-    state = state.copyWith(
-      accountModel: accountModel,
-      withdrawStyle: withdrawStyle,
-      money: money,
-    );
-  }
-
-  void _checkCanCommit() {
     double price = 0;
     if (state.money.isNotEmpty) {
       price = double.tryParse(state.money) ?? 0;
     }
-    state = state.copyWith(canCommit: price > 0 && price <= 20000);
+    state = state.copyWith(
+      accountModel: accountModel,
+      withdrawStyle: withdrawStyle,
+      money: money,
+      canCommit: price > 0 && price <= 20000,
+    );
   }
 }
 
