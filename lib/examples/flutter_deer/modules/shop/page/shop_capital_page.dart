@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/shop_router.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/utils/toast.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/my_app_bar.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/my_scroll_view.dart';
 
 class ShopCapitalPage extends StatelessWidget {
   const ShopCapitalPage({Key? key}) : super(key: key);
@@ -13,12 +17,18 @@ class ShopCapitalPage extends StatelessWidget {
       appBar: const MyAppBar(
         title: Text('资金管理'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildCard(),
-          ],
-        ),
+      body: MyScrollView(
+        children: [
+          _buildCard(),
+          _listItem(
+            '提现',
+            () => NavigatorUtils.push(context, ShopRouter.withdraw),
+          ),
+          _listItem('提现记录', () {
+            Toast.show('样式类似 - 账户流水');
+          }),
+          _listItem('提现密码', () {}),
+        ],
       ),
     );
   }
@@ -30,7 +40,7 @@ class ShopCapitalPage extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           Container(
-            padding: EdgeInsets.only(left: 6, right: 6, top: 3),
+            padding: const EdgeInsets.only(left: 6, right: 6, top: 3),
             child: const LoadAssetImage(
               'account/bg',
               fit: BoxFit.fill,
@@ -70,6 +80,32 @@ class ShopCapitalPage extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _listItem(String title, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.only(left: 16.fit),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: 52.fit,
+              child: Row(
+                children: [
+                  Expanded(child: Text(title)),
+                  LoadAssetImage('ic_arrow_right',
+                      height: 16.fit, width: 16.fit),
+                  SizedBox(width: 16.fit),
+                ],
+              ),
+            ),
+            const Divider(),
+          ],
+        ),
       ),
     );
   }

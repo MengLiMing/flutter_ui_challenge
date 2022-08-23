@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ui_challenge/change_app_page.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/my_app_bar.dart';
 import 'package:flutter_ui_challenge/examples/ui_chanllenge/routes.dart';
 import 'package:flutter_ui_challenge/examples/ui_chanllenge/theme.dart';
 
@@ -24,7 +25,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: MyAppBar(
         title: const Text('HomePage'),
         actions: [
           IconButton(

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +17,7 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/utils/toast.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/custom_show_loading.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/my_app_bar.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/my_edit_scroll_view.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/simple_textfield.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -121,171 +121,142 @@ class _GoodsEditPageState extends ConsumerState<GoodsEditPage>
         appBar: MyAppBar(
           title: Text(widget.isEdit ? '编辑商品' : "添加商品"),
         ),
-        body: Stack(
-          fit: StackFit.expand,
-          children: [
-            LayoutBuilder(
-              builder: (context, constraints) {
-                return Scaffold(
-                  resizeToAvoidBottomInset: true,
-                  body: SingleChildScrollView(
-                    controller: controller,
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.only(left: 16),
-                    child: ConstrainedBox(
-                      constraints:
-                          BoxConstraints(minHeight: constraints.maxHeight),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          sectionTitle('基本信息', top: 21),
-                          selectedImage(),
-                          space(16),
-                          textField(
-                            '商品名称',
-                            '填写商品名称',
-                            readGoodData.name,
-                            (value) {
-                              readNotifier.changeGoodsData(name: value);
-                            },
-                          ),
-                          textField(
-                            '商品简介',
-                            '填写简短描述',
-                            readGoodData.desc,
-                            (value) {
-                              readNotifier.changeGoodsData(desc: value);
-                            },
-                          ),
-                          textField(
-                            '折后价格',
-                            '填写商品单品折后价格',
-                            readGoodData.price == 0
-                                ? ''
-                                : readGoodData.price.toString(),
-                            (value) {
-                              /// 实际开发还是封装一下价格处理
-                              readNotifier.changeGoodsData(
-                                  price: double.tryParse(value) ?? 0);
-                            },
-                            keyboardType:
-                                TextInputType.numberWithOptions(decimal: true),
-                          ),
-                          textField(
-                            '商品条码',
-                            '选填',
-                            readGoodData.code,
-                            (value) {
-                              readNotifier.changeGoodsData(code: value);
-                            },
-                            rightWidgt: GestureDetector(
-                              behavior: HitTestBehavior.translucent,
-                              onTap: () => Toast.show('扫描'),
-                              child: Container(
-                                alignment: Alignment.center,
-                                padding:
-                                    const EdgeInsets.only(right: 16, left: 16),
-                                child: const LoadAssetImage('goods/scanning',
-                                    width: 16.0, height: 16.0),
-                              ),
-                            ),
-                          ),
-                          textField(
-                            '商品说明',
-                            '选填',
-                            readGoodData.remark,
-                            (value) {
-                              readNotifier.changeGoodsData(remark: value);
-                            },
-                          ),
-                          sectionTitle('折扣立减', top: 32, bottom: 16),
-                          textField(
-                            '立减金额',
-                            '0.0',
-                            readGoodData.reducePrice == 0
-                                ? ''
-                                : readGoodData.reducePrice.toString(),
-                            (value) {
-                              readNotifier.changeGoodsData(
-                                  reducePrice: double.tryParse(value) ?? 0);
-                            },
-                            keyboardType:
-                                TextInputType.numberWithOptions(decimal: true),
-                          ),
-                          textField(
-                            '折扣金额',
-                            '0.0',
-                            readGoodData.discountPrice == 0
-                                ? ''
-                                : readGoodData.discountPrice.toString(),
-                            (value) {
-                              readNotifier.changeGoodsData(
-                                  discountPrice: double.tryParse(value) ?? 0);
-                            },
-                            keyboardType: const TextInputType.numberWithOptions(
-                                decimal: true),
-                          ),
-                          sectionTitle('类型规格', top: 32, bottom: 16),
-                          GestureDetector(
-                            behavior: HitTestBehavior.translucent,
-                            onTap: chooseGoodsType,
-                            child: Consumer(builder: (context, ref, _) {
-                              return typeChooseView(
-                                '商品类型',
-                                hintText: '选择商品类型',
-                                content: ref.watch(goodsTypeChange),
-                              );
-                            }),
-                          ),
-                          GestureDetector(
-                            behavior: HitTestBehavior.translucent,
-                            onTap: chooseGoodsSpec,
-                            child: Consumer(builder: (context, ref, _) {
-                              return typeChooseView(
-                                '商品规格',
-                                hintText: '对规格进行分类',
-                                content: ref.watch(goodsSpecChange),
-                              );
-                            }),
-                          ),
-                          space(16 + max(ScreenUtils.bottomPadding, 8) + 44),
-                        ],
-                      ),
-                    ),
-                  ),
+        body: MyEditScrollView(
+          bottomHeight: 16 + max(ScreenUtils.bottomPadding, 8) + 44,
+          bottom: Container(
+            color: Colors.white,
+            padding: EdgeInsets.only(
+              top: 8,
+              left: 16,
+              right: 16,
+              bottom: max(ScreenUtils.bottomPadding, 8),
+            ),
+            child: Consumer(
+              builder: (context, ref, _) {
+                final value = ref.watch(canCommit);
+                return MaterialButton(
+                  color: value ? Colours.appMain : Colours.buttonDisabled,
+                  minWidth: double.infinity,
+                  elevation: 0,
+                  height: 44,
+                  onPressed: () {
+                    if (value == false) return;
+                    commitAction();
+                  },
+                  child:
+                      const Text('点击', style: TextStyle(color: Colors.white)),
                 );
               },
             ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: Container(
-                color: Colors.white,
-                padding: EdgeInsets.only(
-                  top: 8,
-                  left: 16,
-                  right: 16,
-                  bottom: max(ScreenUtils.bottomPadding, 8),
-                ),
-                child: Consumer(
-                  builder: (context, ref, _) {
-                    final value = ref.watch(canCommit);
-                    return MaterialButton(
-                      color: value ? Colours.appMain : Colours.buttonDisabled,
-                      minWidth: double.infinity,
-                      elevation: 0,
-                      height: 44,
-                      onPressed: () {
-                        if (value == false) return;
-                        commitAction();
-                      },
-                      child: const Text('点击',
-                          style: TextStyle(color: Colors.white)),
-                    );
-                  },
+          ),
+          padding: const EdgeInsets.only(left: 16),
+          children: [
+            sectionTitle('基本信息', top: 21),
+            selectedImage(),
+            space(16),
+            textField(
+              '商品名称',
+              '填写商品名称',
+              readGoodData.name,
+              (value) {
+                readNotifier.changeGoodsData(name: value);
+              },
+            ),
+            textField(
+              '商品简介',
+              '填写简短描述',
+              readGoodData.desc,
+              (value) {
+                readNotifier.changeGoodsData(desc: value);
+              },
+            ),
+            textField(
+              '折后价格',
+              '填写商品单品折后价格',
+              readGoodData.price == 0 ? '' : readGoodData.price.toString(),
+              (value) {
+                /// 实际开发还是封装一下价格处理
+                readNotifier.changeGoodsData(
+                    price: double.tryParse(value) ?? 0);
+              },
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+            ),
+            textField(
+              '商品条码',
+              '选填',
+              readGoodData.code,
+              (value) {
+                readNotifier.changeGoodsData(code: value);
+              },
+              rightWidgt: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () => Toast.show('扫描'),
+                child: Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.only(right: 16, left: 16),
+                  child: const LoadAssetImage('goods/scanning',
+                      width: 16.0, height: 16.0),
                 ),
               ),
+            ),
+            textField(
+              '商品说明',
+              '选填',
+              readGoodData.remark,
+              (value) {
+                readNotifier.changeGoodsData(remark: value);
+              },
+            ),
+            sectionTitle('折扣立减', top: 32, bottom: 16),
+            textField(
+              '立减金额',
+              '0.0',
+              readGoodData.reducePrice == 0
+                  ? ''
+                  : readGoodData.reducePrice.toString(),
+              (value) {
+                readNotifier.changeGoodsData(
+                    reducePrice: double.tryParse(value) ?? 0);
+              },
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+            ),
+            textField(
+              '折扣金额',
+              '0.0',
+              readGoodData.discountPrice == 0
+                  ? ''
+                  : readGoodData.discountPrice.toString(),
+              (value) {
+                readNotifier.changeGoodsData(
+                    discountPrice: double.tryParse(value) ?? 0);
+              },
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+            ),
+            sectionTitle('类型规格', top: 32, bottom: 16),
+            GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: chooseGoodsType,
+              child: Consumer(builder: (context, ref, _) {
+                return typeChooseView(
+                  '商品类型',
+                  hintText: '选择商品类型',
+                  content: ref.watch(goodsTypeChange),
+                );
+              }),
+            ),
+            GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: chooseGoodsSpec,
+              child: Consumer(builder: (context, ref, _) {
+                return typeChooseView(
+                  '商品规格',
+                  hintText: '对规格进行分类',
+                  content: ref.watch(goodsSpecChange),
+                );
+              }),
             ),
           ],
         ),

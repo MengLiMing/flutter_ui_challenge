@@ -20,6 +20,7 @@ extension on DialogInpuAlignment {
   }
 }
 
+/// 弹出框中有输入框使用
 class DialogInput extends StatefulWidget {
   final Widget child;
 
