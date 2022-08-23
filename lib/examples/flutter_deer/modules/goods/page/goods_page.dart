@@ -11,10 +11,12 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/overlay_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/random_utils.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/toast.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/always_keep_alive.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/easy_segment/easy_segment.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/my_app_bar.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/option_selected_view.dart';
 
 class GoodsPage extends ConsumerStatefulWidget {
@@ -77,7 +79,7 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsProviders {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
+      appBar: MyAppBar(
         actions: [
           IconButton(
             onPressed: searchAction,
@@ -93,8 +95,8 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsProviders {
             onPressed: showAddMenu,
             icon: Container(
                 padding: const EdgeInsets.only(right: 5),
-                width: 42,
-                height: 44,
+                width: 42.fit,
+                height: 44.fit,
                 alignment: Alignment.center,
                 child:
                     const LoadAssetImage('goods/add', width: 24, height: 24)),
@@ -122,7 +124,7 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsProviders {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                top: 49,
+                top: 49.fit,
                 child: GoodsTypeChoose(
                   selectedIndex: ref.watch(selectedIndex),
                   datas: items,
@@ -257,7 +259,7 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsProviders {
       return OptionSelectedView(
         top: addBtnSize.height + addBtnOffset.dy - 10,
         right: 8,
-        radius: 8,
+        radius: 8.fit,
         arrowPointScale: 0.85,
         controller: selectedController,
         child: GoodsPageOptionView(onTap: (value) {

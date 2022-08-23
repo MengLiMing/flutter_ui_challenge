@@ -9,6 +9,7 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/common/user_provider.
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/text_styles.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/toast.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/my_app_bar.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/simple_textfield.dart';
 
 class CodeLoginPage extends ConsumerStatefulWidget {
@@ -60,7 +61,7 @@ class _CodeLoginPageState extends ConsumerState<CodeLoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: const MyAppBar(
         elevation: 0,
       ),
       body: SingleChildScrollView(

@@ -23,14 +23,20 @@ class ShopActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverGrid(
-      delegate: SliverChildBuilderDelegate((context, index) {
-        return ShopActionItem(itemData: actions[index]);
-      }, childCount: actions.length),
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        crossAxisSpacing: 16,
-        maxCrossAxisExtent: 70,
-        childAspectRatio: 70 / 88,
+    return SliverPadding(
+      padding: const EdgeInsets.only(
+        left: 8,
+        right: 8,
+      ),
+      sliver: SliverGrid(
+        delegate: SliverChildBuilderDelegate((context, index) {
+          return ShopActionItem(itemData: actions[index]);
+        }, childCount: actions.length),
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          crossAxisSpacing: 0,
+          maxCrossAxisExtent: 80,
+          childAspectRatio: 80 / 88,
+        ),
       ),
     );
   }

@@ -64,8 +64,12 @@ class _OrderPageState extends ConsumerState<OrderPage> {
                     NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 sliver: SliverPersistentHeader(
                   delegate: OrderHeader(
-                    maxHeight: 173 + ScreenUtils.topPadding,
-                    minHeight: 129 + ScreenUtils.topPadding,
+                    maxHeight: 129.fit +
+                        ScreenUtils.navBarHeight +
+                        ScreenUtils.topPadding,
+                    minHeight: 85.fit +
+                        ScreenUtils.navBarHeight +
+                        ScreenUtils.topPadding,
                     items: items,
                     onSearch: search,
                   ),

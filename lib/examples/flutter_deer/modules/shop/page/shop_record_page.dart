@@ -6,9 +6,9 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/model/sh
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/provider/shop_record_providers.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/custon_back_button.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/flutter_table_view/flutter_table_view.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_more_footer.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/my_app_bar.dart';
 
 class ShopRecordPage extends ConsumerStatefulWidget {
   const ShopRecordPage({Key? key}) : super(key: key);
@@ -39,19 +39,8 @@ class _ShopRecordPageState extends ConsumerState<ShopRecordPage>
       controller.loadMoreSuccess();
     });
     return Scaffold(
-      appBar: AppBar(
-        leading: const CustomBackButton(),
-        title: const Text('账户流水'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              controller.jumpToSection(
-                dataSource.length - 1,
-              );
-            },
-            icon: const Icon(Icons.delete),
-          ),
-        ],
+      appBar: const MyAppBar(
+        title: Text('账户流水'),
       ),
       body: Stack(
         alignment: Alignment.center,

@@ -32,32 +32,43 @@ class ShopPage extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 16),
-        child: CustomScrollView(
-          slivers: [
-            const SliverToBoxAdapter(
-              child: ShopHeader(),
-            ),
-            const SliverToBoxAdapter(child: Divider()),
-            SliverToBoxAdapter(child: sectionTitle('账户', top: 24)),
-            ShopActions(actions: [
-              ShopAction(
-                  title: '账户流水',
-                  image: 'shop/zhls',
-                  onTap: () {
-                    NavigatorUtils.push(context, ShopRouter.record);
-                  }),
-              ShopAction(title: '资金管理', image: 'shop/zjgl', onTap: () {}),
-              ShopAction(title: '提现账号', image: 'shop/txzh', onTap: () {})
-            ]),
-            const SliverToBoxAdapter(child: Divider()),
-            SliverToBoxAdapter(child: sectionTitle('店铺', top: 24)),
-            ShopActions(actions: [
-              ShopAction(title: '店铺设置', image: 'shop/dpsz', onTap: () {}),
-            ]),
-          ],
-        ),
+      body: CustomScrollView(
+        slivers: [
+          const SliverToBoxAdapter(
+            child: ShopHeader(),
+          ),
+          line(),
+          SliverToBoxAdapter(child: sectionTitle('账户', top: 24)),
+          ShopActions(actions: [
+            ShopAction(
+                title: '账户流水',
+                image: 'shop/zhls',
+                onTap: () {
+                  NavigatorUtils.push(context, ShopRouter.record);
+                }),
+            ShopAction(
+                title: '资金管理',
+                image: 'shop/zjgl',
+                onTap: () {
+                  NavigatorUtils.push(context, ShopRouter.capital);
+                }),
+            ShopAction(title: '提现账号', image: 'shop/txzh', onTap: () {})
+          ]),
+          line(),
+          SliverToBoxAdapter(child: sectionTitle('店铺', top: 24)),
+          ShopActions(actions: [
+            ShopAction(title: '店铺设置', image: 'shop/dpsz', onTap: () {}),
+          ]),
+        ],
+      ),
+    );
+  }
+
+  Widget line() {
+    return const SliverPadding(
+      padding: EdgeInsets.only(left: 16),
+      sliver: SliverToBoxAdapter(
+        child: Divider(),
       ),
     );
   }
@@ -68,7 +79,7 @@ class ShopPage extends StatelessWidget {
     double bottom = 0,
   }) {
     return Padding(
-      padding: EdgeInsets.only(top: top, bottom: bottom),
+      padding: EdgeInsets.only(top: top, bottom: bottom, left: 16),
       child: Text(
         title,
         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),

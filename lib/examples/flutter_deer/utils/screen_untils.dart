@@ -29,4 +29,16 @@ class ScreenUtils {
       MediaQueryData.fromWindow(WidgetsBinding.instance.window)
           .viewInsets
           .bottom;
+
+  static double get scale {
+    if (width > 0) {
+      return width / 375;
+    } else {
+      return 1;
+    }
+  }
+}
+
+extension ScreenUtilsFit on num {
+  double get fit => ScreenUtils.scale * this;
 }

@@ -77,7 +77,9 @@ class DeerApp extends StatelessWidget {
             builder: (context, child) {
               ScreenUtils.config(context);
               return MediaQuery(
-                data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+                data: MediaQuery.of(context).copyWith(
+                  textScaleFactor: ScreenUtils.scale,
+                ),
                 child: child!,
               );
             },

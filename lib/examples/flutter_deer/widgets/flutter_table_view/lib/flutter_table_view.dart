@@ -174,12 +174,15 @@ class _FlutterTableViewState extends State<FlutterTableView> {
               minCacheExtent: widget.minCacheExtent,
               itemBuilder: (context, index) {
                 if (index >= count) {
+                  final additionalIndex = index - count;
+
                   final indexPath = countManger
-                      .indexPathWithIndex(index - widget.additionalNumber);
+                      .indexPathWithIndex(index - additionalIndex - 1);
                   final sectionCount = dataSource.sectionCount();
+
+                  /// 前一个section是最后一个section才调用刷新
                   if (indexPath != null &&
                       indexPath.section == (sectionCount - 1)) {
-                    final additionalIndex = index - count;
                     if (widget.additionalBuilder != null &&
                         additionalIndex >= 0 &&
                         additionalIndex < widget.additionalNumber) {

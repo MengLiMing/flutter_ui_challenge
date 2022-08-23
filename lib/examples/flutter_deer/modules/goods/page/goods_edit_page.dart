@@ -16,8 +16,8 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/utils/dialog_utils.da
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/toast.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/custom_show_loading.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/custon_back_button.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/my_app_bar.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/simple_textfield.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -118,8 +118,7 @@ class _GoodsEditPageState extends ConsumerState<GoodsEditPage>
       controller: loadingController,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          leading: const CustomBackButton(),
+        appBar: MyAppBar(
           title: Text(widget.isEdit ? '编辑商品' : "添加商品"),
         ),
         body: Stack(

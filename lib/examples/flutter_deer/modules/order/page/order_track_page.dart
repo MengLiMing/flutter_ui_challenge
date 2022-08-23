@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/custon_back_button.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/my_app_bar.dart';
 
 class OrderTrackPage extends StatelessWidget {
   final String orderId;
@@ -13,9 +13,8 @@ class OrderTrackPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: const CustomBackButton(),
-        title: const Text('订单跟踪'),
+      appBar: const MyAppBar(
+        title: Text('订单跟踪'),
       ),
       body: ListView.builder(
         padding: const EdgeInsets.only(left: 16),

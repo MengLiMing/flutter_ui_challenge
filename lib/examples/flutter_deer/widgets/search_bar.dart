@@ -126,7 +126,7 @@ class _SearchBarState extends State<SearchBar> {
       minWidth: 44,
       height: 32,
       onPressed: searchAction,
-      child: Text(
+      child: const Text(
         '搜索',
         style: TextStyle(
           color: Colors.white,
@@ -135,17 +135,20 @@ class _SearchBarState extends State<SearchBar> {
     );
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.dark,
-      child: Material(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        child: SafeArea(
-          child: Row(
-            children: [
-              backButton,
-              textField,
-              SizedBox(width: 8),
-              searchButton,
-              SizedBox(width: 16),
-            ],
+      child: MediaQuery(
+        data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
+        child: Material(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: SafeArea(
+            child: Row(
+              children: [
+                backButton,
+                textField,
+                const SizedBox(width: 8),
+                searchButton,
+                const SizedBox(width: 16),
+              ],
+            ),
           ),
         ),
       ),

@@ -59,7 +59,8 @@ class OrderHeader extends SliverPersistentHeaderDelegate {
             width: 50,
             height: ScreenUtils.navBarHeight,
             child: IconButton(
-              icon: LoadAssetImage('order/icon_search', width: 22, height: 22),
+              icon: const LoadAssetImage('order/icon_search',
+                  width: 22, height: 22),
               onPressed: onSearch,
             ),
           ),
@@ -69,7 +70,6 @@ class OrderHeader extends SliverPersistentHeaderDelegate {
           bottom: 96,
           child: Container(
             alignment: Alignment.center,
-            width: 48,
             height: 30,
             child: Text(
               '订单',

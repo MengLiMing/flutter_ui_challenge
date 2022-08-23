@@ -13,8 +13,8 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.d
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/string_extension.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/toast.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/custom_show_loading.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/custon_back_button.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/my_app_bar.dart';
 
 class OrderDetailPage extends StatefulWidget {
   final String orderId;
@@ -51,8 +51,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     return CustomShowLoading(
       controller: loadingController,
       child: Scaffold(
-        appBar: AppBar(
-          leading: const CustomBackButton(),
+        appBar: MyAppBar(
           actions: [
             if (_items.isNotEmpty)
               TextButton(
@@ -146,7 +145,11 @@ extension on _OrderDetailPageState {
       (context) =>
           sectionTitle('正在配送', topSpace: 3, style: TextStyles.textBold24),
       (context) => sectionTitle('客户信息'),
-      (context) => userInfo(),
+      (context) => userInfo(
+            name: '郭李',
+            phone: '13014795306',
+            address: '西安市 雁塔区 唐兴路唐兴数码3楼318',
+          ),
       (context) => space(16),
       (context) => sectionTitle('商品信息', bottomSpace: 0),
       for (int i = 0; i < 2; i++) (context) => goodInfo(),
@@ -158,9 +161,9 @@ extension on _OrderDetailPageState {
             priceInfo('优惠券', -2.5),
             priceInfo('社区币折扣', -2.5),
             priceInfo('佣金', -1),
-            Divider(),
+            const Divider(),
             priceInfo('合计', 46.5, topSpace: 16),
-            Divider(),
+            const Divider(),
           ]),
       (context) => sectionTitle('订单信息', topSpace: 32),
       (context) => Column(
@@ -211,7 +214,7 @@ extension on _OrderDetailPageState {
     double bottomSpace = 8,
     double? width,
   }) {
-    final style = const TextStyle(
+    const style = TextStyle(
       fontSize: 14,
       color: Colours.textGray,
       fontFeatures: [FontFeature.tabularFigures()],
@@ -226,7 +229,7 @@ extension on _OrderDetailPageState {
                   style: style,
                 )
               : SizedBox(
-                  width: width,
+                  width: width.fit,
                   child: DefaultTextStyle(
                     style: style,
                     child: Row(
@@ -236,7 +239,7 @@ extension on _OrderDetailPageState {
                   ),
                 ),
           Text(':', style: style),
-          const SizedBox(width: 8),
+          SizedBox(width: 8.fit),
           Text(
             content,
             style: const TextStyle(fontSize: 14, color: Colours.text),
@@ -364,40 +367,42 @@ extension on _OrderDetailPageState {
   }
 
   /// 客户信息
-  Widget userInfo() {
+  Widget userInfo({
+    required String name,
+    required String phone,
+    required String address,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const LoadAssetImage('order/icon_avatar', width: 44, height: 44),
-            const SizedBox(width: 8),
+            LoadAssetImage('order/icon_avatar', width: 44.fit, height: 44.fit),
+            SizedBox(width: 8.fit),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text('郭李'),
-                  SizedBox(height: 8),
-                  Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Text('13014795306')),
+                children: [
+                  Text(name),
+                  SizedBox(height: 8.fit),
+                  Align(alignment: Alignment.bottomLeft, child: Text(phone)),
                 ],
               ),
             ),
-            const SizedBox(
+            SizedBox(
               width: 1,
-              height: 24,
+              height: 24.fit,
               child: ColoredBox(color: Colours.bgGray),
             ),
             GestureDetector(
               onTap: () => Toast.show('打电话'),
-              child: const Padding(
-                padding: EdgeInsets.only(left: 16),
+              child: Padding(
+                padding: EdgeInsets.only(left: 16.fit),
                 child: LoadAssetImage(
                   'order/icon_phone',
-                  width: 24,
-                  height: 24,
+                  width: 24.fit,
+                  height: 24.fit,
                 ),
               ),
             ),
@@ -408,20 +413,20 @@ extension on _OrderDetailPageState {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const LoadAssetImage('order/icon_address',
-                  width: 16.0, height: 16.0),
-              const SizedBox(width: 4),
+              LoadAssetImage('order/icon_address',
+                  width: 16.fit, height: 16.fit),
+              SizedBox(width: 4.fit),
               Container(
-                constraints:
-                    BoxConstraints(maxWidth: ScreenUtils.width - 36 - 32),
+                constraints: BoxConstraints(
+                    maxWidth: ScreenUtils.width - 36.fit - 32.fit),
                 child: Text(
-                  '西安市 雁塔区 唐兴路唐兴数码3楼318'.text,
+                  address.text,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              const Icon(
+              Icon(
                 Icons.keyboard_arrow_right,
-                size: 16,
+                size: 16.fit,
                 color: Colours.text,
               ),
             ],

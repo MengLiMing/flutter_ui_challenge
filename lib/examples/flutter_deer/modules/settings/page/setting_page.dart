@@ -6,7 +6,7 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/modules/settings/widg
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/dialog_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/alert_view.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/custon_back_button.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/my_app_bar.dart';
 
 class SettingPage extends ConsumerStatefulWidget {
   const SettingPage({Key? key}) : super(key: key);
@@ -19,9 +19,8 @@ class _SettingPageState extends ConsumerState<SettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: CustomBackButton(),
-        title: const Text('设置'),
+      appBar: const MyAppBar(
+        title: Text('设置'),
       ),
       body: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),

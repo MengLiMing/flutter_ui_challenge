@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/deer_app.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/my_app_bar.dart';
 import 'package:flutter_ui_challenge/examples/ui_chanllenge/flutter_challenge_page.dart';
 import 'package:flutter_ui_challenge/main.dart';
 
@@ -11,8 +12,8 @@ class ChangeAppPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('切换App'),
+      appBar: const MyAppBar(
+        title: Text('切换App'),
       ),
       body: GridView(
         padding: const EdgeInsets.all(10),

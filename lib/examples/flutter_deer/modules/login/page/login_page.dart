@@ -7,6 +7,7 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/text_styles.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/my_app_bar.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/simple_textfield.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -200,7 +201,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       )
     ];
     return Scaffold(
-      appBar: AppBar(
+      appBar: MyAppBar(
         elevation: 0,
         leading: const CloseButton(),
         actions: [

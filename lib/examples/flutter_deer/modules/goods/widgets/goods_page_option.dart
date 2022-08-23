@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
 
 enum GoodsPageOption {
@@ -27,10 +28,10 @@ class GoodsPageOptionView extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: SizedBox(
-        height: 68,
-        width: 120,
+        height: 68.fit,
+        width: 120.fit,
         child: ListView.separated(
-          padding: const EdgeInsets.only(left: 16, right: 16),
+          padding: EdgeInsets.only(left: 16.fit, right: 16.fit),
           itemBuilder: (context, index) {
             final option = values[index];
             return GestureDetector(
@@ -59,15 +60,15 @@ class _OptionItemView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 34,
+      height: 34.fit,
       child: Row(
         children: [
           LoadAssetImage(
             option.imgae,
-            width: 16,
-            height: 16,
+            width: 16.fit,
+            height: 16.fit,
           ),
-          SizedBox(width: 6),
+          SizedBox(width: 6.fit),
           Expanded(child: Text(option.title)),
         ],
       ),
