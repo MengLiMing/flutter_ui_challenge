@@ -1,16 +1,23 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-part 'bank_model.freezed.dart';
 part 'bank_model.g.dart';
 
-@freezed
-class BankModel with _$BankModel {
-  factory BankModel({
-    int? id,
-    String? bankName,
-    String? firstLetter,
-  }) = _BankModel;
+@JsonSerializable()
+class BankModel extends Equatable {
+  final int id;
+  final String bankName;
+  final String firstLetter;
 
-  factory BankModel.fromJson(Map<String, dynamic> json) =>
-      _$BankModelFromJson(json);
+  const BankModel(
+      {required this.id, required this.bankName, required this.firstLetter});
+
+  factory BankModel.fromJson(Map<String, dynamic> json) {
+    return _$BankModelFromJson(json);
+  }
+
+  Map<String, dynamic> toJson() => _$BankModelToJson(this);
+
+  @override
+  List<Object?> get props => [id, bankName, firstLetter];
 }

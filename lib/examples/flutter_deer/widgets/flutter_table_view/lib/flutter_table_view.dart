@@ -5,25 +5,23 @@ part of flutter_table_view;
 typedef TableViewItemBuilder = Widget Function(
     BuildContext context, IndexPath indexPath);
 
-typedef TableReusableViewBuilder = Widget? Function(
+typedef TableViewReusableViewBuilder = Widget? Function(
   BuildContext context,
   int sectionIndex,
-  FLutterTableViewReusableStyle reusableStyle,
 );
+
+typedef TableReusableViewHandler = void Function(
+    BuildContext context, int sectionIndex);
+
+typedef TableViewSelectedHandler = void Function(
+    BuildContext context, IndexPath indexPath);
 
 enum FlutterTableViewStyle {
   plain,
   grouped,
 }
 
-enum FLutterTableViewReusableStyle {
-  header,
-  footer,
-}
-
 class FlutterTableView extends StatefulWidget {
-  static final TableReusableViewBuilder defaultBuilder = (_, __, ___) => null;
-
   /// 返回section个数
   final int Function() sectionCount;
 
@@ -41,8 +39,22 @@ class FlutterTableView extends StatefulWidget {
   /// cell构造器
   final TableViewItemBuilder itemBuilder;
 
-  /// ReusableView 构造器 - 提供header、footer
-  final TableReusableViewBuilder? reusableBuilder;
+  /// 提供header
+  final TableViewReusableViewBuilder? headerBuilder;
+
+  /// 提供footer
+  final TableViewReusableViewBuilder? footerBuilder;
+
+  /// 点击cell
+  final TableViewSelectedHandler? onSelectedItem;
+
+  /// 点击头
+  final TableReusableViewHandler? onSelectedHeader;
+
+  /// 点击footer
+  final TableReusableViewHandler? onSelectedFooter;
+
+  /// 点击头
 
   /// header偏移高度
   final double headerOffset;
@@ -76,7 +88,8 @@ class FlutterTableView extends StatefulWidget {
     required this.itemBuilder,
     this.headerOffset = 0,
     this.style = FlutterTableViewStyle.plain,
-    this.reusableBuilder,
+    this.headerBuilder,
+    this.footerBuilder,
     this.shrinkWrap = false,
     this.scrollDirection = Axis.vertical,
     this.reverse = false,
@@ -90,6 +103,9 @@ class FlutterTableView extends StatefulWidget {
     this.additionalNumber = 0,
     this.additionalBuilder,
     this.initialLoadedNumber = 0,
+    this.onSelectedItem,
+    this.onSelectedHeader,
+    this.onSelectedFooter,
   })  : assert(additionalNumber >= 0),
         assert(initialLoadedNumber >= 0),
         super(key: key);
@@ -220,7 +236,7 @@ class _FlutterTableViewState extends State<FlutterTableView> {
   }
 
   Widget _buildHeader(BuildContext context) {
-    if (widget.reusableBuilder == null) return Container();
+    if (widget.headerBuilder == null) return Container();
     return ValueListenableBuilder<Iterable<ItemPosition>>(
       valueListenable: itemPositionsListener.itemPositions,
       builder: (ctx, positions, _) {
@@ -286,9 +302,20 @@ class _FlutterTableViewState extends State<FlutterTableView> {
         mainAxisSpace += widget.headerOffset;
         _headerKey.section = indexPath.section;
 
-        final headerWideget = widget.reusableBuilder?.call(
-            context, indexPath.section, FLutterTableViewReusableStyle.header);
+        var headerWideget = widget.headerBuilder?.call(
+          context,
+          indexPath.section,
+        );
         if (headerWideget == null) return Container();
+        if (widget.onSelectedHeader != null) {
+          headerWideget = GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            child: headerWideget,
+            onTap: () {
+              widget.onSelectedHeader?.call(context, indexPath.section);
+            },
+          );
+        }
         if (isVertical) {
           if (widget.reverse) {
             return Positioned(
@@ -344,61 +371,71 @@ class _FlutterTableViewState extends State<FlutterTableView> {
 
   Widget buildItem(BuildContext context, IndexPath indexPath, int rowCount) {
     var itemWidegt = widget.itemBuilder(context, indexPath);
+    if (widget.onSelectedItem != null) {
+      itemWidegt = GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        child: itemWidegt,
+        onTap: () {
+          widget.onSelectedItem?.call(context, indexPath);
+        },
+      );
+    }
+
+    Widget? header;
+    Widget? footer;
     if (indexPath.row == 0) {
-      var header = widget.reusableBuilder?.call(
+      header = widget.headerBuilder?.call(
         context,
         indexPath.section,
-        FLutterTableViewReusableStyle.header,
       );
-      if (header != null) {
-        List<Widget> children = widget.reverse
-            ? [
-                itemWidegt,
-                header,
-              ]
-            : [
-                header,
-                itemWidegt,
-              ];
-        if (widget.scrollDirection == Axis.vertical) {
-          itemWidegt = Column(
-            mainAxisSize: MainAxisSize.min,
-            children: children,
-          );
-        } else {
-          itemWidegt = Row(
-            mainAxisSize: MainAxisSize.min,
-            children: children,
-          );
-        }
+      if (widget.onSelectedHeader != null) {
+        header = GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          child: header,
+          onTap: () {
+            widget.onSelectedHeader?.call(context, indexPath.section);
+          },
+        );
       }
-    } else if (indexPath.row == rowCount - 1) {
-      final footer = widget.reusableBuilder?.call(
+    }
+    if (indexPath.row == rowCount - 1) {
+      footer = widget.footerBuilder?.call(
         context,
         indexPath.section,
-        FLutterTableViewReusableStyle.footer,
       );
-      if (footer != null) {
-        List<Widget> children = widget.reverse
-            ? [
-                itemWidegt,
-                footer,
-              ]
-            : [
-                footer,
-                itemWidegt,
-              ];
-        if (widget.scrollDirection == Axis.vertical) {
-          itemWidegt = Column(
-            mainAxisSize: MainAxisSize.min,
-            children: children,
-          );
-        } else {
-          itemWidegt = Row(
-            mainAxisSize: MainAxisSize.min,
-            children: children,
-          );
-        }
+      if (widget.onSelectedFooter != null) {
+        footer = GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          child: footer,
+          onTap: () {
+            widget.onSelectedFooter?.call(context, indexPath.section);
+          },
+        );
+      }
+    }
+
+    if (header != null || footer != null) {
+      List<Widget> children = widget.reverse
+          ? [
+              if (footer != null) footer,
+              itemWidegt,
+              if (header != null) header,
+            ]
+          : [
+              if (header != null) header,
+              itemWidegt,
+              if (footer != null) footer,
+            ];
+      if (widget.scrollDirection == Axis.vertical) {
+        itemWidegt = Column(
+          mainAxisSize: MainAxisSize.min,
+          children: children,
+        );
+      } else {
+        itemWidegt = Row(
+          mainAxisSize: MainAxisSize.min,
+          children: children,
+        );
       }
     }
     return itemWidegt;

@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/model/bank_model/bank_model.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/model/city_model/city_model.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/model/shop_withdraw_models.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/provider/shop_witdraw_add_providers.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/shop_router.dart';
@@ -40,16 +42,38 @@ class _ShopAddWithdrawPageState extends ConsumerState<ShopAddWithdrawPage>
   }
 
   void cityChoose() {
-    NavigatorUtils.push(context, ShopRouter.city, resultCallback: (city) {
-      if (city is String && city.isNotEmpty) {
-        ref.read(manager.state).update((state) => state.copyWith(city: city));
+    NavigatorUtils.push(context, ShopRouter.chooseInfo,
+        parameters: {'style': '0'}, resultCallback: (cityModel) {
+      if (cityModel is CityModel) {
+        ref
+            .read(manager.state)
+            .update((state) => state.copyWith(city: cityModel.name));
       }
     });
   }
 
-  void bankNameChoose() {}
+  void bankNameChoose() {
+    NavigatorUtils.push(context, ShopRouter.chooseInfo,
+        parameters: {'style': '1'}, resultCallback: (bankModel) {
+      if (bankModel is BankModel) {
+        ref
+            .read(manager.state)
+            .update((state) => state.copyWith(bankName: bankModel.bankName));
+      }
+    });
+  }
 
-  void brankNameChoose() {}
+  void brankNameChoose() {
+    NavigatorUtils.push(context, ShopRouter.chooseInfo,
+        parameters: {'style': '2'}, resultCallback: (bankModel) {
+      if (bankModel is BankModel) {
+        ref
+            .read(manager.state)
+            .update((state) => state.copyWith(branchName: bankModel.bankName));
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final data = ref.watch(manager);
@@ -113,7 +137,7 @@ class _ShopAddWithdrawPageState extends ConsumerState<ShopAddWithdrawPage>
             _selectedItem(
                 '银行名称', '选择开户银行', data.bankEditModel.bankName, bankNameChoose),
             _selectedItem('支行名称', '选择开户支行', data.bankEditModel.branchName,
-                bankNameChoose),
+                brankNameChoose),
             _hintText('绑定持卡人本人的银行卡'),
           ],
         ],
@@ -138,6 +162,7 @@ class _ShopAddWithdrawPageState extends ConsumerState<ShopAddWithdrawPage>
                 hasLine: false,
                 hintText: hint,
                 hintStyle: const TextStyle(color: Colours.textGrayC),
+                onChanged: onChange,
               ),
             ),
             const SizedBox(width: 16),

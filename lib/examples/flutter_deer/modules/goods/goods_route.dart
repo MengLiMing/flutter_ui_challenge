@@ -13,7 +13,7 @@ class GoodsRouter extends ModularRouterProvider {
     }));
 
     router.define(edit, handler: Handler(handlerFunc: (context, params) {
-      final isEdit = params['isEdit']?.first as String?;
+      final isEdit = params['isEdit']?.first;
       return GoodsEditPage(isEdit: isEdit == '1');
     }));
   }

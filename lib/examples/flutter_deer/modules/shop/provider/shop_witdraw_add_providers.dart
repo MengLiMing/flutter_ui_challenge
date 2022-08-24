@@ -12,6 +12,9 @@ mixin ShopWithdrawAddProviders {
 
   late final canCommit = Provider.autoDispose<bool>((ref) {
     final model = ref.watch(manager);
+    if (model.accontType == ShopAccontType.wechat) {
+      return true;
+    }
     return model.bankEditModel.name.isNotEmpty &&
         model.bankEditModel.cardNumber.isNotEmpty &&
         model.bankEditModel.city.isNotEmpty &&

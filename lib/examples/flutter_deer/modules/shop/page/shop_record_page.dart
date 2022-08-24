@@ -33,10 +33,10 @@ class _ShopRecordPageState extends ConsumerState<ShopRecordPage>
   @override
   Widget build(BuildContext context) {
     ref.listen<void>(refresh, (_, __) {
-      controller.refreshSuccess();
+      controller.reloadData();
     });
     ref.listen<void>(loadMore, (_, __) {
-      controller.loadMoreSuccess();
+      controller.loadMoreData();
     });
     return Scaffold(
       appBar: const MyAppBar(
@@ -73,9 +73,7 @@ class _ShopRecordPageState extends ConsumerState<ShopRecordPage>
                   hasLine: hasLine,
                 );
               },
-              reusableBuilder: (context, sectionIndex, reusableStyle) {
-                if (reusableStyle == FLutterTableViewReusableStyle.footer)
-                  return null;
+              headerBuilder: (context, sectionIndex) {
                 final sectionModel = dataSource[sectionIndex];
                 return _ShopRecordHeader(
                   model: sectionModel,

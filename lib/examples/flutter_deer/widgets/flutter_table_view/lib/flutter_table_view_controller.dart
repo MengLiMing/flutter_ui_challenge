@@ -19,20 +19,23 @@ class FlutterTableViewController {
     });
   }
 
-  /// 数据刷新成功后调用
-  void refreshSuccess() {
+  /// 加载firstSection
+  void reloadData({bool isAll = false}) {
     _unwrapCountManager((countManager) {
-      countManager
-        ..clear()
-        ..initLoad();
+      countManager.clear();
+      if (isAll) {
+        countManager.reloadSection();
+      } else {
+        countManager.initLoad();
+      }
     });
   }
 
   /// 加载更多成功后调用
-  void loadMoreSuccess() {
+  void loadMoreData() {
     _unwrapCountManager((countManager) {
       if (countManager.value == 0) {
-        refreshSuccess();
+        reloadData();
       } else {
         final currentIndexPath =
             countManager.indexPathWithIndex(countManager.value - 1);

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/model/shop_withdraw_models.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/shop_add_withdraw_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/shop_capital_page.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/shop_city_page.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/shop_info_choose_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/shop_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/shop_record_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/shop_withdraw_choose_page.dart';
@@ -28,8 +28,8 @@ class ShopRouter extends ModularRouterProvider {
   /// 选择账号
   static const withdrawChoose = '/shop/withdraw/choose';
 
-  /// 开户城市
-  static const city = '/shop/city';
+  /// 开户城市 style:0 /银行名称 style:1 /支行名称style:2
+  static const chooseInfo = '/shop/city';
 
   @override
   void initRouter(FluroRouter router) {
@@ -65,8 +65,12 @@ class ShopRouter extends ModularRouterProvider {
       return ShopWithdrawChoosePage(model: model);
     }));
 
-    router.define(city, handler: Handler(handlerFunc: (context, _) {
-      return const ShopCityPage();
+    router.define(chooseInfo, handler: Handler(handlerFunc: (context, params) {
+      final value = params['style']?.first ?? '0';
+      final style = int.tryParse(value) ?? 0;
+      return ShopInfoChoosePage(
+        style: ShopInfoChooseStyle.values[style],
+      );
     }));
   }
 }

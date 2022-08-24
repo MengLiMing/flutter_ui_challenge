@@ -90,9 +90,15 @@ class DeerApp extends StatelessWidget {
             },
           );
 
-          return GestureDetector(
-            onTap: () {
-              FocusManager.instance.primaryFocus?.unfocus();
+          /// 全局点击空白隐藏键盘
+          return Listener(
+            behavior: HitTestBehavior.deferToChild,
+            onPointerDown: (_) {
+              FocusScopeNode currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus &&
+                  currentFocus.focusedChild != null) {
+                FocusManager.instance.primaryFocus?.unfocus();
+              }
             },
             child: content,
           );
