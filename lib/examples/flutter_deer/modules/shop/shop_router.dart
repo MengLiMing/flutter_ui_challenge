@@ -8,6 +8,7 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/sho
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/shop_record_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/shop_withdraw_choose_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/shop_withdraw_page.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/shop_withdraw_pwd_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/deer_routers.dart';
 
 class ShopRouter extends ModularRouterProvider {
@@ -30,6 +31,9 @@ class ShopRouter extends ModularRouterProvider {
 
   /// 开户城市 style:0 /银行名称 style:1 /支行名称style:2
   static const chooseInfo = '/shop/city';
+
+  /// 提现密码
+  static const withdrawPwd = '/shop/withdraw/pwd';
 
   @override
   void initRouter(FluroRouter router) {
@@ -71,6 +75,10 @@ class ShopRouter extends ModularRouterProvider {
       return ShopInfoChoosePage(
         style: ShopInfoChooseStyle.values[style],
       );
+    }));
+
+    router.define(withdrawPwd, handler: Handler(handlerFunc: (_, __) {
+      return const ShopWithdrawPwdPage();
     }));
   }
 }

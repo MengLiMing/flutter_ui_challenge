@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_ui_challenge/examples/ui_chanllenge/flutter_challenge_page.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/deer_app.dart';
 
 final mainAppProvider = StateProvider<Widget>((ref) {
-  return const FlutterChallengeApp();
+  return DeerApp();
 });
 
 void main() {

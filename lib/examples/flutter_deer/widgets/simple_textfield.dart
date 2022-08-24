@@ -17,6 +17,7 @@ class SimpleTextField extends StatefulWidget {
   final bool hasLine;
   final String? defaultText;
   final double height;
+  final List<TextInputFormatter>? inputFormatters;
 
   const SimpleTextField({
     Key? key,
@@ -33,6 +34,7 @@ class SimpleTextField extends StatefulWidget {
     this.hintStyle = TextStyles.textHint14,
     this.style = TextStyles.text,
     this.defaultText,
+    this.inputFormatters,
     required this.hintText,
   }) : super(key: key);
 
@@ -99,7 +101,7 @@ class _SimpleTextFieldState extends State<SimpleTextField> {
     // final themeData = Theme.of(context);
 
     final textField = TextField(
-      inputFormatters: _getInputFormatters(),
+      inputFormatters: widget.inputFormatters ?? _getInputFormatters(),
       style: widget.style,
       controller: controller,
       focusNode: widget.focusNode,

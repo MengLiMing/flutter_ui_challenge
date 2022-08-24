@@ -3,11 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/model/shop_withdraw_models.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/provider/shop_withdraw_providers.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/shop_router.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/widgets/shop_pwd_dialog.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/widgets/shop_withdraw_account.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/text_styles.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_utils.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/utils/dialog_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/utils/toast.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/custon_back_button.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/my_app_bar.dart';
@@ -29,6 +32,18 @@ class _ShopWithDrawPageState extends ConsumerState<ShopWithDrawPage>
   void dispose() {
     editingController.dispose();
     super.dispose();
+  }
+
+  void withdrawAction() {
+    DialogUtils.show(context, builder: (context) {
+      return ShopPwdDialog();
+    }).then((pwd) {
+      if (pwd == '666666') {
+        Toast.show('密码正确');
+      } else {
+        Toast.show('密码错误');
+      }
+    });
   }
 
   @override
@@ -117,22 +132,23 @@ class _ShopWithDrawPageState extends ConsumerState<ShopWithDrawPage>
                             fontSize: 14, color: Colours.textGrayC),
                       );
                     }),
-                    RepaintBoundary(
-                      child: SimpleTextField(
-                        hasLine: false,
-                        controller: editingController,
-                        hintText: '',
-                        keyboardType: const TextInputType.numberWithOptions(
-                          decimal: true,
-                        ),
-                        style: const TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        onChanged: (value) {
-                          ref.read(manager.notifier).change(money: value);
-                        },
+                    SimpleTextField(
+                      hasLine: false,
+                      controller: editingController,
+                      hintText: '',
+                      inputFormatters: [
+                        UsNumberTextInputFormatter(max: 70),
+                      ],
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
                       ),
+                      style: const TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      onChanged: (value) {
+                        ref.read(manager.notifier).change(money: value);
+                      },
                     ),
                   ],
                 ),
@@ -150,7 +166,7 @@ class _ShopWithDrawPageState extends ConsumerState<ShopWithDrawPage>
               ),
               InkWell(
                 onTap: () {
-                  var all = "20000";
+                  var all = "70";
                   editingController.text = all;
                   editingController.selection = TextSelection.collapsed(
                     offset: all.length,
@@ -254,7 +270,7 @@ class _ShopWithDrawPageState extends ConsumerState<ShopWithDrawPage>
         disabledColor: Colours.buttonDisabled,
         minWidth: double.infinity,
         height: 44,
-        onPressed: ref.watch(canCommit) ? () {} : null,
+        onPressed: ref.watch(canCommit) ? withdrawAction : null,
         child: const Text(
           '提现',
           style: TextStyle(color: Colors.white),

@@ -32,9 +32,10 @@ class ShopWithdrawStateNotifier extends StateNotifier<ShopWithdrawState> {
     ShopWithdrawStyle? withdrawStyle,
     String? money,
   }) {
+    final value = money ?? state.money;
     double price = 0;
-    if (state.money.isNotEmpty) {
-      price = double.tryParse(state.money) ?? 0;
+    if (value != null) {
+      price = double.tryParse(value) ?? 0;
     }
     state = state.copyWith(
       accountModel: accountModel,

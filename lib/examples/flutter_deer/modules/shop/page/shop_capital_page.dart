@@ -27,7 +27,10 @@ class ShopCapitalPage extends StatelessWidget {
           _listItem('提现记录', () {
             Toast.show('样式类似 - 账户流水');
           }),
-          _listItem('提现密码', () {}),
+          _listItem(
+            '提现密码',
+            () => NavigatorUtils.push(context, ShopRouter.withdrawPwd),
+          ),
         ],
       ),
     );
