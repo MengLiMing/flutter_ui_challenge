@@ -134,12 +134,12 @@ class _ShopInfoChooseState extends ConsumerState<ShopInfoChoosePage>
 
   Widget tableView() {
     ref.listen(manager, (previous, next) {
-      tableViewController.reloadData(isAll: true);
+      tableViewController.reloadData();
     });
     return FlutterTableView(
       padding: EdgeInsets.only(
-        left: 16,
-        right: 36,
+        left: 16.fit,
+        right: 36.fit,
         bottom: max(10, ScreenUtils.bottomPadding),
       ),
       sectionCount: () {
@@ -232,8 +232,8 @@ class _ChooseInfoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 40,
+    return SizedBox(
+      height: 40.fit,
       child: Row(
         children: [
           Opacity(

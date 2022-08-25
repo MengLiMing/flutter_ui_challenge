@@ -31,6 +31,7 @@ class DeerApp extends StatelessWidget {
     app = OKToast(
       position: ToastPosition.center,
       radius: 20,
+      movingOnWindowChange: false,
       textPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       backgroundColor: Colors.black87,
       child: app,

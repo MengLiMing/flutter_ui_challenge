@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/widgets/shop_pwd_code_view.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/text_styles.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/number_key_borad.dart';
 
 class ShopPwdDialog extends StatefulWidget {
@@ -44,7 +47,7 @@ class _ShopPwdDialogState extends State<ShopPwdDialog> {
                           alignment: Alignment.centerRight,
                           padding: const EdgeInsets.only(right: 16),
                           child: const Text(
-                            '忘记密码?',
+                            '密码不是666666',
                             style: TextStyle(
                               color: Colours.appMain,
                               fontSize: 12,
@@ -75,6 +78,23 @@ class _ShopPwdDialogState extends State<ShopPwdDialog> {
                   )
                 ],
               ),
+              Positioned(
+                right: 0,
+                top: 0,
+                child: GestureDetector(
+                  onTap: () => NavigatorUtils.pop(context),
+                  child: Container(
+                    height: 48.fit,
+                    width: 48.fit,
+                    alignment: Alignment.center,
+                    child: LoadAssetImage(
+                      'goods/icon_dialog_close',
+                      width: 16.fit,
+                      height: 16.fit,
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -84,49 +104,17 @@ class _ShopPwdDialogState extends State<ShopPwdDialog> {
 
   Widget codeView() {
     return Container(
-      margin: EdgeInsets.only(left: 16.fit, right: 16.fit),
-      height: 40.fit,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colours.textGrayC, width: 1),
-        borderRadius: BorderRadius.all(Radius.circular(4)),
-      ),
       child: ValueListenableBuilder<List<int>>(
-          valueListenable: inputPwd,
-          builder: (context, value, _) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                for (int i = 0; i < maxLength; i++) ...[
-                  if (i != 0)
-                    Container(
-                      width: 1,
-                      height: double.infinity,
-                      color: Colours.textGrayC,
-                    ),
-                  if (value.length > i)
-                    Expanded(
-                      child: Center(
-                        child: Container(
-                          width: 8,
-                          height: 8,
-                          decoration: const BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(4),
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  else
-                    Expanded(
-                      child: Container(),
-                    )
-                ]
-              ],
-            );
-          }),
+        valueListenable: inputPwd,
+        builder: (context, value, _) {
+          return ShopPwdCodeView(
+            margin: EdgeInsets.only(left: 16.fit, right: 16.fit),
+            radius: 4.fit,
+            height: 40.fit,
+            pwd: value,
+          );
+        },
+      ),
     );
   }
 }

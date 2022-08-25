@@ -4,8 +4,6 @@ class _TableViewCountManager extends ChangeNotifier
     implements ValueListenable<int> {
   final _TableViewDataSource dataSource;
 
-  Function()? setState;
-
   _TableViewCountManager({required this.dataSource});
 
   /// 记录分区
@@ -35,18 +33,10 @@ class _TableViewCountManager extends ChangeNotifier
     _dirtyIndex = -1;
   }
 
-  void initLoad() {
-    reloadSection(earyEnd: true);
-  }
-
-  void loadNextSection(int sectionIndex) {
-    reloadSection(from: sectionIndex + 1, earyEnd: true);
-  }
-
   /// 重新刷新 范围内的section 并返回rowCount, earyEnd 是否changed发生变化提前结束
   void reloadSection({
     int from = 0,
-    bool earyEnd = false,
+    bool Function(int changed, int count)? earyEndHandler,
     Function(int sectionIndex)? autoRemoveZeroAction,
   }) {
     final sectionCount = dataSource.sectionCount();
@@ -115,7 +105,7 @@ class _TableViewCountManager extends ChangeNotifier
         }
         zeroSections.add(i);
       }
-      if (earyEnd && changed != 0) {
+      if (earyEndHandler != null && earyEndHandler(changed, value + changed)) {
         break;
       }
     }
@@ -133,8 +123,10 @@ class _TableViewCountManager extends ChangeNotifier
     var cache = _sectionCache[sectionIndex];
 
     if (cache == null) {
-      /// 没有缓存就需要重新获取
-      reloadSection(from: sectionIndex, earyEnd: true);
+      reloadSection(
+        from: sectionIndex,
+        earyEndHandler: (changed, _) => changed != 0,
+      );
       cache = _sectionCache[sectionIndex];
     }
 

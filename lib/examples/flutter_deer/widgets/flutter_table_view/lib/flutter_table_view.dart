@@ -54,6 +54,9 @@ class FlutterTableView extends StatefulWidget {
   /// 点击footer
   final TableReusableViewHandler? onSelectedFooter;
 
+  /// 首次自动加载
+  final bool autoLoad;
+
   /// 点击头
 
   /// header偏移高度
@@ -93,6 +96,7 @@ class FlutterTableView extends StatefulWidget {
     this.shrinkWrap = false,
     this.scrollDirection = Axis.vertical,
     this.reverse = false,
+    this.autoLoad = false,
     this.physics,
     this.semanticChildCount,
     this.padding,
@@ -135,13 +139,12 @@ class _FlutterTableViewState extends State<FlutterTableView> {
     super.initState();
     dataSource = _TableViewDataSource();
 
-    countManger = _TableViewCountManager(dataSource: dataSource)
-      ..setState = () {
-        setState(() {});
-      };
+    countManger = _TableViewCountManager(dataSource: dataSource);
     configDataSource();
 
-    countManger.initLoad();
+    if (widget.autoLoad) {
+      countManger.reloadSection();
+    }
   }
 
   void configDataSource() {
@@ -215,7 +218,6 @@ class _FlutterTableViewState extends State<FlutterTableView> {
                   } else {
                     final sectionCount = dataSource.sectionCount();
                     final rowCount = dataSource.rowCount(indexPath.section);
-                    countManger.loadNextSection(indexPath.section);
                     if (indexPath.section >= 0 &&
                         indexPath.section < sectionCount &&
                         indexPath.row >= 0 &&

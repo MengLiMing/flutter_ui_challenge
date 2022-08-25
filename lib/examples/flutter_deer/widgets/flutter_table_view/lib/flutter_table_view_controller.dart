@@ -19,19 +19,15 @@ class FlutterTableViewController {
     });
   }
 
-  /// 加载firstSection
-  void reloadData({bool isAll = false}) {
+  /// 首次加载数据使用
+  void reloadData() {
     _unwrapCountManager((countManager) {
       countManager.clear();
-      if (isAll) {
-        countManager.reloadSection();
-      } else {
-        countManager.initLoad();
-      }
+      countManager.reloadSection();
     });
   }
 
-  /// 加载更多成功后调用
+  /// 加载更多数据之后使用
   void loadMoreData() {
     _unwrapCountManager((countManager) {
       if (countManager.value == 0) {
@@ -40,13 +36,13 @@ class FlutterTableViewController {
         final currentIndexPath =
             countManager.indexPathWithIndex(countManager.value - 1);
         if (currentIndexPath != null) {
-          countManager.loadNextSection(currentIndexPath.section);
+          countManager.reloadSection(from: currentIndexPath.section + 1);
         }
       }
     });
   }
 
-  /// 对应sectionIndex下的数据源 改变需要调用
+  /// 在对应section删除或者添加后 调用
   void reloadSection(
     int sectionIndex, {
     Function(int sectionIndex)? removeAction,
@@ -59,13 +55,13 @@ class FlutterTableViewController {
     });
   }
 
-  void jumpToSection(int section) {
-    jumpTo(indexPath: IndexPath(row: 0, section: section));
+  void jumpToSection(int section, {double alignment = 0}) {
+    jumpTo(
+        indexPath: IndexPath(row: 0, section: section), alignment: alignment);
   }
 
   void jumpTo({required IndexPath indexPath, double alignment = 0}) {
     _unwrapCountManager((countManager) {
-      // countManager.reloadSection();
       final index = countManager.indexWithIndexPath(indexPath);
       final itemScrollController = _itemScrollController;
       if (index != null &&
@@ -76,6 +72,22 @@ class FlutterTableViewController {
     });
   }
 
+  Future<void> scrollToSection(
+    int section, {
+    double alignment = 0,
+    required Duration duration,
+    Curve curve = Curves.linear,
+    List<double> opacityAnimationWeights = const [40, 20, 40],
+  }) async {
+    return scrollTo(
+      indexPath: IndexPath(row: 0, section: section),
+      duration: duration,
+      alignment: alignment,
+      curve: curve,
+      opacityAnimationWeights: opacityAnimationWeights,
+    );
+  }
+
   Future<void> scrollTo({
     required IndexPath indexPath,
     double alignment = 0,
@@ -84,7 +96,6 @@ class FlutterTableViewController {
     List<double> opacityAnimationWeights = const [40, 20, 40],
   }) async {
     _unwrapCountManager((countManager) async {
-      // countManager.reloadSection();
       final index = countManager.indexWithIndexPath(indexPath);
       final itemScrollController = _itemScrollController;
       if (index != null &&

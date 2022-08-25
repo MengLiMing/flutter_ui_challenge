@@ -40,5 +40,5 @@ class ScreenUtils {
 }
 
 extension ScreenUtilsFit on num {
-  double get fit => ScreenUtils.scale * this;
+  double get fit => ((ScreenUtils.scale * this) * 10).roundToDouble() / 10;
 }

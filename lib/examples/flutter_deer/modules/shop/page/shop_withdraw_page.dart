@@ -36,8 +36,9 @@ class _ShopWithDrawPageState extends ConsumerState<ShopWithDrawPage>
 
   void withdrawAction() {
     DialogUtils.show(context, builder: (context) {
-      return ShopPwdDialog();
+      return const ShopPwdDialog();
     }).then((pwd) {
+      if (pwd == null) return;
       if (pwd == '666666') {
         Toast.show('密码正确');
       } else {

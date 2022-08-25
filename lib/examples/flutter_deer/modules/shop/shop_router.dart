@@ -6,6 +6,7 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/sho
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/shop_info_choose_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/shop_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/shop_record_page.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/shop_withdraw_change_pwd_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/shop_withdraw_choose_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/shop_withdraw_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/shop_withdraw_pwd_page.dart';
@@ -34,6 +35,9 @@ class ShopRouter extends ModularRouterProvider {
 
   /// 提现密码
   static const withdrawPwd = '/shop/withdraw/pwd';
+
+  /// 修改密码
+  static const changePwd = '/shop/withdraw/pwd/change';
 
   @override
   void initRouter(FluroRouter router) {
@@ -79,6 +83,10 @@ class ShopRouter extends ModularRouterProvider {
 
     router.define(withdrawPwd, handler: Handler(handlerFunc: (_, __) {
       return const ShopWithdrawPwdPage();
+    }));
+
+    router.define(changePwd, handler: Handler(handlerFunc: (_, __) {
+      return const ShopWithdrawChangePwdPage();
     }));
   }
 }
