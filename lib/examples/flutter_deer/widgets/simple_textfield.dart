@@ -18,6 +18,7 @@ class SimpleTextField extends StatefulWidget {
   final String? defaultText;
   final double height;
   final List<TextInputFormatter>? inputFormatters;
+  final bool autofocus;
 
   const SimpleTextField({
     Key? key,
@@ -34,6 +35,7 @@ class SimpleTextField extends StatefulWidget {
     this.hintStyle = TextStyles.textHint14,
     this.style = TextStyles.text,
     this.defaultText,
+    this.autofocus = false,
     this.inputFormatters,
     required this.hintText,
   }) : super(key: key);
@@ -108,7 +110,7 @@ class _SimpleTextFieldState extends State<SimpleTextField> {
       maxLength: widget.maxLength,
       obscureText: widget.isSecret,
       keyboardType: widget.keyboardType,
-      autofocus: false,
+      autofocus: widget.autofocus,
       textInputAction: TextInputAction.done,
       onChanged: widget.onChanged,
       decoration: InputDecoration(

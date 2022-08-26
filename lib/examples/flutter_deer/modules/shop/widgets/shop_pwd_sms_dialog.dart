@@ -5,7 +5,7 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/code_view.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/dialog_input.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/input_dialog.dart';
 
 class ShopPwdSmsDialog extends StatefulWidget {
   const ShopPwdSmsDialog({Key? key}) : super(key: key);
@@ -48,7 +48,7 @@ class _ShopPwdSmsDialogState extends State<ShopPwdSmsDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return DialogInput(
+    return InputDialog(
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 48.fit),
         padding: EdgeInsets.symmetric(horizontal: 16.fit),
@@ -75,7 +75,7 @@ class _ShopPwdSmsDialogState extends State<ShopPwdSmsDialog> {
               height: 32.fit,
               width: 232.fit,
               child: CodeView(
-                autofocus: true,
+                autofocus: false,
                 autoUnfocus: false,
                 length: 6,
                 hadInputBuilder: (context, value, index) {

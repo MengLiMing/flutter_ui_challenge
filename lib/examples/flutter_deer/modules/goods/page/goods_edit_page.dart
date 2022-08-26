@@ -283,10 +283,18 @@ class _GoodsEditPageState extends ConsumerState<GoodsEditPage>
           height: 50,
           child: Row(
             children: [
-              Expanded(child: Text(title)),
-              Text(
-                content ?? hintText,
-                style: style,
+              Text(title),
+              SizedBox(width: 10),
+              Expanded(
+                child: Container(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    content ?? hintText,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: style,
+                  ),
+                ),
               ),
               const LoadAssetImage('ic_arrow_right', height: 16.0, width: 16.0),
               const SizedBox(width: 16),

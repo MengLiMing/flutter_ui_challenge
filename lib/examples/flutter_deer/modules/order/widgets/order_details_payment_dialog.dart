@@ -35,11 +35,11 @@ class OrderDetailsPaymentDialog extends ConsumerWidget {
                 children: const [
                   Text('收款方式', style: TextStyles.textBold18),
                   Positioned(
-                    child: CloseButton(color: Colours.textGray),
                     right: 0,
                     top: 0,
                     bottom: 0,
                     width: 48,
+                    child: CloseButton(color: Colours.textGray),
                   )
                 ],
               ),

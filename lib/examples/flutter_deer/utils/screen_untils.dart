@@ -15,9 +15,9 @@ class ScreenUtils {
 
   static MediaQueryData get mediaQuery => MediaQuery.of(_currentContext);
 
-  static double get topPadding => mediaQuery.padding.top;
+  static double get topPadding => mediaQuery.viewPadding.top;
 
-  static double get bottomPadding => mediaQuery.padding.bottom;
+  static double get bottomPadding => mediaQuery.viewPadding.bottom;
 
   static double get navBarHeight => 44;
 

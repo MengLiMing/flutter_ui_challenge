@@ -11,12 +11,15 @@ class MyEditScrollView extends StatelessWidget {
 
   final double bottomHeight;
 
+  final bool resizeToAvoidBottomInset;
+
   const MyEditScrollView({
     Key? key,
     required this.children,
     this.padding,
     required this.bottom,
     required this.bottomHeight,
+    this.resizeToAvoidBottomInset = true,
   }) : super(key: key);
 
   @override
@@ -25,7 +28,7 @@ class MyEditScrollView extends StatelessWidget {
       fit: StackFit.expand,
       children: [
         Scaffold(
-          resizeToAvoidBottomInset: true,
+          resizeToAvoidBottomInset: resizeToAvoidBottomInset,
           body: MyScrollView(
             padding: padding,
             children: [

@@ -38,7 +38,7 @@ class CodeView extends StatefulWidget {
     Key? key,
     required this.length,
     this.autofocus = false,
-    this.autoUnfocus = true,
+    this.autoUnfocus = false,
     required this.hadInputBuilder,
     required this.inputtingBuilder,
     required this.noInputBuilder,

@@ -53,12 +53,22 @@ class ShopPage extends StatelessWidget {
                 onTap: () {
                   NavigatorUtils.push(context, ShopRouter.capital);
                 }),
-            ShopAction(title: '提现账号', image: 'shop/txzh', onTap: () {})
+            ShopAction(
+                title: '提现账号',
+                image: 'shop/txzh',
+                onTap: () {
+                  NavigatorUtils.push(context, ShopRouter.account);
+                })
           ]),
           line(),
           SliverToBoxAdapter(child: sectionTitle('店铺', top: 24)),
           ShopActions(actions: [
-            ShopAction(title: '店铺设置', image: 'shop/dpsz', onTap: () {}),
+            ShopAction(
+                title: '店铺设置',
+                image: 'shop/dpsz',
+                onTap: () {
+                  NavigatorUtils.push(context, ShopRouter.config);
+                }),
           ]),
         ],
       ),
