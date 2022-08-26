@@ -5,7 +5,6 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/modules/statistics/wi
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/statistics/widgets/statistics_header_delegate.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/statistics/widgets/statistics_item.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/statistics/widgets/statistics_line_chart.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/modules/statistics/widgets/statistics_line_painter.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/text_styles.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
 
