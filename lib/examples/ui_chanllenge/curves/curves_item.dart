@@ -163,9 +163,7 @@ class CurvePainter extends CustomPainter {
       if (i == 0) {
         path.moveTo(point.dx, point.dy);
       } else {
-        final controlPoint = (point + preOffset) / 2;
-        path.quadraticBezierTo(
-            controlPoint.dx, controlPoint.dy, point.dx, point.dy);
+        path.lineTo(point.dx, point.dy);
       }
       preOffset = point;
     }

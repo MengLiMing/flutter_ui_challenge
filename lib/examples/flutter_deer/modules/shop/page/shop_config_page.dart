@@ -41,7 +41,11 @@ class _ShopConfigPageState extends ConsumerState<ShopConfigPage>
         );
   }
 
-  void commitAction() {}
+  void commitAction() {
+    // final json = ref.read(manager).model.toJson();
+    // print(json);
+    NavigatorUtils.pop(context);
+  }
 
   void choosePayment() {
     DialogUtils.show(context, builder: (context) {

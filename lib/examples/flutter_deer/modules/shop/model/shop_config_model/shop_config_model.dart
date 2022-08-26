@@ -117,4 +117,9 @@ class ShopConfigModel {
         phone.hashCode ^
         address.hashCode;
   }
+
+  Map<String, dynamic> toJson() => _$ShopConfigModelToJson(this);
+
+  factory ShopConfigModel.fromJson(Map<String, dynamic> source) =>
+      _$ShopConfigModelFromJson(source);
 }

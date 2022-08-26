@@ -7,7 +7,6 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/page/or
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/provider/order_header_provider.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/widgets/order_header.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_utils.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/always_keep_alive.dart';
 
 class OrderPage extends ConsumerStatefulWidget {
@@ -64,12 +63,6 @@ class _OrderPageState extends ConsumerState<OrderPage> {
                     NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 sliver: SliverPersistentHeader(
                   delegate: OrderHeader(
-                    maxHeight: 129.fit +
-                        ScreenUtils.navBarHeight +
-                        ScreenUtils.topPadding,
-                    minHeight: 85.fit +
-                        ScreenUtils.navBarHeight +
-                        ScreenUtils.topPadding,
                     items: items,
                     onSearch: search,
                   ),

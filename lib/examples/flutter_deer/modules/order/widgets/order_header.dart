@@ -8,24 +8,24 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.d
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
 
 class OrderHeader extends SliverPersistentHeaderDelegate {
-  final double maxHeight;
-  final double minHeight;
   final List<OrderChooseItemData> items;
 
   final VoidCallback onSearch;
 
   const OrderHeader({
     required this.items,
-    required this.maxHeight,
-    required this.minHeight,
     required this.onSearch,
   });
 
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final offset = max(0, min(maxHeight - minHeight, shrinkOffset));
-    final progress = offset / (maxHeight - minHeight);
+    final offset = max(0, min(maxExtent - minExtent, shrinkOffset));
+    final progress = offset / (maxExtent - minExtent);
+
+    final titleAlignment =
+        AlignmentTween(begin: Alignment.centerLeft, end: Alignment.center)
+            .lerp(progress);
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -36,46 +36,52 @@ class OrderHeader extends SliverPersistentHeaderDelegate {
           child: LoadAssetImage(
             'order/order_bg',
             width: ScreenUtils.width,
-            height: 113.0,
+            height: maxExtent - 110,
             fit: BoxFit.fill,
           ),
         ),
         Positioned(
           left: 0,
-          bottom: 0,
+          bottom: 10,
           height: 41,
           child: LoadAssetImage(
             'order/order_bg1',
             width: ScreenUtils.width,
-            height: 113.0,
+            height: 100.0,
             fit: BoxFit.fill,
           ),
         ),
         Positioned(
           top: ScreenUtils.topPadding,
           right: 0,
+          height: ScreenUtils.navBarHeight,
           child: Container(
             alignment: Alignment.center,
             width: 50,
             height: ScreenUtils.navBarHeight,
             child: IconButton(
-              icon: const LoadAssetImage('order/icon_search',
-                  width: 22, height: 22),
+              icon: const LoadAssetImage(
+                'order/icon_search',
+                width: 22,
+                height: 22,
+              ),
               onPressed: onSearch,
             ),
           ),
         ),
         Positioned(
-          left: lerpDouble(16, (ScreenUtils.width - 48) / 2, progress),
-          bottom: 96,
+          left: 0,
+          right: 0,
+          height: lerpDouble(62, ScreenUtils.navBarHeight, progress),
+          top: lerpDouble(32, 0, progress)! + ScreenUtils.topPadding,
           child: Container(
-            alignment: Alignment.center,
-            height: 30,
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            alignment: titleAlignment,
             child: Text(
               '订单',
               style: TextStyle(
                 fontSize: lerpDouble(24, 18, progress),
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
                 color: Colors.white,
               ),
             ),
@@ -93,15 +99,14 @@ class OrderHeader extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => maxHeight;
+  double get maxExtent => ScreenUtils.topPadding + 95 + 80;
 
   @override
-  double get minExtent => minHeight;
+  double get minExtent =>
+      ScreenUtils.topPadding + ScreenUtils.navBarHeight + 4 + 80;
 
   @override
   bool shouldRebuild(covariant OrderHeader oldDelegate) {
-    return maxHeight != oldDelegate.maxHeight ||
-        minHeight != oldDelegate.minHeight ||
-        listEquals(items, oldDelegate.items);
+    return listEquals(items, oldDelegate.items);
   }
 }

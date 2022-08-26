@@ -13,6 +13,10 @@ class ShopWithdrawAccountStateNotifier
     extends StateNotifier<List<ShopWithdrawAccountModel>> {
   ShopWithdrawAccountStateNotifier() : super([]);
 
+  void config(List<ShopWithdrawAccountModel> accounts) {
+    state = accounts;
+  }
+
   void removeAt(int index) {
     if (state.length > index) {
       final oldList = state;

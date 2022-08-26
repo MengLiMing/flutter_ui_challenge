@@ -24,6 +24,13 @@ class _ShopWithdrawAccountPageState
     with ShopWithdrawAccountProviders {
   final globalKey = GlobalKey<AnimatedListState>();
 
+  @override
+  void initState() {
+    super.initState();
+
+    ref.read(manager.notifier).config(ShopWithdrawAccountModel.samples);
+  }
+
   void addAction() {
     NavigatorUtils.push(context, ShopRouter.withdrawAdd,
         resultCallback: (model) {
