@@ -9,9 +9,6 @@ class ConfigProviders {
     final result = await Future.wait<dynamic>(
       [
         SharedPreferences.getInstance(),
-        Future.delayed(
-          const Duration(seconds: 1),
-        ),
       ],
     );
 
