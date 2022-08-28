@@ -166,7 +166,6 @@ mixin EasySegmentControllerConfig<T extends StatefulWidget, R extends State<T>>
 
   @override
   void initState() {
-    SingleChildRenderObjectElement;
     animationController = AnimationController(vsync: this, duration: duration)
       ..addListener(animationHandler);
 

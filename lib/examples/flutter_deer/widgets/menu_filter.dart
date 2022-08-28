@@ -143,7 +143,7 @@ class _MenuFilterState extends State<MenuFilter> with TickerProviderStateMixin {
                 animation: heightChangedAnimation,
                 builder: (context, child) {
                   return AnimatedBuilder(
-                    animation: animationController,
+                    animation: heightAnimation,
                     builder: (context, _) {
                       return Container(
                         color: Colors.white,

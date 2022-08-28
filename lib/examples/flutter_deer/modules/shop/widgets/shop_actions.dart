@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
 
 class ShopAction {
@@ -24,17 +25,17 @@ class ShopActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
-      padding: const EdgeInsets.only(
-        left: 8,
-        right: 8,
+      padding: EdgeInsets.only(
+        left: 8.fit,
+        right: 8.fit,
       ),
       sliver: SliverGrid(
         delegate: SliverChildBuilderDelegate((context, index) {
           return ShopActionItem(itemData: actions[index]);
         }, childCount: actions.length),
-        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
           crossAxisSpacing: 0,
-          maxCrossAxisExtent: 80,
+          maxCrossAxisExtent: 80.fit,
           childAspectRatio: 80 / 88,
         ),
       ),
@@ -56,13 +57,13 @@ class ShopActionItem extends StatelessWidget {
       onTap: itemData.onTap,
       child: Column(
         children: [
-          const SizedBox(height: 12),
+          SizedBox(height: 12.fit),
           LoadAssetImage(
             itemData.image,
-            width: 32,
-            height: 32,
+            width: 32.fit,
+            height: 32.fit,
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4.fit),
           Text(itemData.title),
         ],
       ),

@@ -14,20 +14,14 @@ class ShopWithdrawAccountStateNotifier
   ShopWithdrawAccountStateNotifier() : super([]);
 
   void config(List<ShopWithdrawAccountModel> accounts) {
-    state = accounts;
+    state = List.from(accounts);
   }
 
   void removeAt(int index) {
-    if (state.length > index) {
-      final oldList = state;
-      oldList.removeAt(index);
-      state = oldList;
-    }
+    state.removeAt(index);
   }
 
   void insertItem(ShopWithdrawAccountModel model) {
-    final oldList = state;
-    oldList.insert(0, model);
-    state = oldList;
+    state.insert(0, model);
   }
 }

@@ -258,8 +258,9 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsProviders {
     optionEntry = OverlayUtils.showEntry(context, (context) {
       return OptionSelectedView(
         top: addBtnSize.height + addBtnOffset.dy - 10,
-        right: 8,
+        right: 7,
         radius: 8.fit,
+        arrowSize: Size(12.fit, 6.fit),
         arrowPointScale: 0.85,
         controller: selectedController,
         child: GoodsPageOptionView(onTap: (value) {
