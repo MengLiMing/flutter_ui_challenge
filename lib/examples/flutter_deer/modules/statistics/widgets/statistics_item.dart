@@ -17,8 +17,8 @@ class StatisticsItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 16.fit, right: 16.fit, bottom: 8.fit),
-      padding: EdgeInsets.all(16.fit),
+      margin: EdgeInsets.only(bottom: 8.fit, left: 16.fit, right: 16.fit),
+      padding: EdgeInsets.only(bottom: 16.fit),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(
@@ -37,23 +37,37 @@ class StatisticsItem extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  title,
-                  style: const TextStyle(fontWeight: FontWeight.w600),
+          GestureDetector(
+            onTap: onTap,
+            behavior: HitTestBehavior.translucent,
+            child: Row(
+              children: [
+                SizedBox(width: 16.fit),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
                 ),
-              ),
-              LoadAssetImage(
-                'statistic/icon_selected',
-                height: 16.fit,
-                width: 16.fit,
-              ),
-            ],
+                Container(
+                  width: 48.fit,
+                  height: 48.fit,
+                  padding: EdgeInsets.all(16.fit),
+                  child: LoadAssetImage(
+                    'statistic/icon_selected',
+                    height: 16.fit,
+                    width: 16.fit,
+                  ),
+                ),
+              ],
+            ),
           ),
-          SizedBox(height: 16.fit),
-          Expanded(child: content),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.only(left: 16.fit, right: 16.fit),
+              child: content,
+            ),
+          ),
         ],
       ),
     );

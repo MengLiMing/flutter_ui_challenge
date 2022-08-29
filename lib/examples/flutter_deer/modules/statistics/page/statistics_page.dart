@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/statistics/statistics_router.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/statistics/widgets/statistics_circle_chart.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/statistics/widgets/statistics_header_content.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/statistics/widgets/statistics_header_delegate.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/statistics/widgets/statistics_item.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/statistics/widgets/statistics_line_chart.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/text_styles.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
 
 class StatisticsPage extends StatelessWidget {
@@ -41,7 +43,9 @@ class StatisticsPage extends StatelessWidget {
                   animationStyle: StatisticsLineAnimationStyle.horizontal,
                 ),
                 title: '订单统计',
-                onTap: () {},
+                onTap: () {
+                  pushInfo(context, 0);
+                },
               ),
             ),
             SliverToBoxAdapter(
@@ -53,7 +57,9 @@ class StatisticsPage extends StatelessWidget {
                   animationStyle: StatisticsLineAnimationStyle.vertical,
                 ),
                 title: '交易额统计',
-                onTap: () {},
+                onTap: () {
+                  pushInfo(context, 1);
+                },
               ),
             ),
             SliverToBoxAdapter(
@@ -79,5 +85,13 @@ class StatisticsPage extends StatelessWidget {
       pinned: true,
       floating: false,
     );
+  }
+
+  void pushInfo(
+    BuildContext context,
+    int style,
+  ) {
+    NavigatorUtils.push(context, StatisticsRouter.info,
+        parameters: {'style': '$style'});
   }
 }
