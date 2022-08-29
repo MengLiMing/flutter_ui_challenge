@@ -42,14 +42,13 @@ class _StatisticsOrderChartState extends State<StatisticsOrderChart> {
 
 class StatisticsOrderLineItem {
   final int original;
-  final double scale;
+  double scale = 0;
   Offset center = Offset.zero;
   double width = 0;
   double height = 0;
 
   StatisticsOrderLineItem({
     required this.original,
-    required this.scale,
   });
 }
 
@@ -120,7 +119,7 @@ class StatisticsOrderLinePainter extends CustomPainter {
       prePoint = point;
 
       items.add(
-        StatisticsOrderLineItem(original: number, scale: scale),
+        StatisticsOrderLineItem(original: number),
       );
     }
 
@@ -157,7 +156,8 @@ class StatisticsOrderLinePainter extends CustomPainter {
       items[i]
         ..center = Offset(position.dx, size.height - position.dy)
         ..width = bigRadius * 4
-        ..height = bigRadius * 4;
+        ..height = bigRadius * 4
+        ..scale = newScale;
     }
 
     _scales = items;

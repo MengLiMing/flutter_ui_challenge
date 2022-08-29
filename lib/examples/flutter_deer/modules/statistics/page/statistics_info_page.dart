@@ -45,16 +45,16 @@ class StatisticsInfoPage extends StatelessWidget {
             title: '全部订单',
             numbers: [500, 600, 400, 500, 300, 500, 600],
           ),
-          // const StatisticsOrderItem(
-          //   bgColor: Color(0xFFFFAA33),
-          //   title: '完成订单',
-          //   numbers: [650, 550, 300, 500, 400, 700, 550],
-          // ),
-          // const StatisticsOrderItem(
-          //   bgColor: Colours.red,
-          //   title: '取消订单',
-          //   numbers: [400, 250, 400, 300, 550, 450, 350],
-          // ),
+          const StatisticsOrderItem(
+            bgColor: Color(0xFFFFAA33),
+            title: '完成订单',
+            numbers: [650, 550, 300, 500, 400, 700, 550],
+          ),
+          const StatisticsOrderItem(
+            bgColor: Colours.red,
+            title: '取消订单',
+            numbers: [400, 250, 400, 300, 550, 450, 350],
+          ),
         ],
       ),
     );
