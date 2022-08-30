@@ -1,5 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:fluro/src/fluro_router.dart';
+import 'package:flutter_ui_challenge/examples/flutter_deer/modules/statistics/page/statistics_goods_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/statistics/page/statistics_info_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/statistics/page/statistics_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/deer_routers.dart';
@@ -8,6 +9,8 @@ class StatisticsRouter extends ModularRouterProvider {
   static const statistics = '/statistics';
 
   static const info = '/statistics/info';
+
+  static const goods = '/statistics/goods';
 
   @override
   void initRouter(FluroRouter router) {
@@ -20,6 +23,10 @@ class StatisticsRouter extends ModularRouterProvider {
       return StatisticsInfoPage(
         style: StatisticsInfoStyle.values[style],
       );
+    }));
+
+    router.define(goods, handler: Handler(handlerFunc: (context, _) {
+      return const StatisticsGoodsPage();
     }));
   }
 }

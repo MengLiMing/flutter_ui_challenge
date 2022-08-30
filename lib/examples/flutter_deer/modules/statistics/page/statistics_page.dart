@@ -68,7 +68,9 @@ class StatisticsPage extends StatelessWidget {
                   datas: [0.8, 0.5, 0.65],
                 ),
                 title: '商品统计',
-                onTap: () {},
+                onTap: () {
+                  NavigatorUtils.push(context, StatisticsRouter.goods);
+                },
               ),
             ),
           ],

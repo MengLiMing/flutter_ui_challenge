@@ -37,8 +37,7 @@ mixin CalendarProviders {
   });
 
   late final datas = Provider.autoDispose<List<CalendarDate>>((ref) {
-    final value = ref.watch(isUnfold);
-    print(value);
+    ref.watch(isUnfold);
     switch (ref.watch(selectedStyle)) {
       case CalendarSelectedStyle.range:
         return ref.read(manager).dayRange;

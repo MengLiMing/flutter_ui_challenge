@@ -3,7 +3,7 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/modules/statistics/wi
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/image_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
 
-class StatisticsOrderItem extends StatelessWidget {
+class StatisticsOrderItem extends StatefulWidget {
   final Color bgColor;
   final String title;
   final List<int> numbers;
@@ -18,13 +18,59 @@ class StatisticsOrderItem extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<StatisticsOrderItem> createState() => _StatisticsOrderItemState();
+}
+
+class _StatisticsOrderItemState extends State<StatisticsOrderItem>
+    with TickerProviderStateMixin {
+  late AnimationController heightAnimationControler;
+
+  late AnimationController showAnimationController;
+
+  final StatisticsOrderLineRepaint _repaint = StatisticsOrderLineRepaint(
+    heightProgress: ValueNotifier(0),
+    showBubbleProgress: ValueNotifier(1),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+
+    heightAnimationControler =
+        AnimationController(vsync: this, duration: const Duration(seconds: 1))
+          ..addListener(() {
+            final heightProgress = Tween(begin: 0.0, end: 1.0)
+                .chain(CurveTween(curve: Curves.easeInOut))
+                .evaluate(heightAnimationControler);
+            _repaint.heightProgress.value = heightProgress;
+          })
+          ..forward();
+
+    showAnimationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 300))
+      ..addListener(() {
+        final showBubbleProgress = Tween(begin: 0.0, end: 1.0)
+            .chain(CurveTween(curve: Curves.easeInOut))
+            .evaluate(showAnimationController);
+        _repaint.showBubbleProgress.value = showBubbleProgress;
+      });
+  }
+
+  @override
+  void dispose() {
+    heightAnimationControler.dispose();
+    showAnimationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       height: 120.fit,
       margin: EdgeInsets.only(left: 16.fit, right: 16.fit, bottom: 16.fit),
-      padding: EdgeInsets.symmetric(vertical: 16.fit),
+      padding: EdgeInsets.only(top: 16.fit),
       decoration: BoxDecoration(
-        color: bgColor,
+        color: widget.bgColor,
         image: DecorationImage(
           image: ImageUtils.getAssetImage('statistic/chart_fg'),
           fit: BoxFit.fill,
@@ -34,7 +80,7 @@ class StatisticsOrderItem extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: bgColor.withOpacity(0.5),
+            color: widget.bgColor.withOpacity(0.5),
             offset: Offset(0, 2.fit),
             blurRadius: 8.fit,
             spreadRadius: 0,
@@ -50,25 +96,50 @@ class StatisticsOrderItem extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 16.fit),
               child: Row(
                 children: [
-                  Expanded(child: Text(title)),
+                  Expanded(child: Text(widget.title)),
                   Text(
-                      '${numbers.reduce((value, element) => value + element)}'),
+                      '${widget.numbers.reduce((value, element) => value + element)}'),
                 ],
               ),
             ),
           ),
-          SizedBox(height: 16.fit),
-          Expanded(
-            child: StatisticsOrderChart(
-              numbers: numbers,
-              bgColor: bgColor,
-              horizontalSpace: 16.fit,
+          Expanded(child: _chart()),
+        ],
+      ),
+    );
+  }
+
+  Widget _chart() {
+    return SizedBox.expand(
+      child: GestureDetector(
+        onTap: () {
+          if (_repaint.isShowingBubble) {
+            _repaint.isShowingBubble = false;
+            showAnimationController.reverse(from: 1);
+          } else {
+            heightAnimationControler.forward(from: 0);
+          }
+        },
+        onLongPressDown: (details) {
+          _repaint.localPoint = details.localPosition;
+        },
+        onLongPress: () {
+          _repaint.isShowingBubble = true;
+          showAnimationController.forward(from: 0);
+        },
+        child: RepaintBoundary(
+          child: CustomPaint(
+            painter: StatisticsOrderLinePainter(
+              numbers: widget.numbers,
+              bgColor: widget.bgColor,
               content: (index) {
-                return content(numbers[index]);
+                return widget.content(widget.numbers[index]);
               },
+              padding: EdgeInsets.all(16.fit),
+              repaint: _repaint,
             ),
           ),
-        ],
+        ),
       ),
     );
   }

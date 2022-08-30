@@ -5,64 +5,6 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class StatisticsOrderChart extends StatefulWidget {
-  final List<int> numbers;
-  final Color bgColor;
-  final double horizontalSpace;
-  final TextSpan Function(int index) content;
-
-  const StatisticsOrderChart({
-    Key? key,
-    required this.numbers,
-    required this.bgColor,
-    required this.content,
-    required this.horizontalSpace,
-  }) : super(key: key);
-
-  @override
-  State<StatisticsOrderChart> createState() => _StatisticsOrderChartState();
-}
-
-class _StatisticsOrderChartState extends State<StatisticsOrderChart> {
-  Offset? _localPosition;
-
-  bool showBubble = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox.expand(
-      child: GestureDetector(
-        onTap: () {
-          if (showBubble) {
-            setState(() {
-              showBubble = false;
-            });
-          }
-        },
-        onLongPressDown: (details) {
-          _localPosition = details.localPosition;
-        },
-        onLongPress: () {
-          setState(() {
-            showBubble = true;
-          });
-        },
-        child: RepaintBoundary(
-          child: CustomPaint(
-            painter: StatisticsOrderLinePainter(
-              numbers: widget.numbers,
-              bgColor: widget.bgColor,
-              selectedOffset: showBubble ? _localPosition : null,
-              content: widget.content,
-              horizontalSpace: widget.horizontalSpace,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class StatisticsOrderLineItem {
   final int index;
   double scale = 0;
@@ -75,12 +17,46 @@ class StatisticsOrderLineItem {
   });
 }
 
+class StatisticsOrderLineRepaint extends Listenable {
+  final ValueNotifier<double> heightProgress;
+  final ValueNotifier<double> showBubbleProgress;
+
+// oldPoint == null, localPoint != null 显示
+// oldPoint != null, localPoint != null 移动
+// oldPoint != null, localPoint == null 消失
+// 已经展示的坐标，
+  Offset? oldPoint;
+// 当前点击的坐标
+  Offset? localPoint;
+
+  bool isShowingBubble = false;
+
+  StatisticsOrderLineRepaint({
+    required this.heightProgress,
+    required this.showBubbleProgress,
+  });
+
+  @override
+  void addListener(VoidCallback listener) {
+    heightProgress.addListener(listener);
+    showBubbleProgress.addListener(listener);
+  }
+
+  @override
+  void removeListener(VoidCallback listener) {
+    heightProgress.removeListener(listener);
+    showBubbleProgress.removeListener(listener);
+  }
+}
+
 class StatisticsOrderLinePainter extends CustomPainter {
   final List<int> numbers;
   final Color bgColor;
-  final Offset? selectedOffset;
   final TextSpan Function(int index) content;
-  final double horizontalSpace;
+  final EdgeInsets padding;
+  final StatisticsOrderLineRepaint repaint;
+
+  Path? _path;
 
   List<StatisticsOrderLineItem> _scales = [];
 
@@ -92,10 +68,10 @@ class StatisticsOrderLinePainter extends CustomPainter {
   StatisticsOrderLinePainter({
     required this.numbers,
     required this.bgColor,
-    required this.selectedOffset,
-    required this.horizontalSpace,
+    required this.padding,
     required this.content,
-  });
+    required this.repaint,
+  }) : super(repaint: repaint);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -151,21 +127,81 @@ class StatisticsOrderLinePainter extends CustomPainter {
     return path;
   }
 
-  /// 此处绘制也可以将其信息回调到外部 在Stack上放置气泡， 这样如果添加动画应该更容易控制一点
+  /// 将绘制信息回调到外部 在Stack上放置气泡， 这样添加动画应该更容易控制一点吧
   void selectedItem(Canvas canvas, Size size) {
-    final point = selectedOffset;
-    if (point == null) return;
+    if (_path == null) return;
+    if (repaint.heightProgress.value != 1) return;
 
-    final selectedItem = findItem(point);
-    if (selectedItem == null) return;
+    final localPoint = repaint.localPoint;
+    final oldPoint = repaint.oldPoint;
+    StatisticsOrderLineItem? oldSelectedItem; // 用于移动
+    StatisticsOrderLineItem? selectedItem;
+    if (localPoint != null) {
+      selectedItem = findItem(localPoint);
+    }
+    if (oldPoint != null) {
+      oldSelectedItem = findItem(oldPoint);
+    }
 
-    final pointRadius = size.height * 0.08;
-    canvas.drawCircle(
-        selectedItem.center, pointRadius, Paint()..color = Colors.white);
+    if (selectedItem == null && oldSelectedItem == null) return;
+
+    final pointRadius = size.height * 0.06;
+    final showBubbleProgress = repaint.showBubbleProgress.value;
+
+    int index;
+    Color bubbleColor = Colors.white.withOpacity(showBubbleProgress);
+    Offset itemCenter;
+
+    if (repaint.isShowingBubble == false) {
+      // 消失
+      index = oldSelectedItem!.index;
+      final center = oldSelectedItem.center;
+      itemCenter = Offset(
+        center.dx,
+        lerpDouble(size.height, center.dy, showBubbleProgress)!,
+      );
+      if (showBubbleProgress == 0) {
+        repaint.localPoint = null;
+        repaint.oldPoint = null;
+      }
+    } else {
+      if (oldSelectedItem == null) {
+        //显示
+        index = selectedItem!.index;
+        final center = selectedItem.center;
+        itemCenter = Offset(
+          center.dx,
+          lerpDouble(size.height, center.dy, showBubbleProgress)!,
+        );
+      } else {
+        //移动
+        bubbleColor = Colors.white;
+
+        index = showBubbleProgress < 0.5
+            ? oldSelectedItem.index
+            : selectedItem!.index;
+
+        // itemCenter = Offset.lerp(
+        //     oldSelectedItem.center, selectedItem!.center, showBubbleProgress)!;
+
+        // 来点高端的
+        final scale = lerpDouble(
+            oldSelectedItem.scale, selectedItem!.scale, showBubbleProgress)!;
+        final pm = _path!.computeMetrics().first;
+        Tangent tangent = pm.getTangentForOffset(pm.length * scale)!;
+        final position = tangent.position;
+        itemCenter = Offset(position.dx + padding.left,
+            size.height - padding.top - position.dy);
+      }
+    }
+
+    if (showBubbleProgress == 1) {
+      repaint.oldPoint = repaint.localPoint;
+    }
 
     /// 绘制弹出框
     TextPainter textPainter = TextPainter(
-      text: content(selectedItem.index),
+      text: content(index),
       textDirection: TextDirection.ltr,
       textAlign: TextAlign.center,
     );
@@ -184,7 +220,7 @@ class StatisticsOrderLinePainter extends CustomPainter {
     final bubbleHeight = 8 + textPainter.height + 8;
 
     Rect rect = Rect.fromCenter(
-      center: selectedItem.center,
+      center: itemCenter,
       width: bubbleWidth,
       height: bubbleHeight,
     );
@@ -195,17 +231,13 @@ class StatisticsOrderLinePainter extends CustomPainter {
         rect.width,
         rect.height);
 
-    if (rect.left < 0) {
-      rect = Rect.fromLTRB(0, rect.top, rect.right - rect.left, rect.bottom);
-    }
-
     /// 绘制气泡
     canvas.drawRRect(
         RRect.fromRectAndRadius(
           rect,
           Radius.circular(4),
         ),
-        Paint()..color = Colors.white);
+        Paint()..color = bubbleColor);
 
     /// 绘制箭头
     Path arrowPath = Path()
@@ -213,15 +245,23 @@ class StatisticsOrderLinePainter extends CustomPainter {
       ..relativeLineTo(arrowWidth / 2, arrowHeight)
       ..relativeLineTo(arrowWidth / 2, -arrowHeight);
 
-    canvas.drawPath(arrowPath, Paint()..color = Colors.white);
+    canvas.drawPath(arrowPath, Paint()..color = bubbleColor);
 
-    textPainter.paint(
-      canvas,
-      Offset(
-        rect.center.dx - textPainter.width / 2,
-        rect.center.dy - textPainter.height / 2,
-      ),
-    );
+    if (repaint.isShowingBubble && showBubbleProgress >= 0.5) {
+      textPainter.paint(
+        canvas,
+        Offset(
+          rect.center.dx - textPainter.width / 2,
+          rect.center.dy - textPainter.height / 2,
+        ),
+      );
+
+      canvas.drawCircle(
+        (selectedItem?.center ?? oldSelectedItem?.center)!,
+        pointRadius,
+        Paint()..color = Colors.white,
+      );
+    }
   }
 
   StatisticsOrderLineItem? findItem(Offset offset) {
@@ -237,14 +277,15 @@ class StatisticsOrderLinePainter extends CustomPainter {
 
   void drawLine(Canvas canvas, Size size) {
     canvas.save();
-    canvas.translate(horizontalSpace, size.height);
+    canvas.translate(padding.left, size.height - padding.top);
     canvas.scale(1.0, -1.0);
 
-    final width = size.width - horizontalSpace * 2;
-    final height = size.height;
+    final width = size.width - padding.horizontal;
+    final height =
+        (size.height - padding.vertical) * repaint.heightProgress.value;
 
     final path = linePath(Size(width, height));
-    final strokeWidth = height * 0.04;
+    final strokeWidth = size.height * 0.03;
 
     canvas.drawPath(
       path,
@@ -283,8 +324,8 @@ class StatisticsOrderLinePainter extends CustomPainter {
       canvas.drawCircle(
           tangent.position, smallRadius, pointPaint..color = Colors.white);
 
-      final center =
-          Offset(position.dx + horizontalSpace, height - position.dy);
+      final center = Offset(
+          position.dx + padding.left, height - position.dy + padding.top);
       items.add(
         StatisticsOrderLineItem(index: i)
           ..center = center
@@ -295,6 +336,7 @@ class StatisticsOrderLinePainter extends CustomPainter {
     }
 
     _scales = items;
+    _path = path;
     canvas.restore();
   }
 
@@ -305,6 +347,6 @@ class StatisticsOrderLinePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant StatisticsOrderLinePainter oldDelegate) {
-    return listEquals(oldDelegate.numbers, numbers);
+    return listEquals(oldDelegate.numbers, numbers) == false;
   }
 }
