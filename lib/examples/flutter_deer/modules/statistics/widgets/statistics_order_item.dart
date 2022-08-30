@@ -7,11 +7,14 @@ class StatisticsOrderItem extends StatelessWidget {
   final Color bgColor;
   final String title;
   final List<int> numbers;
+  final TextSpan Function(int number) content;
+
   const StatisticsOrderItem({
     Key? key,
     required this.bgColor,
     required this.title,
     required this.numbers,
+    required this.content,
   }) : super(key: key);
 
   @override
@@ -19,7 +22,7 @@ class StatisticsOrderItem extends StatelessWidget {
     return Container(
       height: 120.fit,
       margin: EdgeInsets.only(left: 16.fit, right: 16.fit, bottom: 16.fit),
-      padding: EdgeInsets.all(16.fit),
+      padding: EdgeInsets.symmetric(vertical: 16.fit),
       decoration: BoxDecoration(
         color: bgColor,
         image: DecorationImage(
@@ -43,11 +46,15 @@ class StatisticsOrderItem extends StatelessWidget {
         children: [
           DefaultTextStyle(
             style: const TextStyle(color: Colors.white, fontSize: 14),
-            child: Row(
-              children: [
-                Expanded(child: Text(title)),
-                Text('${numbers.reduce((value, element) => value + element)}'),
-              ],
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.fit),
+              child: Row(
+                children: [
+                  Expanded(child: Text(title)),
+                  Text(
+                      '${numbers.reduce((value, element) => value + element)}'),
+                ],
+              ),
             ),
           ),
           SizedBox(height: 16.fit),
@@ -55,6 +62,10 @@ class StatisticsOrderItem extends StatelessWidget {
             child: StatisticsOrderChart(
               numbers: numbers,
               bgColor: bgColor,
+              horizontalSpace: 16.fit,
+              content: (index) {
+                return content(numbers[index]);
+              },
             ),
           ),
         ],

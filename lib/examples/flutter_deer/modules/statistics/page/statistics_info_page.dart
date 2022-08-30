@@ -40,24 +40,69 @@ class StatisticsInfoPage extends StatelessWidget {
         children: [
           const StatisticsCalendar(),
           _contentTitle(),
-          const StatisticsOrderItem(
-            bgColor: Colours.appMain,
-            title: '全部订单',
-            numbers: [500, 600, 400, 500, 300, 500, 600],
-          ),
-          const StatisticsOrderItem(
-            bgColor: Color(0xFFFFAA33),
-            title: '完成订单',
-            numbers: [650, 550, 300, 500, 400, 700, 550],
-          ),
-          const StatisticsOrderItem(
-            bgColor: Colours.red,
-            title: '取消订单',
-            numbers: [400, 250, 400, 300, 550, 450, 350],
-          ),
+          if (style == StatisticsInfoStyle.order) ...[
+            StatisticsOrderItem(
+              bgColor: Colours.appMain,
+              title: '全部订单',
+              numbers: const [500, 600, 400, 500, 300, 500, 600],
+              content: (number) {
+                return itemContent(number);
+              },
+            ),
+            StatisticsOrderItem(
+              bgColor: const Color(0xFFFFAA33),
+              title: '完成订单',
+              numbers: const [650, 550, 300, 500, 400, 700, 550],
+              content: (number) {
+                return itemContent(number);
+              },
+            ),
+            StatisticsOrderItem(
+              bgColor: Colours.red,
+              title: '取消订单',
+              numbers: const [400, 250, 400, 300, 550, 450, 350],
+              content: (number) {
+                return itemContent(number);
+              },
+            ),
+          ] else ...[
+            StatisticsOrderItem(
+              bgColor: Colours.appMain,
+              title: '交易额(元)',
+              numbers: const [500, 600, 400, 500, 300, 500, 600],
+              content: (number) {
+                return itemContent(number);
+              },
+            ),
+          ]
         ],
       ),
     );
+  }
+
+  TextSpan itemContent(int number) {
+    String unit = style == StatisticsInfoStyle.order ? "单" : "元";
+    return TextSpan(
+        style: TextStyle(
+          textBaseline: TextBaseline.alphabetic,
+        ),
+        children: [
+          TextSpan(
+            text: '$number',
+            style: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+              fontSize: 12,
+            ),
+          ),
+          TextSpan(
+            text: ' $unit',
+            style: const TextStyle(
+              color: Colours.textGray,
+              fontSize: 9,
+            ),
+          ),
+        ]);
   }
 
   Widget _contentTitle() {
@@ -67,9 +112,9 @@ class StatisticsInfoPage extends StatelessWidget {
         left: 16.fit,
         bottom: 16.fit,
       ),
-      child: const Text(
-        '订单走势',
-        style: TextStyle(
+      child: Text(
+        style == StatisticsInfoStyle.order ? '订单走势' : '交易额走势',
+        style: const TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w600,
         ),

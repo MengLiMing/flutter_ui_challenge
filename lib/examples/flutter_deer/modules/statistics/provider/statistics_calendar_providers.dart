@@ -53,8 +53,10 @@ mixin CalendarProviders {
 class CalendarStateNotifier extends StateNotifier<CalendarState> {
   CalendarStateNotifier() : super(CalendarState());
 
+  DateTime get now => DateTime.now().toLocal();
+
   void initState() {
-    final currentDate = DateTime.now().toLocal();
+    final currentDate = now;
 
     state = state.copyWith(
       year: currentDate.year,
@@ -150,9 +152,10 @@ class CalendarStateNotifier extends StateNotifier<CalendarState> {
     }
 
     final dayCount = lastDate.day - firstDate.day + 1;
+    final currentDate = now;
+
     for (int i = 0; i < dayCount; i++) {
       final day = DateTime(date.year, date.month, i + 1);
-      final currentDate = DateTime.now().toLocal();
       result
           .add(CalendarDate(date: day, canSelected: day.isBefore(currentDate)));
     }
@@ -186,23 +189,24 @@ class CalendarStateNotifier extends StateNotifier<CalendarState> {
 
   /// 根据当前日期获取七日数据
   List<CalendarDate> _dayRange(DateTime date) {
-    final currentDate = DateTime.utc(date.year, date.month, date.day);
+    final newDate = DateTime.utc(date.year, date.month, date.day);
 
-    final currentWeekDay = currentDate.weekday;
+    final currentDate = now;
+
+    final currentWeekDay = newDate.weekday;
 
     return List.generate(7, (index) {
       final weekDay = index + 1;
       DateTime weekDate;
       if (currentWeekDay > weekDay) {
-        weekDate =
-            currentDate.subtract(Duration(days: currentWeekDay - weekDay));
+        weekDate = newDate.subtract(Duration(days: currentWeekDay - weekDay));
       } else if (currentWeekDay < weekDay) {
-        weekDate = currentDate.add(Duration(days: weekDay - currentWeekDay));
+        weekDate = newDate.add(Duration(days: weekDay - currentWeekDay));
       } else {
-        weekDate = currentDate;
+        weekDate = newDate;
       }
       return CalendarDate(
-          date: weekDate, canSelected: currentWeekDay >= weekDay);
+          date: weekDate, canSelected: weekDate.isBefore(currentDate));
     });
   }
 }
