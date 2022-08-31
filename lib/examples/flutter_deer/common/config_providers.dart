@@ -17,9 +17,10 @@ class ConfigProviders {
     return;
   });
 
-  static final config = StateNotifierProvider<AppConfigState, AppConfig>((ref) {
-    return AppConfigState(
-      AppConfig(
+  static final config =
+      StateNotifierProvider<AppConfigStateNotifier, AppConfigState>((ref) {
+    return AppConfigStateNotifier(
+      AppConfigState(
         hadShowGuide: DeerStorage.hadShowGuide,
         themeMode: DeerStorage.themeMode,
       ),
@@ -35,8 +36,8 @@ class ConfigProviders {
   });
 }
 
-class AppConfigState extends StateNotifier<AppConfig> {
-  AppConfigState(AppConfig config) : super(config);
+class AppConfigStateNotifier extends StateNotifier<AppConfigState> {
+  AppConfigStateNotifier(AppConfigState config) : super(config);
 
   set hadShowGuide(bool value) {
     DeerStorage.hadShowGuide = value;
@@ -52,20 +53,22 @@ class AppConfigState extends StateNotifier<AppConfig> {
 }
 
 @immutable
-class AppConfig extends Equatable {
+class AppConfigState extends Equatable {
   final bool hadShowGuide;
   final ThemeMode themeMode;
 
-  const AppConfig({
+  /// 调试相关
+
+  const AppConfigState({
     required this.hadShowGuide,
     required this.themeMode,
   });
 
-  AppConfig copyWith({
+  AppConfigState copyWith({
     bool? hadShowGuide,
     ThemeMode? themeMode,
   }) {
-    return AppConfig(
+    return AppConfigState(
       hadShowGuide: hadShowGuide ?? this.hadShowGuide,
       themeMode: themeMode ?? this.themeMode,
     );

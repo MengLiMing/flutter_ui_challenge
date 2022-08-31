@@ -8,7 +8,7 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.da
 class SearchBar extends StatefulWidget implements PreferredSizeWidget {
   final String backImg;
 
-  final hintText;
+  final String hintText;
 
   final ValueChanged<String>? keywordChanged;
 

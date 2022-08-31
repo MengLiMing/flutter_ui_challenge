@@ -40,10 +40,12 @@ class _StatisticsCircleChartState extends State<StatisticsCircleChart>
       behavior: HitTestBehavior.translucent,
       onTap: () => animationController.forward(from: 0),
       child: SizedBox.expand(
-        child: CustomPaint(
-          painter: StatisticsCirclePainter(
-            datas: widget.datas,
-            progress: progress,
+        child: RepaintBoundary(
+          child: CustomPaint(
+            painter: StatisticsCirclePainter(
+              datas: widget.datas,
+              progress: progress,
+            ),
           ),
         ),
       ),

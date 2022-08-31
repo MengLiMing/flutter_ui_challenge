@@ -53,7 +53,7 @@ mixin GoodsTypeChooseProviders {
 }
 
 class GoodsTypeChooseStateNotifier extends StateNotifier<GoodsTypeChooseState> {
-  GoodsTypeChooseStateNotifier() : super(GoodsTypeChooseState());
+  GoodsTypeChooseStateNotifier() : super(const GoodsTypeChooseState());
   List<GoodsTypeModel> _dataSource = [];
 
   final Map<GoodsTypeModel, List<GoodsTypeModel>> _allDataSource = {};

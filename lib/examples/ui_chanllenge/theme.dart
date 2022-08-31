@@ -8,7 +8,8 @@ class Themes {
   };
 
   static ThemeData lightTheme = ThemeData(
-    pageTransitionsTheme: PageTransitionsTheme(builders: _defaultBuilders),
+    pageTransitionsTheme:
+        const PageTransitionsTheme(builders: _defaultBuilders),
     appBarTheme: const AppBarTheme(
       toolbarHeight: 44,
       foregroundColor: Colors.black,

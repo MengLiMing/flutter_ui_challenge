@@ -142,7 +142,7 @@ class _GoodsTypeChooseSheetState extends State<GoodsTypeChooseSheet>
                 color: isSelected ? Colours.appMain : Colours.text,
               ),
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Visibility(
               visible: isSelected,
               child:
@@ -205,7 +205,7 @@ class _GoodsTypeChooseSheetState extends State<GoodsTypeChooseSheet>
               onTap: () => NavigatorUtils.pop(context),
               child: Container(
                 alignment: Alignment.center,
-                child: LoadAssetImage(
+                child: const LoadAssetImage(
                   'goods/icon_dialog_close',
                   width: 16,
                   height: 16,

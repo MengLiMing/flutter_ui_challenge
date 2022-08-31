@@ -80,14 +80,14 @@ class _StatisticsGoodsCircleChartState extends State<StatisticsGoodsCircleChart>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      alignment: Alignment.center,
-      children: [
-        GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: () => animationController.forward(from: 0),
-          child: RepaintBoundary(
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () => animationController.forward(from: 0),
+      child: Stack(
+        fit: StackFit.expand,
+        alignment: Alignment.center,
+        children: [
+          RepaintBoundary(
             child: CustomPaint(
               painter: StatisticsGoodsCirclePainter(
                 items: chartItems,
@@ -98,24 +98,24 @@ class _StatisticsGoodsCircleChartState extends State<StatisticsGoodsCircleChart>
               ),
             ),
           ),
-        ),
-        Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                widget.style == StatisticsGoodsStyle.complete ? "已配送" : "待配送",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  widget.style == StatisticsGoodsStyle.complete ? "已配送" : "待配送",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 2),
-              Text('$_all件'),
-            ],
-          ),
-        )
-      ],
+                const SizedBox(height: 2),
+                Text('$_all件'),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }

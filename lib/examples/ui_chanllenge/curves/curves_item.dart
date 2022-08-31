@@ -4,9 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ui_challenge/examples/ui_chanllenge/curves/curve_type.dart';
 
-final frame = seconds * 60;
+const frame = seconds * 60;
 
-final seconds = 1;
+const seconds = 1;
 
 class CurveItem extends StatefulWidget {
   final CurveType curveType;
@@ -28,7 +28,7 @@ class _CurveItemState extends State<CurveItem>
     super.initState();
     animationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: seconds),
+      duration: const Duration(seconds: seconds),
     );
   }
 
@@ -47,9 +47,12 @@ class _CurveItemState extends State<CurveItem>
     return GestureDetector(
       onTap: _startAnimation,
       child: Container(
-        decoration: BoxDecoration(color: Colors.white, boxShadow: [
-          BoxShadow(color: Colors.black38, blurRadius: 2),
-        ]),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(color: Colors.black38, blurRadius: 2),
+          ],
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -153,7 +156,6 @@ class CurvePainter extends CustomPainter {
 
     final curve = curveBy(curveType);
 
-    Offset preOffset = Offset.zero;
     for (int i = 0; i < stopFrame; i++) {
       final t = i / frame;
       final point = Offset(
@@ -165,7 +167,6 @@ class CurvePainter extends CustomPainter {
       } else {
         path.lineTo(point.dx, point.dy);
       }
-      preOffset = point;
     }
     canvas.drawPath(
         path,
@@ -256,7 +257,7 @@ class CurvePainter extends CustomPainter {
 
 extension CurvePainterLogic on CurvePainter {
   /// 指示器size
-  Size get indicatorSize => Size(30, 10);
+  Size get indicatorSize => const Size(30, 10);
 
   /// 竖直方向 左距离
   double get left => oneTextPaint.width * 2;

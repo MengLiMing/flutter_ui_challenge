@@ -112,7 +112,7 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsProviders {
             children: [
               _headTitle(),
               _segmentView(),
-              Divider(),
+              const Divider(),
               Expanded(
                 child: _pageView(),
               )

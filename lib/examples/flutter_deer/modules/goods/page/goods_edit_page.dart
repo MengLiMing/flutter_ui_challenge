@@ -284,7 +284,7 @@ class _GoodsEditPageState extends ConsumerState<GoodsEditPage>
           child: Row(
             children: [
               Text(title),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Expanded(
                 child: Container(
                   alignment: Alignment.centerRight,

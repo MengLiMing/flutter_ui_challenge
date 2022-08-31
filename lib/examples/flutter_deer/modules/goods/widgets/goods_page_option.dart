@@ -59,7 +59,7 @@ class _OptionItemView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 34.fit,
       child: Row(
         children: [

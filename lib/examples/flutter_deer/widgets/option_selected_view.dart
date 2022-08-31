@@ -150,15 +150,17 @@ class _OptionSelectedViewState extends State<OptionSelectedView>
                 child: child,
               );
             },
-            child: CustomPaint(
-              painter: _ArrowPainter(
-                arrowSize: widget.arrowSize,
-                arrowPointScale: widget.arrowPointScale,
-                radius: widget.radius,
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(top: arrowHeight),
-                child: widget.child,
+            child: RepaintBoundary(
+              child: CustomPaint(
+                painter: _ArrowPainter(
+                  arrowSize: widget.arrowSize,
+                  arrowPointScale: widget.arrowPointScale,
+                  radius: widget.radius,
+                ),
+                child: Padding(
+                  padding: EdgeInsets.only(top: arrowHeight),
+                  child: widget.child,
+                ),
               ),
             ),
           ),

@@ -8,7 +8,7 @@ class CurvesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final curves = CurveType.values;
+    const curves = CurveType.values;
     return Scaffold(
       appBar: AppBar(
         title: Text('${curves.length}种Curve效果'),
@@ -22,7 +22,7 @@ class CurvesPage extends StatelessWidget {
         itemBuilder: (context, index) {
           return CurveItem(curveType: curves[index]);
         },
-        separatorBuilder: (context, index) => SizedBox(height: 10),
+        separatorBuilder: (context, index) => const SizedBox(height: 10),
         itemCount: curves.length,
       ),
     );

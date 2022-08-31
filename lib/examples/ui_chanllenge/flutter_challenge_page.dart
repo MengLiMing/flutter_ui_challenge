@@ -69,9 +69,7 @@ class HomeListItem extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10),
         padding: const EdgeInsets.symmetric(horizontal: 10),
-        constraints: BoxConstraints(
-          minHeight: 60,
-        ),
+        constraints: const BoxConstraints(minHeight: 60),
         alignment: Alignment.centerLeft,
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -86,7 +84,7 @@ class HomeListItem extends StatelessWidget {
         ),
         child: Text(
           routeName,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w500,
           ),

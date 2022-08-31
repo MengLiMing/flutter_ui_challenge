@@ -33,7 +33,7 @@ class GoodsListStateNotifier extends StateNotifier<GoodsListState>
     with PageRequest<GoodsListItemData> {
   int? type;
 
-  GoodsListStateNotifier() : super(GoodsListState());
+  GoodsListStateNotifier() : super(const GoodsListState());
 
   @override
   void cancelRequest() {}

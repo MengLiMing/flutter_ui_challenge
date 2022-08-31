@@ -24,15 +24,16 @@ dependencies:
   cached_network_image: ^3.2.1
   # 滚动到index
   scrollable_positioned_list: ^0.3.2
-  # open url 打电话 - 打开外部网页等
-  url_launcher: ^6.1.5
   equatable: ^2.0.3
   # webview
   webview_flutter: 3.0.4
+  # 锁
+  synchronized: ^3.0.0+2
+  # 使用到了DateFormat
+  intl: ^0.17.0
+  # json转model相关
   freezed_annotation: ^2.1.0
   json_annotation: ^4.6.0
-  synchronized: ^3.0.0+2
-  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

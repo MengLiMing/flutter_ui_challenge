@@ -70,8 +70,9 @@ class StatisticsGoodsCirclePainter extends CustomPainter {
 
   void drawData(Canvas canvas, Size size) {
     canvas.save();
+    final minSide = min(size.width / 2, size.height / 2);
 
-    final radius = min(size.width / 2, size.height / 2) * ringScale;
+    final radius = minSide * ringScale;
 
     final rect = Rect.fromCenter(
       center: Offset.zero,
@@ -96,19 +97,54 @@ class StatisticsGoodsCirclePainter extends CustomPainter {
     }
 
     double startScale = 0;
+    final middleRadius = minSide * (ringScale + foregroundSmlScale) / 2;
     for (final item in items) {
       final scale = item.scale * scaleProgress;
+      final start = startScale * pi * 2 + startAngle;
+      final sweep = scale * pi * 2;
+
       canvas.drawArc(
         rect,
-        startScale * pi * 2 + startAngle,
-        scale * pi * 2,
+        start,
+        sweep,
         true,
         Paint()..color = item.color,
       );
+
+      /// 计算文本绘制中心
+      final middleAngle = start + sweep / 2;
+      final middleOffset = Offset(
+        middleRadius * cos(middleAngle),
+        middleRadius * sin(middleAngle),
+      );
+      drawScale(canvas, middleOffset, scale);
       startScale += scale;
     }
 
     canvas.restore();
+  }
+
+  /// 绘制文本
+  void drawScale(Canvas canvas, Offset center, double scale) {
+    final textPainter = TextPainter(
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+      text: TextSpan(
+        text: '${(scale * 100).toStringAsFixed(1)}%',
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+    );
+    textPainter.layout();
+
+    textPainter.paint(
+      canvas,
+      Offset(
+        center.dx - textPainter.width / 2,
+        center.dy - textPainter.height / 2,
+      ),
+    );
   }
 
   /// 绘制覆盖层

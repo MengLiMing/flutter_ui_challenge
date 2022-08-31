@@ -59,12 +59,14 @@ class _StatisticsLineChartState extends State<StatisticsLineChart>
           Expanded(
             child: SizedBox(
               width: double.infinity,
-              child: CustomPaint(
-                painter: StatisticsLinePainter(
-                  datas: widget.datas,
-                  lineColor: widget.lineColor,
-                  progress: progress,
-                  style: widget.animationStyle,
+              child: RepaintBoundary(
+                child: CustomPaint(
+                  painter: StatisticsLinePainter(
+                    datas: widget.datas,
+                    lineColor: widget.lineColor,
+                    progress: progress,
+                    style: widget.animationStyle,
+                  ),
                 ),
               ),
             ),
