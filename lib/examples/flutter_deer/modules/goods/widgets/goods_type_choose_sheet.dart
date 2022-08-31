@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_segment/flutter_easy_segment.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/providers/goods_type_choose_providers.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/text_styles.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/easy_segment/easy_segment.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
 
 class GoodsTypeChooseSheet extends StatefulWidget {
@@ -164,7 +164,6 @@ class _GoodsTypeChooseSheetState extends State<GoodsTypeChooseSheet>
         indicators: const [
           CustomSegmentLineIndicator(
             color: Colours.appMain,
-            index: 0,
             bottom: 0,
             cornerRadius: 0,
             height: 2,
@@ -173,16 +172,15 @@ class _GoodsTypeChooseSheetState extends State<GoodsTypeChooseSheet>
         onTap: (index) {
           ref.read(typeManager.notifier).changeSegmentIndex(index);
         },
-        children: [
-          for (int i = 0; i < choosed.length; i++)
-            CustomSegmentText(
-              content: choosed[i],
-              normalStyle: const TextStyle(fontSize: 14, color: Colours.text),
-              selectedStyle:
-                  const TextStyle(fontSize: 14, color: Colours.appMain),
-              index: i,
-            ),
-        ],
+        children: choosed
+            .map((model) => CustomSegmentText(
+                  content: model,
+                  normalStyle:
+                      const TextStyle(fontSize: 14, color: Colours.text),
+                  selectedStyle:
+                      const TextStyle(fontSize: 14, color: Colours.appMain),
+                ))
+            .toList(),
       );
     });
   }

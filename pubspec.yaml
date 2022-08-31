@@ -36,6 +36,7 @@ dependencies:
   json_annotation: ^4.6.0
   # 悬停 & 分区 & scrollToIndex
   flutter_table_list_view: ^0.0.1
+  flutter_easy_segment: ^0.0.1
 
 dev_dependencies:
   flutter_test:

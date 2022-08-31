@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_segment/flutter_easy_segment.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/goods_route.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/goods/providers/goods_providers.dart';
@@ -14,7 +15,6 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/utils/random_utils.da
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/toast.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/always_keep_alive.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/easy_segment/easy_segment.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/my_app_bar.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/option_selected_view.dart';
@@ -171,7 +171,6 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsProviders {
       indicators: const [
         /// 固定宽度无动画
         CustomSegmentLineIndicator(
-          index: 0,
           color: Colours.appMain,
           width: 40,
           bottom: 2,
@@ -181,7 +180,6 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsProviders {
 
         /// 固定宽度有动画
         CustomSegmentLineIndicator(
-          index: 1,
           color: Colours.red,
           width: 40,
           bottom: 7,
@@ -191,7 +189,6 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsProviders {
 
         /// 动态宽度(和item保持宽度一致) 有动画
         CustomSegmentLineIndicator(
-          index: 2,
           color: Colors.yellow,
           top: 0,
           height: 3,
@@ -200,29 +197,28 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsProviders {
 
         /// 动态宽度(和item保持宽度一致) 无动画
         CustomSegmentLineIndicator(
-          index: 3,
           color: Colors.green,
           top: 5,
           height: 3,
           animation: false,
         ),
       ],
-      children: List.generate(
-        items.length,
-        (index) => CustomSegmentText(
-          key: ValueKey(items[index].title),
-          content: items[index].title,
-          index: index,
-          height: 50,
-          normalStyle: const TextStyle(
-              color: Colors.black, fontSize: 16, fontWeight: FontWeight.normal),
-          selectedStyle: const TextStyle(
-            color: Colours.appMain,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+      children: items
+          .map((item) => CustomSegmentText(
+                key: ValueKey(item.title),
+                content: item.title,
+                height: 50,
+                normalStyle: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.normal),
+                selectedStyle: const TextStyle(
+                  color: Colours.appMain,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ))
+          .toList(),
     );
   }
 
