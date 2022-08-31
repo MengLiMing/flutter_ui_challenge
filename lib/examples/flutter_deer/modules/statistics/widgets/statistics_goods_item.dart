@@ -121,7 +121,7 @@ class StatisticsGoodsItem extends StatelessWidget {
         ),
         child: Text(
           '${index + 1}',
-          style: TextStyle(color: Colors.white, fontSize: 12),
+          style: const TextStyle(color: Colors.white, fontSize: 12),
         ),
       );
     }

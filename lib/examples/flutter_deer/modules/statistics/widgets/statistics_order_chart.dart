@@ -210,11 +210,11 @@ class StatisticsOrderLinePainter extends CustomPainter {
     // 气泡上圆圈的半径
     final circleRadius = textPainter.height / 2;
     // 箭头高
-    final arrowHeight = 6.0;
+    const arrowHeight = 6.0;
     // 箭头宽
-    final arrowWidth = 12.0;
+    const arrowWidth = 12.0;
     // 箭头距离远点的间距
-    final bottomSpace = 4;
+    const bottomSpace = 4;
 
     final bubbleWidth = 2 + circleRadius + 2 + textPainter.width + 2;
     final bubbleHeight = 8 + textPainter.height + 8;
@@ -235,7 +235,7 @@ class StatisticsOrderLinePainter extends CustomPainter {
     canvas.drawRRect(
         RRect.fromRectAndRadius(
           rect,
-          Radius.circular(4),
+          const Radius.circular(4),
         ),
         Paint()..color = bubbleColor);
 

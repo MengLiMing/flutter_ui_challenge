@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,7 +49,7 @@ class OrderChooseItemData extends Equatable {
   final String title;
   final String unSelectImg;
   final String selectImg;
-  int count;
+  int count = 0;
   final OrderType orderType;
 
   OrderChooseItemData({
@@ -55,7 +57,6 @@ class OrderChooseItemData extends Equatable {
     required this.unSelectImg,
     required this.selectImg,
     required this.orderType,
-    this.count = 0,
   });
 
   @override
@@ -89,9 +90,7 @@ class _OrderTypeChooseItem extends ConsumerWidget {
               width: 24,
               height: 24,
             ),
-            SizedBox(
-              height: 8,
-            ),
+            const SizedBox(height: 8),
             Text(
               data.title,
               style: TextStyle(

@@ -54,7 +54,7 @@ mixin OrderListProviders {
 
 class OrderListDataManager extends StateNotifier<OrderListData>
     with PageRequest<OrderListItemData> {
-  OrderListParams params = OrderListParams();
+  OrderListParams params = const OrderListParams();
 
   OrderListDataManager() : super(OrderListData.empty());
 
@@ -127,7 +127,7 @@ class OrderListData extends Equatable {
 
   final bool hadLoaded;
 
-  OrderListData({
+  const OrderListData({
     required this.isLoading,
     required this.datas,
     required this.hadMore,
@@ -135,9 +135,9 @@ class OrderListData extends Equatable {
   });
 
   factory OrderListData.empty() {
-    return OrderListData(
+    return const OrderListData(
       isLoading: false,
-      datas: const [],
+      datas: [],
       hadMore: true,
       hadLoaded: false,
     );

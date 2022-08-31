@@ -13,6 +13,6 @@ class CalendarUtils {
       lastMonthDate = DateTime.utc(year + 1);
     }
 
-    return lastMonthDate.subtract(Duration(days: 1));
+    return lastMonthDate.subtract(const Duration(days: 1));
   }
 }

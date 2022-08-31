@@ -2,11 +2,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_table_list_view/flutter_table_list_view.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/model/shop_record_model.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/provider/shop_record_providers.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/flutter_table_view/flutter_table_view.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_more_footer.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/my_app_bar.dart';
 
@@ -73,7 +73,7 @@ class _ShopRecordPageState extends ConsumerState<ShopRecordPage>
                   hasLine: hasLine,
                 );
               },
-              headerBuilder: (context, sectionIndex) {
+              headerBuilder: (context, sectionIndex, _) {
                 final sectionModel = dataSource[sectionIndex];
                 return _ShopRecordHeader(
                   model: sectionModel,

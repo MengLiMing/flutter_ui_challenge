@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -186,11 +185,6 @@ class _ArrowPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (size.width <= 0 || size.height <= 0) return;
-
-    /// 根据size计算pointScale的范围
-    final minScale = (radius + arrowSize.width / 2) / size.width;
-    final maxScale = 1 - minScale;
-    final pointScale = min(max(minScale, arrowPointScale), maxScale);
 
     final rectPath = Path()
       ..addRRect(RRect.fromRectXY(

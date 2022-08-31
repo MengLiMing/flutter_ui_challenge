@@ -88,7 +88,7 @@ class _SearchBarState extends State<SearchBar> {
                 const EdgeInsets.only(left: -8, right: -16, bottom: 14),
             border: const UnderlineInputBorder(borderSide: BorderSide.none),
             icon: const Padding(
-              padding: const EdgeInsets.only(top: 8, bottom: 8, left: 8),
+              padding: EdgeInsets.only(top: 8, bottom: 8, left: 8),
               child: LoadAssetImage(
                 'order/order_search',
                 color: Colours.textGrayC,

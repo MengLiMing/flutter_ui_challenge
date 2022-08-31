@@ -75,7 +75,7 @@ class OrderHeader extends SliverPersistentHeaderDelegate {
           height: lerpDouble(62, ScreenUtils.navBarHeight, progress),
           top: lerpDouble(32, 0, progress)! + ScreenUtils.topPadding,
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             alignment: titleAlignment,
             child: Text(
               '订单',

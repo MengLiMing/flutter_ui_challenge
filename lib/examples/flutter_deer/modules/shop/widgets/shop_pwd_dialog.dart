@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/widgets/shop_pwd_code_view.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/text_styles.dart';
@@ -103,18 +102,16 @@ class _ShopPwdDialogState extends State<ShopPwdDialog> {
   }
 
   Widget codeView() {
-    return Container(
-      child: ValueListenableBuilder<List<int>>(
-        valueListenable: inputPwd,
-        builder: (context, value, _) {
-          return ShopPwdCodeView(
-            margin: EdgeInsets.only(left: 16.fit, right: 16.fit),
-            radius: 4.fit,
-            height: 40.fit,
-            pwd: value,
-          );
-        },
-      ),
+    return ValueListenableBuilder<List<int>>(
+      valueListenable: inputPwd,
+      builder: (context, value, _) {
+        return ShopPwdCodeView(
+          margin: EdgeInsets.only(left: 16.fit, right: 16.fit),
+          radius: 4.fit,
+          height: 40.fit,
+          pwd: value,
+        );
+      },
     );
   }
 }

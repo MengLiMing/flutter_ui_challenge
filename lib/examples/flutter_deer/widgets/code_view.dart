@@ -109,7 +109,7 @@ class _CodeViewState extends State<CodeView> {
             autofocus: widget.autofocus,
             controller: _textEditingController,
             focusNode: _focusNode,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.transparent,
             ),
             cursorColor: Colors.transparent,

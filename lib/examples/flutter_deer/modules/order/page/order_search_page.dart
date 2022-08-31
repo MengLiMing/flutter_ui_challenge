@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/models/order_models.dart';
@@ -85,8 +84,9 @@ class _OrderSearchPageState extends ConsumerState<OrderSearchPage>
   Future<void> request(bool isRefresh, {bool isSearching = false}) async {
     _isSearching = isSearching;
     final notifier = ref.read(dataManager.notifier);
-    if (notifier.params.keyword == null || notifier.params.keyword!.isEmpty)
+    if (notifier.params.keyword == null || notifier.params.keyword!.isEmpty) {
       return;
+    }
 
     if (isRefresh) {
       await notifier.refresh();

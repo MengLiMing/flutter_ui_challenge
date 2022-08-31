@@ -88,7 +88,7 @@ class _OrderListPageState extends ConsumerState<OrderListPage>
 
             return CustomScrollView(
               key: PageStorageKey<String>('$_index'),
-              physics: AlwaysScrollableScrollPhysics(
+              physics: const AlwaysScrollableScrollPhysics(
                   parent: BouncingScrollPhysics()),
               controller: controller,
               slivers: [

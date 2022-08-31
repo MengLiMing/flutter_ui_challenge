@@ -25,7 +25,7 @@ class EmptyView extends StatelessWidget {
         const SizedBox(height: 16),
         Text(
           hintText ?? type.hintText,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 14,
             color: Colours.text,
           ),

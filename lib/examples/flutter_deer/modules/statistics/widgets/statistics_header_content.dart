@@ -9,7 +9,7 @@ class StatisticsHeaderContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 6),
       child: Row(
         children: [
           Expanded(child: _item('statistic/xdd', '新订单(单)', '80')),
@@ -32,12 +32,12 @@ class StatisticsHeaderContent extends StatelessWidget {
         SizedBox(height: 6.fit),
         Text(
           title,
-          style: TextStyle(color: Colours.textGray, fontSize: 12),
+          style: const TextStyle(color: Colours.textGray, fontSize: 12),
         ),
         SizedBox(height: 6.fit),
         Text(
           content,
-          style: TextStyle(fontSize: 18),
+          style: const TextStyle(fontSize: 18),
         ),
       ],
     );

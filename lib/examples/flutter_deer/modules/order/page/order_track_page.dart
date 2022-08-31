@@ -83,7 +83,7 @@ class _ListStepItem extends StatelessWidget {
                 height: 16,
                 decoration: BoxDecoration(
                   color: isLatest ? Colours.appMain : Colours.bgGray,
-                  borderRadius: BorderRadius.all(
+                  borderRadius: const BorderRadius.all(
                     Radius.circular(4),
                   ),
                 ),
@@ -97,7 +97,7 @@ class _ListStepItem extends StatelessWidget {
                 ),
             ],
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Expanded(
               child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -110,7 +110,7 @@ class _ListStepItem extends StatelessWidget {
                 child: Text(data.desc),
               ),
               Text(data.date),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
             ],
           )),
         ],

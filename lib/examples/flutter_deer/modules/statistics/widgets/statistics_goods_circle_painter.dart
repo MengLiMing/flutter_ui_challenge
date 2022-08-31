@@ -131,7 +131,7 @@ class StatisticsGoodsCirclePainter extends CustomPainter {
       textDirection: TextDirection.ltr,
       text: TextSpan(
         text: '${(scale * 100).toStringAsFixed(1)}%',
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.white,
         ),
       ),

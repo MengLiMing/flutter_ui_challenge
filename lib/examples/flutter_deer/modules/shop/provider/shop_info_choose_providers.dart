@@ -5,10 +5,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_table_list_view/flutter_table_list_view.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/model/bank_model/bank_model.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/model/city_model/city_model.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/page/shop_info_choose_page.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/flutter_table_view/flutter_table_view.dart';
 
 mixin ShopInfoChooseProviders {
   final manager = StateNotifierProvider.autoDispose<ShopInfoChooseStateNotifier,

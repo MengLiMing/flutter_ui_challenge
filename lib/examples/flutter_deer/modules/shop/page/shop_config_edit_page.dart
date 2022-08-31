@@ -75,7 +75,7 @@ class _ShopConfigEditPageState extends State<ShopConfigEditPage> {
               ),
               onEditingComplete: complete,
             ),
-            SizedBox(height: 21),
+            const SizedBox(height: 21),
           ],
         ),
       ),

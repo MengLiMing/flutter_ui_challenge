@@ -291,7 +291,8 @@ class _ShopConfigPageState extends ConsumerState<ShopConfigPage>
                       maxLines: maxLines,
                       textAlign: textAlign,
                       overflow: maxLines == null ? null : TextOverflow.ellipsis,
-                      style: TextStyle(height: 1.4, color: Colours.textGray),
+                      style:
+                          const TextStyle(height: 1.4, color: Colours.textGray),
                     ),
                   ),
                 ),
@@ -309,7 +310,7 @@ class _ShopConfigPageState extends ConsumerState<ShopConfigPage>
               ],
             ),
           ),
-          Divider(),
+          const Divider(),
         ],
       ),
     );

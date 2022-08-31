@@ -83,7 +83,7 @@ class StatisticsInfoPage extends StatelessWidget {
   TextSpan itemContent(int number) {
     String unit = style == StatisticsInfoStyle.order ? "单" : "元";
     return TextSpan(
-        style: TextStyle(
+        style: const TextStyle(
           textBaseline: TextBaseline.alphabetic,
         ),
         children: [

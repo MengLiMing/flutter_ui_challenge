@@ -121,7 +121,7 @@ class _ShopWithDrawPageState extends ConsumerState<ShopWithDrawPage>
           Row(
             children: [
               const Text('¥', style: TextStyles.textBold24),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Expanded(
                 child: Stack(
                   alignment: Alignment.centerLeft,

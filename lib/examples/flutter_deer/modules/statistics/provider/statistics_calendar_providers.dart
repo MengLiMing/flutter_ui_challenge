@@ -50,7 +50,7 @@ mixin CalendarProviders {
 }
 
 class CalendarStateNotifier extends StateNotifier<CalendarState> {
-  CalendarStateNotifier() : super(CalendarState());
+  CalendarStateNotifier() : super(const CalendarState());
 
   DateTime get now => DateTime.now().toLocal();
 

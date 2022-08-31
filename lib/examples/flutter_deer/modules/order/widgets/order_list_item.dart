@@ -96,14 +96,14 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
       ),
       Container(
         alignment: Alignment.center,
-        margin: EdgeInsets.symmetric(vertical: 8),
-        child: Divider(),
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        child: const Divider(),
       ),
       orderInfo(),
       Container(
         alignment: Alignment.center,
-        margin: EdgeInsets.symmetric(vertical: 8),
-        child: Divider(),
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        child: const Divider(),
       ),
       actions(),
     ];
@@ -189,7 +189,7 @@ class _OrderListItemState extends ConsumerState<OrderListItem> {
           children: [
             Expanded(
                 child: OrderListActionType.contact.actionButton(tapAction)),
-            SizedBox(width: 135),
+            const SizedBox(width: 135),
             Expanded(child: OrderListActionType.track.actionButton(tapAction)),
           ],
         );

@@ -17,7 +17,7 @@ class ShopPwdSmsDialog extends StatefulWidget {
 class _ShopPwdSmsDialogState extends State<ShopPwdSmsDialog> {
   Timer? timer;
 
-  ValueNotifier<int> _countDown = ValueNotifier(0);
+  final ValueNotifier<int> _countDown = ValueNotifier(0);
 
   int get countDown => _countDown.value;
   set countDown(int value) {
@@ -117,7 +117,7 @@ class _ShopPwdSmsDialogState extends State<ShopPwdSmsDialog> {
           if (value == 0) {
             return TextButton(
               onPressed: startTimer,
-              child: Text(
+              child: const Text(
                 '获取验证码',
                 style: TextStyle(fontSize: 18),
               ),

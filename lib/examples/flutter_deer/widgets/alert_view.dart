@@ -19,6 +19,7 @@ class AlertView extends StatelessWidget {
     return CommonDialog(
       horizontalSpace: 40,
       title: title,
+      onEnsure: onTap,
       children: [
         Container(
           padding: const EdgeInsets.only(
@@ -34,7 +35,6 @@ class AlertView extends StatelessWidget {
           ),
         ),
       ],
-      onEnsure: onTap,
     );
   }
 }

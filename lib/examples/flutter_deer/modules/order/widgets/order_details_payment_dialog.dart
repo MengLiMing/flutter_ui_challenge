@@ -106,13 +106,13 @@ class _PaymentItem extends ConsumerWidget {
                   child: Text(paymentType.desc),
                 ),
                 Visibility(
+                  visible: isSelected,
                   child: LoadAssetImage(
                     'order/ic_check',
                     color: color,
                     width: 14,
                     height: 14,
                   ),
-                  visible: isSelected,
                 )
               ],
             ),

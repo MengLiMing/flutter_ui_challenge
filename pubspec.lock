@@ -251,6 +251,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.4"
+  flutter_table_list_view:
+    dependency: "direct main"
+    description:
+      name: flutter_table_list_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter

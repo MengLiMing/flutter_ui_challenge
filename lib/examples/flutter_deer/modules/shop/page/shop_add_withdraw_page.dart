@@ -31,7 +31,7 @@ class _ShopAddWithdrawPageState extends ConsumerState<ShopAddWithdrawPage>
     with ShopWithdrawAddProviders {
   void accountTypeChoose() {
     DialogUtils.show(context, builder: (context) {
-      return ShopWithdrawAccontTypeChoose();
+      return const ShopWithdrawAccontTypeChoose();
     }).then((value) {
       if (value is ShopAccontType) {
         ref

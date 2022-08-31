@@ -238,7 +238,7 @@ extension on _OrderDetailPageState {
                     ),
                   ),
                 ),
-          Text(':', style: style),
+          const Text(':', style: style),
           SizedBox(width: 8.fit),
           Text(
             content,
@@ -263,8 +263,8 @@ extension on _OrderDetailPageState {
           Expanded(child: Text(title)),
           Text(
             '${price < 0 ? '-' : ''}¥${price.abs()}',
-            style:
-                TextStyle(fontSize: 14, fontWeight: FontWeight.w600).copyWith(
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)
+                .copyWith(
               color: price < 0 ? Colours.red : null,
             ),
           ),
@@ -314,7 +314,7 @@ extension on _OrderDetailPageState {
                       ),
                     ],
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   const Text(
                     '玫瑰香 520ml',
                     style: TextStyle(
@@ -322,7 +322,7 @@ extension on _OrderDetailPageState {
                       color: Colours.textGray,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Wrap(
                     spacing: 4,
                     children: [
@@ -393,7 +393,7 @@ extension on _OrderDetailPageState {
             SizedBox(
               width: 1,
               height: 24.fit,
-              child: ColoredBox(color: Colours.bgGray),
+              child: const ColoredBox(color: Colours.bgGray),
             ),
             GestureDetector(
               onTap: () => Toast.show('打电话'),

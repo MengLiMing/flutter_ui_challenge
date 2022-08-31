@@ -21,7 +21,7 @@ class ShopHeader extends StatelessWidget {
                       style:
                           TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Row(
                       children: const [
                         LoadAssetImage(

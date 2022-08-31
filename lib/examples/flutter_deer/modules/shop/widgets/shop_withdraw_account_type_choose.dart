@@ -20,12 +20,12 @@ class ShopWithdrawAccontTypeChoose extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(height: 24),
-            Text(
+            const SizedBox(height: 24),
+            const Text(
               '账号类型',
               style: TextStyles.textBold18,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             for (final type in ShopAccontType.values) ...[
               const Divider(),
               InkWell(

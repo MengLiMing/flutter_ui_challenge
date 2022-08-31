@@ -104,7 +104,7 @@ class _StatisticsGoodsCircleChartState extends State<StatisticsGoodsCircleChart>
               children: [
                 Text(
                   widget.style == StatisticsGoodsStyle.complete ? "已配送" : "待配送",
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),

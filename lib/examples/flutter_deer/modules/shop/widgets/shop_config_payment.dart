@@ -48,9 +48,9 @@ class _ShopConfigPaymentState extends State<ShopConfigPayment> {
     return CommonDialog(
         title: '支付方式(多选)',
         children: [
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           ...ShopPaymentStyle.values.map((e) => _item(e)),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
         ],
         onEnsure: () {
           final result = List<ShopPaymentStyle>.from(selectedValue);

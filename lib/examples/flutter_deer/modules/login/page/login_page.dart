@@ -93,12 +93,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       }
     });
 
-    final _children = <Widget>[
+    final children = [
       Container(
         margin: const EdgeInsets.only(top: 20),
         alignment: Alignment.centerLeft,
         height: 32,
-        child: Text(
+        child: const Text(
           '密码登录',
           style: TextStyles.textBold26,
         ),
@@ -150,9 +150,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           );
         },
       ),
-      SizedBox(
-        height: 25,
-      ),
+      const SizedBox(height: 25),
       SizedBox(
         height: 44,
         width: double.infinity,
@@ -219,7 +217,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: _children,
+            children: children,
           ),
         ),
       ),

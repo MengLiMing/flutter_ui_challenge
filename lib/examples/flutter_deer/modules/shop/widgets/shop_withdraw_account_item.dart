@@ -28,7 +28,7 @@ class ShopWithdrawAccountItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final iconWidth = 44.fit;
     return DefaultTextStyle(
-      style: TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
       child: Container(
         margin: EdgeInsets.only(left: 24.fit, right: 24.fit, top: 16.fit),
         padding: EdgeInsets.all(24.fit),
@@ -73,9 +73,9 @@ class ShopWithdrawAccountItem extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(model.title, style: TextStyle(fontSize: 18)),
+                        Text(model.title, style: const TextStyle(fontSize: 18)),
                         Expanded(child: Container()),
-                        Text(model.desc, style: TextStyle(fontSize: 12)),
+                        Text(model.desc, style: const TextStyle(fontSize: 12)),
                       ],
                     ),
                   ),
@@ -87,7 +87,7 @@ class ShopWithdrawAccountItem extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.only(left: iconWidth + 8.fit),
                   alignment: Alignment.bottomLeft,
-                  child: Text(
+                  child: const Text(
                     '**** **** **** 1111',
                     style: TextStyle(fontSize: 18),
                   ),

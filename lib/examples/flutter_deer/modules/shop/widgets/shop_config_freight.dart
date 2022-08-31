@@ -33,9 +33,9 @@ class _ShopConfigFreightState extends State<ShopConfigFreight> {
     return CommonDialog(
         title: '运费配置',
         children: [
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           ...ShopFreightConfig.values.map((e) => _item(e)),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
         ],
         onEnsure: () {
           NavigatorUtils.pop(context, result: config);

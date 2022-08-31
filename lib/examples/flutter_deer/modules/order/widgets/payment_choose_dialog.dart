@@ -21,8 +21,7 @@ class PaymentChooseDialog extends StatelessWidget {
     return CommonDialog(
       title: '收款方式',
       children: [
-        SizedBox(height: 8),
-
+        const SizedBox(height: 8),
         ValueListenableBuilder<PaymentType>(
           valueListenable: chooseType,
           builder: (context, value, _) {
@@ -41,9 +40,7 @@ class PaymentChooseDialog extends StatelessWidget {
             );
           },
         ),
-
-        /// 确定取消按钮
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
       ],
       onEnsure: () {
         NavigatorUtils.pop(context);

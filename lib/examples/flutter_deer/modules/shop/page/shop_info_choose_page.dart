@@ -3,13 +3,13 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_table_list_view/flutter_table_list_view.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/provider/shop_info_choose_providers.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/shop/widgets/shop_info_choose_indicator.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/screen_untils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/custon_back_button.dart';
-import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/flutter_table_view/flutter_table_view.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/my_app_bar.dart';
 
@@ -149,7 +149,7 @@ class _ShopInfoChooseState extends ConsumerState<ShopInfoChoosePage>
         return ref.read(manager.notifier).rowCount(section: section);
       },
       controller: tableViewController,
-      headerBuilder: (context, sectionIndex) {
+      headerBuilder: (context, sectionIndex, isHover) {
         final model = ref.read(manager.notifier).infoChooseModel(
               indexPath: IndexPath(row: 0, section: sectionIndex),
             );

@@ -15,7 +15,7 @@ class NumberKeyboardItem {
 
   const NumberKeyboardItem({
     required this.style,
-    this.args = null,
+    this.args,
   });
 
   factory NumberKeyboardItem.number(int number) {
@@ -41,7 +41,7 @@ class NumberKeyboard extends StatelessWidget {
   final ValueChanged<int> onTapNumber;
   final VoidCallback? onDecimal;
 
-  late List<NumberKeyboardItem> items;
+  late final List<NumberKeyboardItem> items;
 
   NumberKeyboard({
     Key? key,

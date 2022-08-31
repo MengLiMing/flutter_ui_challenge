@@ -14,8 +14,8 @@ class ShopWithdrawPwdPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(
-        title: const Text('提现密码'),
+      appBar: const MyAppBar(
+        title: Text('提现密码'),
       ),
       body: MyScrollView(
         children: [

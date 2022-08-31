@@ -1,5 +1,4 @@
 import 'package:fluro/fluro.dart';
-import 'package:fluro/src/fluro_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/page/order_detail_page.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/modules/order/page/order_page.dart';
@@ -12,8 +11,8 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/routers/not_found_pag
 class OrderRouter extends ModularRouterProvider {
   static const order = '/order';
   static const search = '/order/search';
-  static const details = 'order/details';
-  static const track = 'order/track';
+  static const details = '/order/details';
+  static const track = '/order/track';
 
   @override
   void initRouter(FluroRouter router) {
@@ -30,8 +29,12 @@ class OrderRouter extends ModularRouterProvider {
     }));
 
     router.define(details, handler: Handler(handlerFunc: (context, params) {
-      final String? orderId = (context?.settings?.arguments as String?) ??
-          (params['orderId']?.first as String?);
+      String? orderId;
+      if (context?.settings?.arguments is String) {
+        orderId = context?.settings?.arguments as String;
+      } else if (params['orderId']?.first is String) {
+        orderId = params['orderId']?.first as String;
+      }
       if (orderId != null) {
         return OrderDetailPage(
           orderId: orderId,
@@ -42,8 +45,12 @@ class OrderRouter extends ModularRouterProvider {
     }));
 
     router.define(track, handler: Handler(handlerFunc: (context, params) {
-      final String? orderId = (context?.settings?.arguments as String?) ??
-          (params['orderId']?.first as String?);
+      String? orderId;
+      if (context?.settings?.arguments is String) {
+        orderId = context?.settings?.arguments as String;
+      } else if (params['orderId']?.first is String) {
+        orderId = params['orderId']?.first as String;
+      }
       if (orderId != null) {
         return OrderTrackPage(
           orderId: orderId,
