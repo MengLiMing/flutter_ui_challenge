@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/utils/image_utils.dart';
 
@@ -33,15 +33,27 @@ class LoadImage extends StatelessWidget {
         width: width,
         fit: fit,
       );
-      return CachedNetworkImage(
-        imageUrl: image,
-        placeholder: (_, __) => holder,
-        errorWidget: (_, __, ___) => holder,
+      return ExtendedImage.network(
+        image,
         width: width,
         height: height,
-        memCacheHeight: cacheHeight,
-        memCacheWidth: cacheWidth,
         fit: fit,
+        cache: true,
+        enableMemoryCache: false,
+        enableLoadState: false,
+        loadStateChanged: (ExtendedImageState state) {
+          switch (state.extendedImageLoadState) {
+            case LoadState.loading:
+            case LoadState.failed:
+              return holder;
+            case LoadState.completed:
+              return AnimatedOpacity(
+                opacity: 1,
+                duration: const Duration(milliseconds: 100),
+                child: ExtendedRawImage(image: state.extendedImageInfo?.image),
+              );
+          }
+        },
       );
     } else {
       return LoadAssetImage(
