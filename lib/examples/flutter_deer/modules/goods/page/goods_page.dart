@@ -34,10 +34,9 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsProviders {
   final OptionSelectedController selectedController =
       OptionSelectedController();
 
-  EasySegmentController segmentController =
-      EasySegmentController(initialIndex: 7);
+  late EasySegmentController segmentController;
 
-  final PageController pageController = PageController(initialPage: 7);
+  late PageController pageController;
 
   List<GoodsTypeItem> items = const [
     GoodsTypeItem(title: '全部商品', count: 10),
@@ -55,6 +54,11 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsProviders {
   void initState() {
     super.initState();
 
+    final initialIndex = items.length - 2;
+
+    segmentController = EasySegmentController(initialIndex: initialIndex);
+    pageController = PageController(initialPage: initialIndex);
+
     pageController.addListener(() {
       segmentController.changeProgress(pageController.page ?? 0);
     });
@@ -65,7 +69,7 @@ class _GoodsPageState extends ConsumerState<GoodsPage> with GoodsProviders {
           .setSelectedIndex(segmentController.currentIndex);
     });
 
-    ref.read(goodsState.notifier).setSelectedIndex(7);
+    ref.read(goodsState.notifier).setSelectedIndex(initialIndex);
   }
 
   @override
