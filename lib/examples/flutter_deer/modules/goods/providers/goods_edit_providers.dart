@@ -125,7 +125,7 @@ class GoodsEditState {
   final GoodsData data;
 
   bool get canCommit =>
-      image.imageFile != null &&
+      (image.imageFile != null || image.url != null || data.imageUrl != null) &&
       data.name.isNotEmpty &&
       data.desc.isNotEmpty &&
       data.price != 0 &&
