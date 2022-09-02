@@ -4,12 +4,6 @@
 
 # flutter_deer
 
-1、使用riverpod作为状态管理
-2、CustomPaint 和 Animation 使用
-3、header悬停
-4、自定义类似Tabbar效果
-5、路由、自定义弹窗等
-
 效果图见下方
 
 | ![订单](https://user-images.githubusercontent.com/19296728/188067072-fb7cad6f-806e-4275-a315-8edc87c99dd5.gif)   |  ![订单详情](https://user-images.githubusercontent.com/19296728/188067355-6e746e1d-e15d-4f16-9a3d-85ab5ac6b3d1.gif)   | ![商品首页](https://user-images.githubusercontent.com/19296728/188067483-314fde9a-685d-4f34-bdd1-71dc3a8c4e57.gif)   |  ![商品编辑](https://user-images.githubusercontent.com/19296728/188067563-244bd785-db61-479e-bb16-5d8da600e4d8.gif)   |
