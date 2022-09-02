@@ -165,7 +165,6 @@ class _GoodsTypeChooseSheetState extends State<GoodsTypeChooseSheet>
           CustomSegmentLineIndicator(
             color: Colours.appMain,
             bottom: 0,
-            cornerRadius: 0,
             height: 2,
           ),
         ],

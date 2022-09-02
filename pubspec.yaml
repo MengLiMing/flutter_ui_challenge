@@ -22,13 +22,9 @@ dependencies:
   image_picker: ^0.8.5+3
   # 图片缓存
   extended_image: ^6.2.1
-  # 滚动到index
-  scrollable_positioned_list: ^0.3.2
   equatable: ^2.0.3
   # webview
   webview_flutter: 3.0.4
-  # 锁
-  synchronized: ^3.0.0+2
   # 使用到了DateFormat
   intl: ^0.17.0
   # json转model相关
@@ -36,7 +32,7 @@ dependencies:
   json_annotation: ^4.6.0
   # 悬停 & 分区 & scrollToIndex
   flutter_table_list_view: ^0.0.1
-  flutter_easy_segment: ^0.0.1
+  flutter_easy_segment: ^0.0.2
 
 dev_dependencies:
   flutter_test:

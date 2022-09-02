@@ -236,7 +236,7 @@ packages:
       name: flutter_easy_segment
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1"
+    version: "0.0.2"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -570,7 +570,7 @@ packages:
     source: hosted
     version: "1.0.3"
   scrollable_positioned_list:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: scrollable_positioned_list
       url: "https://pub.dartlang.org"
@@ -708,7 +708,7 @@ packages:
     source: hosted
     version: "1.1.0"
   synchronized:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: synchronized
       url: "https://pub.dartlang.org"
