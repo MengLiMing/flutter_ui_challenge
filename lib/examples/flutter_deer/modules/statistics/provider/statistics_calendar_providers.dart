@@ -176,13 +176,14 @@ class CalendarStateNotifier extends StateNotifier<CalendarState> {
     DateTime date, {
     bool isUnfold = true,
   }) {
+    final nowDate = now;
     final count = isUnfold ? 12 : (date.month <= 7 ? 7 : 5);
     final preCount = isUnfold ? 0 : (date.month <= 7 ? 0 : 7);
     return List.generate(count, (index) {
       final monthIndex = index + 1 + preCount;
       final monthDate = DateTime(date.year, monthIndex);
       return CalendarDate(
-          date: monthDate, canSelected: date.month >= monthIndex);
+          date: monthDate, canSelected: nowDate.month >= monthIndex);
     });
   }
 
@@ -205,7 +206,10 @@ class CalendarStateNotifier extends StateNotifier<CalendarState> {
         weekDate = newDate;
       }
       return CalendarDate(
-          date: weekDate, canSelected: weekDate.isBefore(currentDate));
+        date: weekDate,
+        canSelected:
+            newDate.month == weekDate.month && weekDate.isBefore(currentDate),
+      );
     });
   }
 }

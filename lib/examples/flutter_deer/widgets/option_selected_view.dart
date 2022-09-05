@@ -144,7 +144,7 @@ class _OptionSelectedViewState extends State<OptionSelectedView>
                 transform: Matrix4.diagonal3Values(
                   scale.value,
                   scale.value,
-                  0,
+                  1,
                 ),
                 child: child,
               );
@@ -163,7 +163,7 @@ class _OptionSelectedViewState extends State<OptionSelectedView>
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

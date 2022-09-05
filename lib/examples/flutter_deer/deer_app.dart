@@ -80,6 +80,8 @@ class DeerApp extends StatelessWidget {
               return MediaQuery(
                 data: MediaQuery.of(context).copyWith(
                   textScaleFactor: ScreenUtils.scale,
+                  boldText: false,
+                  platformBrightness: Brightness.light,
                 ),
                 child: child!,
               );
