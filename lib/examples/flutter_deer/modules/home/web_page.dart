@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_utils.dart';
@@ -23,16 +20,9 @@ class WebViewPage extends StatefulWidget {
 }
 
 class _WebViewPageState extends State<WebViewPage> {
-  WebViewController? webViewController;
+  late final WebViewController webViewController;
 
   ValueNotifier<double> progress = ValueNotifier(0);
-
-  @override
-  void initState() {
-    super.initState();
-
-    if (!kIsWeb && Platform.isAndroid) WebView.platform = AndroidWebView();
-  }
 
   String get url {
     if (widget.url.startsWith('http') || widget.url.startsWith('https')) {
@@ -44,6 +34,24 @@ class _WebViewPageState extends State<WebViewPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    webViewController = WebViewController.fromPlatformCreationParams(
+        const PlatformWebViewControllerCreationParams());
+
+    webViewController
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(NavigationDelegate(
+        onProgress: (int progress) {
+          this.progress.value = progress / 100;
+        },
+      ));
+
+    webViewController.loadRequest(Uri.parse(url));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar(
@@ -52,17 +60,7 @@ class _WebViewPageState extends State<WebViewPage> {
       ),
       body: Stack(
         children: [
-          WebView(
-            initialUrl: url,
-            javascriptMode: JavascriptMode.unrestricted,
-            allowsInlineMediaPlayback: true,
-            onWebViewCreated: (controller) {
-              webViewController = controller;
-            },
-            onProgress: (value) {
-              progress.value = value / 100;
-            },
-          ),
+          WebViewWidget(controller: webViewController),
           ValueListenableBuilder(
               valueListenable: progress,
               builder: (context, value, _) {
@@ -87,14 +85,9 @@ class _WebViewPageState extends State<WebViewPage> {
       NavigatorUtils.pop(context);
     }
 
-    final controller = webViewController;
-    if (controller == null) {
-      pop();
-      return;
-    }
-    final canGoback = await controller.canGoBack();
+    final canGoback = await webViewController.canGoBack();
     if (canGoback) {
-      controller.goBack();
+      webViewController.goBack();
     } else {
       pop();
     }

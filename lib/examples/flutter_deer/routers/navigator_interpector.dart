@@ -5,7 +5,7 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_uti
 
 typedef InterpectorNext = void Function();
 
-abstract class NavigatorInterpector {
+mixin NavigatorInterpector {
   /// 下一个拦截器
   NavigatorInterpector? next;
 

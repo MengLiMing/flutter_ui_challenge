@@ -4,7 +4,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.17.6 <3.0.0"
+  sdk: ">=3.0.5 <4.0.0"
 
 dependencies:
   flutter:
@@ -24,7 +24,7 @@ dependencies:
   extended_image:
   equatable: ^2.0.3
   # webview
-  webview_flutter: 3.0.4
+  webview_flutter:
   # 使用到了DateFormat
   intl: ^0.17.0
   # json转model相关
