@@ -5,7 +5,7 @@ import 'package:flutter_ui_challenge/examples/flutter_deer/res/colors.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/routers/navigator_utils.dart';
 import 'package:flutter_ui_challenge/examples/flutter_deer/widgets/load_image.dart';
 
-class SearchBar extends StatefulWidget implements PreferredSizeWidget {
+class MySearchBar extends StatefulWidget implements PreferredSizeWidget {
   final String backImg;
 
   final String hintText;
@@ -14,7 +14,7 @@ class SearchBar extends StatefulWidget implements PreferredSizeWidget {
 
   final ValueChanged<String> onSearch;
 
-  const SearchBar({
+  const MySearchBar({
     Key? key,
     required this.hintText,
     this.backImg = 'ic_back_black',
@@ -23,13 +23,13 @@ class SearchBar extends StatefulWidget implements PreferredSizeWidget {
   }) : super(key: key);
 
   @override
-  State<SearchBar> createState() => _SearchBarState();
+  State<MySearchBar> createState() => _MySearchBarState();
 
   @override
   Size get preferredSize => const Size.fromHeight(44);
 }
 
-class _SearchBarState extends State<SearchBar> {
+class _MySearchBarState extends State<MySearchBar> {
   final editController = TextEditingController();
 
   @override

@@ -39,7 +39,7 @@ class _OrderSearchPageState extends ConsumerState<OrderSearchPage>
     return CustomShowLoading(
       controller: loadingController,
       child: Scaffold(
-        appBar: SearchBar(
+        appBar: MySearchBar(
           hintText: '时间/关键字查询',
           onSearch: searchAction,
         ),
