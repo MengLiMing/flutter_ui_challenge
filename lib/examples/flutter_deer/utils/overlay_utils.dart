@@ -6,7 +6,7 @@ class OverlayUtils {
     WidgetBuilder builder,
   ) {
     final entry = OverlayEntry(builder: builder);
-    Overlay.of(context)?.insert(entry);
+    Overlay.of(context).insert(entry);
     return entry;
   }
 }

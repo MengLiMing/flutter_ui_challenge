@@ -181,7 +181,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           onTap: _forgetPwd,
           child: Text(
             '忘记密码',
-            style: themeData.textTheme.subtitle2,
+            style: themeData.textTheme.titleSmall,
           ),
         ),
       ),

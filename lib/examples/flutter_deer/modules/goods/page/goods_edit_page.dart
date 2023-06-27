@@ -35,7 +35,7 @@ class GoodsEditPage extends ConsumerStatefulWidget {
 }
 
 class _GoodsEditPageState extends ConsumerState<GoodsEditPage>
-    with GoodsEditProviders, WidgetsBindingObserver {
+    with GoodsEditProviders {
   final ImagePicker _picker = ImagePicker();
 
   final ScrollController controller = ScrollController();

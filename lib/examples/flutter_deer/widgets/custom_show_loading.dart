@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class CustomShowLoadingController with ChangeNotifier {
+class CustomShowLoadingController extends ChangeNotifier {
   var _isLoading = false;
 
   set isLoading(bool value) {

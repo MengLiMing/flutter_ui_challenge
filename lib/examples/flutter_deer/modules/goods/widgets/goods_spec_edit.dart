@@ -16,14 +16,12 @@ class GoodsSpecEdit extends StatefulWidget {
   State<GoodsSpecEdit> createState() => _GoodsSpecEditState();
 }
 
-class _GoodsSpecEditState extends State<GoodsSpecEdit>
-    with WidgetsBindingObserver {
+class _GoodsSpecEditState extends State<GoodsSpecEdit> {
   TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-
     controller.text = widget.spec ?? '';
   }
 

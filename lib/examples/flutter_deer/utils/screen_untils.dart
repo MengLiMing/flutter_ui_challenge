@@ -26,9 +26,7 @@ class ScreenUtils {
   static double get height => mediaQuery.size.height;
 
   static double get keyboardHeight =>
-      MediaQueryData.fromWindow(WidgetsBinding.instance.window)
-          .viewInsets
-          .bottom;
+      MediaQueryData.fromView(WidgetsBinding.instance.window).viewInsets.bottom;
 
   static double get scale {
     if (width > 0) {

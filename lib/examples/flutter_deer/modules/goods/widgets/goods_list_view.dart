@@ -283,8 +283,8 @@ class _GoodsLisItemState extends State<GoodsLisItem>
                       child: Container(
                         padding: const EdgeInsets.only(right: 16),
                         alignment: Alignment.bottomLeft,
-                        child: Row(
-                          children: const [
+                        child: const Row(
+                          children: [
                             Expanded(
                               child: Text(
                                 '¥20.00',

@@ -91,7 +91,7 @@ class _MenuFilterState extends State<MenuFilter> with TickerProviderStateMixin {
     if (widget.isShow &&
         animationController.value == 1 &&
         oldWidget.contentHeight != widget.contentHeight) {
-      ServicesBinding.instance.addPostFrameCallback((timeStamp) {
+      ServicesBinding.instance?.addPostFrameCallback((timeStamp) {
         startHeightAnimation(oldWidget.contentHeight - widget.contentHeight);
       });
     } else {

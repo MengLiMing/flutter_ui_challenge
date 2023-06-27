@@ -47,7 +47,7 @@ class GoodsListStateNotifier extends StateNotifier<GoodsListState>
   @override
   void startRequest(int page, int pageSize, PageRequestType requestType) {
     if (mounted == false) return;
-    ServicesBinding.instance.addPostFrameCallback((timeStamp) {
+    ServicesBinding.instance?.addPostFrameCallback((timeStamp) {
       state = state.copyWith(isLoading: true);
     });
   }
